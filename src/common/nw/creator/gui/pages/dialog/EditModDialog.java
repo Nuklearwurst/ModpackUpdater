@@ -59,6 +59,7 @@ public class EditModDialog extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
+	@SuppressWarnings("SameParameterValue")
 	public EditModDialog(Frame parent, boolean modal, boolean mode, int index,
 			ITableHolder table) {
 		super(parent, modal);

@@ -1,8 +1,24 @@
 package common.nw.installer.gui;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Frame;
+import argo.jdom.JdomParser;
+import argo.jdom.JsonNode;
+import argo.jdom.JsonRootNode;
+import argo.jdom.JsonStringNode;
+import argo.saj.InvalidSyntaxException;
+import com.google.common.base.Charsets;
+import com.google.common.base.Throwables;
+import com.google.common.collect.Maps;
+import com.google.common.io.Files;
+import com.google.gson.Gson;
+import common.nw.modpack.LocalModpack;
+import common.nw.utils.Utils;
+import common.nw.utils.log.NwLogger;
+
+import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -11,35 +27,6 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.swing.ButtonGroup;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.border.EmptyBorder;
-
-import argo.jdom.JdomParser;
-import argo.jdom.JsonNode;
-import argo.jdom.JsonRootNode;
-import argo.jdom.JsonStringNode;
-import argo.saj.InvalidSyntaxException;
-
-import com.google.common.base.Charsets;
-import com.google.common.base.Throwables;
-import com.google.common.collect.Maps;
-import com.google.common.io.Files;
-import com.google.gson.Gson;
-
-import common.nw.modpack.LocalModpack;
-import common.nw.utils.Utils;
 
 public class DialogProfileSettings extends JDialog {
 
@@ -65,6 +52,7 @@ public class DialogProfileSettings extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
+	@SuppressWarnings("SameParameterValue")
 	public DialogProfileSettings(Frame parent, boolean modal,
 			InstallerWindow installer) {
 		super(parent, modal);
@@ -437,7 +425,7 @@ public class DialogProfileSettings extends JDialog {
 		}
 		//update data
 		for(Map.Entry<JsonStringNode, JsonNode> entry : profileCopy.entrySet()) {
-			if(entry.getKey().getText() == selection) {
+			if(entry.getKey().getText().equals(selection)) {
 				//minecraft data
 				txtProfileName.setText(entry.getValue().getStringValue("name"));
 				txtGameDirectory.setText(entry.getValue().getStringValue("gameDir"));
@@ -500,6 +488,7 @@ public class DialogProfileSettings extends JDialog {
 			try {
 				return Integer.parseInt(freq);
 			} catch (NumberFormatException e) {
+				NwLogger.INSTALLER_LOGGER.warn("Error parsing Update Frequency (" + s + ")", e);
 			}
 		}
 		return 0;

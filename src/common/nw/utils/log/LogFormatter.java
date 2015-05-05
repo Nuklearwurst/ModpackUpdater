@@ -8,7 +8,8 @@ import java.util.Calendar;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
-public final class LogFormatter extends Formatter {
+@SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+final class LogFormatter extends Formatter {
 
 	private static final String LINE_SEPARATOR = System
 			.getProperty("line.separator");

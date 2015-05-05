@@ -1,12 +1,10 @@
 package common.nw.creator.gui;
 
+import javax.swing.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.io.File;
 import java.util.List;
-
-import javax.swing.JComponent;
-import javax.swing.TransferHandler;
 
 public class FileTransferHandler extends TransferHandler {
 
@@ -27,10 +25,7 @@ public class FileTransferHandler extends TransferHandler {
 	@Override
 	public boolean canImport(TransferHandler.TransferSupport info) {
 		// Check for String flavor
-		if (!info.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
-			return false;
-		}
-		return true;
+		return info.isDataFlavorSupported(DataFlavor.javaFileListFlavor);
 	}
 
 	/**

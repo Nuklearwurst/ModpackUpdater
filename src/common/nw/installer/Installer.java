@@ -1,31 +1,23 @@
 package common.nw.installer;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.swing.JOptionPane;
-
 import argo.format.PrettyJsonFormatter;
-import argo.jdom.JdomParser;
-import argo.jdom.JsonField;
-import argo.jdom.JsonNode;
-import argo.jdom.JsonNodeFactories;
-import argo.jdom.JsonRootNode;
-import argo.jdom.JsonStringNode;
+import argo.jdom.*;
 import argo.saj.InvalidSyntaxException;
-
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
-
 import common.nw.modpack.RepoModpack;
 import common.nw.utils.DownloadHelper;
 import common.nw.utils.Utils;
 import common.nw.utils.log.NwLogHelper;
+
+import javax.swing.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
 
 public class Installer {
 
@@ -88,9 +80,11 @@ public class Installer {
 	public boolean validateEntries() {
 		boolean notNull = name != null && !name.isEmpty() && dir != null
 				&& !dir.isEmpty();
-		baseDir = new File(dir);
-		boolean allValid = baseDir.exists() && baseDir.isDirectory();
-		return notNull && allValid;
+		if(notNull) {
+			baseDir = new File(dir);
+			return baseDir.exists() && baseDir.isDirectory();
+		}
+		return false;
 	}
 
 	/**
@@ -98,6 +92,7 @@ public class Installer {
 	 * 
 	 * @return success
 	 */
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean createDirs() {
 		File versions = new File(baseDir, "versions");
 		if (!versions.exists()) {
@@ -130,6 +125,7 @@ public class Installer {
 	 * 
 	 * @return success
 	 */
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean downloadLibraries() {
 		if (!downloadLib) {
 			return true;
@@ -148,17 +144,23 @@ public class Installer {
 					}
 					File lib = new File(baseDir, "libraries");
 					if (!lib.exists()) {
-						lib.mkdir();
+						if(!lib.mkdir()) {
+							return false;
+						}
 					}
 					File updater = new File(lib, "common" + File.separator
 							+ "nuklearwurst" + File.separator + "updater");
 					if (!updater.exists()) {
-						updater.mkdirs();
+						if(!updater.mkdirs()) {
+							return false;
+						}
 					}
 					String version = s.substring(s.lastIndexOf(":") + 1);
 					File dir = new File(updater, version);
 					if (!dir.exists()) {
-						dir.mkdirs();
+						if(!dir.mkdirs()) {
+							return false;
+						}
 					}
 					File file = new File(dir, "updater-" + version + ".jar");
 					String realUrl = url + "/common/nuklearwurst/updater/"
@@ -178,6 +180,7 @@ public class Installer {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean createJson() {
 		try {
 			data = DownloadHelper.getString(repo.minecraft.jsonName, null);
@@ -202,7 +205,9 @@ public class Installer {
 		try {
 			File file = new File(ourDir, name + ".json");
 			if (file.exists()) {
-				file.delete();
+				if(!file.delete()) {
+					return false;
+				}
 			}
 			BufferedWriter newWriter = Files.newWriter(file, Charsets.UTF_8);
 			PrettyJsonFormatter.fieldOrderPreservingPrettyJsonFormatter()
@@ -220,11 +225,15 @@ public class Installer {
 	 * 
 	 * @return true if successful
 	 */
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean createJar() {
 		File file = new File(ourDir, name + ".jar");
 		if (file.exists()) {
-			file.delete();
+			if(!file.delete()) {
+				return false;
+			}
 		}
+		//noinspection SimplifiableIfStatement
 		if(repo.minecraft.versionName != null && !repo.minecraft.versionName.isEmpty()) {
 			return DownloadHelper.downloadFile(repo.minecraft.versionName, file);
 		}
@@ -238,6 +247,7 @@ public class Installer {
 	 * @see <a href=https://github.com/MinecraftForge/Installer>https://github.com/MinecraftForge/Installer</a>
 	 * @return success of the profile creation
 	 */
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean createProfile(String profileName, String javaOptions, String gameDirectory, int updateFrequency) {
 		if (createProfile) {
 			File launcherProfiles = new File(baseDir, "launcher_profiles.json");

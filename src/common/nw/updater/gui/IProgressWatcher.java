@@ -4,33 +4,37 @@ import javax.swing.Icon;
 
 public interface IProgressWatcher {
 
-	public boolean isCancelled();
+	boolean isCancelled();
 	
 	/**
 	 * used to force the updater to pause
 	 * the updater will pause as long this method returns true
 	 */
-	public boolean isPaused();
+	boolean isPaused();
 	
-	public boolean quitToLauncher();
+	boolean quitToLauncher();
 	
-	public int showErrorDialog(String title, String message);
+	@SuppressWarnings("SameParameterValue")
+	int showErrorDialog(String title, String message);
 	
-	public int showConfirmDialog(String message, String title, int optionType, int messageType);
+	@SuppressWarnings("SameParameterValue")
+	int showConfirmDialog(String message, String title, int optionType, int messageType);
 
-	public String showInputDialog(String message);
+	@SuppressWarnings("SameParameterValue")
+	String showInputDialog(String message);
 	
-	public int showOptionDialog(String msg, String title, int optionType, int messageType, Icon icon, String[] options, String defaultOption);
+	@SuppressWarnings("SameParameterValue")
+	int showOptionDialog(String msg, String title, int optionType, int messageType, Icon icon, String[] options, String defaultOption);
 
-	public void setDownloadProgress(String msg);
+	void setDownloadProgress(String msg);
 
-	public void setDownloadProgress(int progress);
+	void setDownloadProgress(int progress);
 
-	public void setDownloadProgress(String msg, int progress);
+	void setDownloadProgress(String msg, int progress);
 
-	public void setDownloadProgress(String msg, int progress, int maxProgress);
+	void setDownloadProgress(String msg, int progress, int maxProgress);
 
-	public void setOverallProgress(int progress);
+	void setOverallProgress(int progress);
 
-	public void setOverallProgress(String msg, int progress);
+	void setOverallProgress(String msg, int progress);
 }

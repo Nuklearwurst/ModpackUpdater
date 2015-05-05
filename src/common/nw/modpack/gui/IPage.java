@@ -2,7 +2,7 @@ package common.nw.modpack.gui;
 
 public interface IPage {
 
-	public void onPageOpened(IPageHolder parent, boolean forward);
+	void onPageOpened(IPageHolder parent, boolean forward);
 
 	/**
 	 * 
@@ -11,7 +11,7 @@ public interface IPage {
 	 *            direction (proceeding == true)
 	 * @return
 	 */
-	public boolean onPageClosed(IPageHolder parent, boolean forward);
+	boolean onPageClosed(IPageHolder parent, boolean forward);
 
 	/**
 	 * what should the button say, which leads to this page?
@@ -19,19 +19,19 @@ public interface IPage {
 	 * @return
 	 */
 	@Deprecated
-	public String getActionText();
+	String getActionText();
 
 	/**
 	 * is it possible to flip to another page?
 	 * 
 	 * @return
 	 */
-	public boolean canBeTurned();
+	boolean canBeTurned();
 
 	/**
 	 * name of the page
 	 * 
 	 * @return
 	 */
-	public String getPageName();
+	String getPageName();
 }

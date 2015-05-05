@@ -1,8 +1,8 @@
 package common.nw.creator.gui.pages;
 
-import javax.swing.table.AbstractTableModel;
-
 import common.nw.creator.gui.TableModelList;
+
+import javax.swing.table.AbstractTableModel;
 
 public class TableModelDyn extends AbstractTableModel {
 
@@ -49,9 +49,7 @@ public class TableModelDyn extends AbstractTableModel {
 		values = new Object[old.length][old[0].length + 1];
 		System.out.println("x: " + old.length + "y: " + old[0].length);
 		for (int x = 0; x < old.length; x++) {
-			for (int y = 0; y < old[0].length; y++) {
-				values[x][y] = old[x][y];
-			}
+			System.arraycopy(old[x], 0, values[x], 0, old[0].length);
 		}
 		for (int i = 0; i < o.length; i++) {
 			values[i][old[0].length] = o[i];

@@ -1,16 +1,15 @@
 package common.nw.updater.launch;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-
-import net.minecraft.launchwrapper.ITweaker;
-import net.minecraft.launchwrapper.LaunchClassLoader;
-
 import common.nw.updater.ConsoleListener;
 import common.nw.updater.Updater;
 import common.nw.updater.gui.UpdateWindow;
 import common.nw.utils.Utils;
+import net.minecraft.launchwrapper.ITweaker;
+import net.minecraft.launchwrapper.LaunchClassLoader;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 public class Launch implements ITweaker {
 
@@ -21,7 +20,7 @@ public class Launch implements ITweaker {
 	 * the launch arguments 
 	 * @see {@link ITweaker} 
 	 */
-	private String[] launchArguments = {"modpack", "modpackrepo", "modpackversion"};
+	private final String[] launchArguments = {"modpack", "modpackrepo", "modpackversion"};
 
 	/** should open gui? */
 	private boolean useGui = true;
@@ -71,6 +70,7 @@ public class Launch implements ITweaker {
 		
 		// close gui before process is terminated
 		if (useGui) {
+			//noinspection ConstantConditions
 			window.close();
 		}
 		

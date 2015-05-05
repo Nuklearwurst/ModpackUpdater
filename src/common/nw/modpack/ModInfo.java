@@ -1,5 +1,10 @@
 package common.nw.modpack;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import common.nw.utils.DownloadHelper;
+import common.nw.utils.log.NwLogger;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
@@ -7,10 +12,6 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import common.nw.utils.DownloadHelper;
 
 public class ModInfo {
 
@@ -119,14 +120,15 @@ public class ModInfo {
 							jsx.printStackTrace();
 						}
 						if (entryMap != null) {
+							//TODO: read litemod files
 						}
 					} else {
 						version = versionFile;
 						hasVersionFile = true;
 					}
 				}
-			} else if (true) {
-
+			} else {
+				//TODO: read forge mods
 			}
 			if (remoteInfo != null) {
 				validateVersion(); // update version info according to the
@@ -159,6 +161,7 @@ public class ModInfo {
 	 *            name of the file inside the zip
 	 * @return
 	 */
+	@SuppressWarnings({"SameParameterValue", "WeakerAccess"})
 	public static String getVersionFileFromZip(File file, String name) {
 		try {
 			String out = null;
@@ -177,6 +180,7 @@ public class ModInfo {
 					}
 					out = outBuilder.toString();
 				} catch (Exception e) {
+					NwLogger.NW_LOGGER.error("Error reading Version from zip!", e);
 				} finally {
 					if (reader != null) {
 						reader.close();
@@ -209,6 +213,7 @@ public class ModInfo {
 		if (remoteInfo == null) {
 			return false;
 		}
+		//noinspection SimplifiableIfStatement
 		if (version == null) {
 			return true;
 		}

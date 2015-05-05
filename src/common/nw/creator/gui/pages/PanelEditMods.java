@@ -1,31 +1,5 @@
 package common.nw.creator.gui.pages;
 
-import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.swing.DropMode;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
-
 import common.nw.creator.Creator;
 import common.nw.creator.gui.FileTransferHandler;
 import common.nw.creator.gui.IDropFileHandler;
@@ -41,6 +15,18 @@ import common.nw.modpack.RepoMod;
 import common.nw.modpack.Strings;
 import common.nw.utils.DownloadHelper;
 
+import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class PanelEditMods extends JPanel implements IPageHandler, IDropFileHandler, ITableHolder {
 
 	/**
@@ -48,10 +34,10 @@ public class PanelEditMods extends JPanel implements IPageHandler, IDropFileHand
 	 */
 	private static final long serialVersionUID = 1L;
 	private JTable table;
-	public Creator creator;
+	private Creator creator;
 
-	public List<RepoMod> mods;
-	public List<RepoMod> blacklist;
+	private List<RepoMod> mods;
+	private List<RepoMod> blacklist;
 
 	private List<RepoMod> hiddenFiles;
 
@@ -71,7 +57,7 @@ public class PanelEditMods extends JPanel implements IPageHandler, IDropFileHand
 		this.frame = frame;
 		this.creator = creator;
 
-		scrollPane = new JScrollPane((Component) null);
+		scrollPane = new JScrollPane(null);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
 		JButton btnRemove = new JButton("Remove");
@@ -288,55 +274,52 @@ public class PanelEditMods extends JPanel implements IPageHandler, IDropFileHand
 			return false;
 		}
 		String absolutePath = file.getAbsolutePath();
-		if (absolutePath != null) {
-			
-			/** path within the minecraft installation */
-			String mcRelativePath = absolutePath;
-			/** base dir */
-			String baseDirPath = null;
-			
-			//split absolutePath in two parts
-			if(mcRelativePath.contains(File.separator + "mods" + File.separator)) {
-				int index = absolutePath.indexOf("mods" + File.separator);
-				mcRelativePath = absolutePath.substring(index);
-				baseDirPath = absolutePath.substring(0, index);
-			} else if(mcRelativePath.contains(File.separator + "config" + File.separator)) {
-				int index = absolutePath.indexOf("config" + File.separator);
-				mcRelativePath = absolutePath.substring(index);
-				baseDirPath = absolutePath.substring(0, index);
-			}
-			
-			ModInfo mod = new ModInfo(mcRelativePath);
-			mod.loadInfo(new File(baseDirPath));
-			RepoMod repo = new RepoMod();
-			repo.name = mod.name;
-			repo.version = mod.version;
-			if(repo.version == null) {
-				repo.version = repo.name;
-			}
-			repo.downloadUrl = "EDIT_DOWNLOAD_URL_PLEASE";
-			repo.downloadType = "PLEASE_EDIT";
-			repo.fileName = mod.fileName;
-			repo.md5 = DownloadHelper.getHash(file);
 
-			if (mod.hasName) {
-				repo.nameType = Strings.nameTypeZipEntry;
-			} else {
-				repo.nameType = Strings.nameTypeFileName;
-			}
-			if (mod.hasVersionFile) {
-				repo.versionType = Strings.versionTypeZipEntry;
-			} else if(mod.fileName.startsWith("config" + File.separator)) {
-				repo.version = DateFormat.getDateInstance().format(new Date(System.currentTimeMillis()));
-				repo.versionType = Strings.versionTypeTracked;
-			} else {
-				repo.versionType = Strings.versionTypeFileName;
-			}
-			this.mods.add(repo);
-			updateTable();
-			return true;
+		/** path within the minecraft installation */
+		String mcRelativePath = absolutePath;
+		/** base dir */
+		String baseDirPath = null;
+
+		//split absolutePath in two parts
+		if(mcRelativePath.contains(File.separator + "mods" + File.separator)) {
+			int index = absolutePath.indexOf("mods" + File.separator);
+			mcRelativePath = absolutePath.substring(index);
+			baseDirPath = absolutePath.substring(0, index);
+		} else if(mcRelativePath.contains(File.separator + "config" + File.separator)) {
+			int index = absolutePath.indexOf("config" + File.separator);
+			mcRelativePath = absolutePath.substring(index);
+			baseDirPath = absolutePath.substring(0, index);
 		}
-		return false;
+
+		ModInfo mod = new ModInfo(mcRelativePath);
+		mod.loadInfo(new File(baseDirPath));
+		RepoMod repo = new RepoMod();
+		repo.name = mod.name;
+		repo.version = mod.version;
+		if(repo.version == null) {
+			repo.version = repo.name;
+		}
+		repo.downloadUrl = "EDIT_DOWNLOAD_URL_PLEASE";
+		repo.downloadType = "PLEASE_EDIT";
+		repo.fileName = mod.fileName;
+		repo.md5 = DownloadHelper.getHash(file);
+
+		if (mod.hasName) {
+			repo.nameType = Strings.nameTypeZipEntry;
+		} else {
+			repo.nameType = Strings.nameTypeFileName;
+		}
+		if (mod.hasVersionFile) {
+			repo.versionType = Strings.versionTypeZipEntry;
+		} else if(mod.fileName.startsWith("config" + File.separator)) {
+			repo.version = DateFormat.getDateInstance().format(new Date(System.currentTimeMillis()));
+			repo.versionType = Strings.versionTypeTracked;
+		} else {
+			repo.versionType = Strings.versionTypeFileName;
+		}
+		this.mods.add(repo);
+		updateTable();
+		return true;
 	}
 
 	private void editBlackList() {

@@ -1,15 +1,5 @@
 package common.nw.creator;
 
-import java.awt.Component;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
-import javax.swing.JOptionPane;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import common.nw.modpack.RepoMod;
@@ -17,6 +7,15 @@ import common.nw.modpack.RepoModpack;
 import common.nw.modpack.RepoVersionInfo;
 import common.nw.modpack.Strings;
 import common.nw.utils.DownloadHelper;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class Creator {
 
@@ -67,15 +66,14 @@ public class Creator {
 		}
 
 		workingDir = new File(fileLoc);
-		boolean allFieldsValid = !modpack.modpackRepo.contains(" ")
-				&& (modpack.minecraft.jarUpdateType.equals(Strings.jarDirectDownload) 
-						|| modpack.minecraft.jarUpdateType.equals(Strings.jarLocalFile) 
+		return !modpack.modpackRepo.contains(" ")
+				&& (modpack.minecraft.jarUpdateType.equals(Strings.jarDirectDownload)
+						|| modpack.minecraft.jarUpdateType.equals(Strings.jarLocalFile)
 						|| modpack.minecraft.jarUpdateType.equals(Strings.jarUserDownload))
-				&& (modpack.minecraft.jsonUpdateType.equals(Strings.jsonDirectDownload) 
-						|| modpack.minecraft.jsonUpdateType.equals(Strings.jsonLocalFile) 
-						|| modpack.minecraft.jsonUpdateType.equals(Strings.jsonUserDownload)) 
+				&& (modpack.minecraft.jsonUpdateType.equals(Strings.jsonDirectDownload)
+						|| modpack.minecraft.jsonUpdateType.equals(Strings.jsonLocalFile)
+						|| modpack.minecraft.jsonUpdateType.equals(Strings.jsonUserDownload))
 				&& workingDir.exists();
-		return allFieldsValid;
 	}
 
 	/**
@@ -127,10 +125,9 @@ public class Creator {
 		RepoMod mod = new RepoMod();
 
 		// handle files in base dir
-		String filename = base.isEmpty() ? file.getName() : base + "/"
-				+ file.getName();
 
-		mod.fileName = filename;
+		mod.fileName = base.isEmpty() ? file.getName() : base + "/"
+				+ file.getName();
 		mod.version = mod.fileName;
 		mod.name = mod.fileName;
 		
@@ -173,6 +170,7 @@ public class Creator {
 	 * @param c
 	 * @return
 	 */
+	@SuppressWarnings("UnusedReturnValue")
 	public boolean createOutputFile(Component c) {
 		if (outputLoc.lastIndexOf(File.separator) == -1) {
 			JOptionPane.showMessageDialog(c, "Invalid Directory!", "Error",

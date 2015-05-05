@@ -1,21 +1,5 @@
 package common.nw.creator.gui.pages;
 
-import java.awt.Dialog;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.ButtonGroup;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import javax.swing.LayoutStyle.ComponentPlacement;
-
 import common.nw.creator.Creator;
 import common.nw.creator.gui.CreatorWindow;
 import common.nw.creator.gui.Reference;
@@ -24,14 +8,21 @@ import common.nw.gui.IPageHandler;
 import common.nw.gui.PageHolder;
 import common.nw.modpack.Strings;
 
+import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 public class PanelMinecraftSettings extends JPanel implements IPageHandler {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public JTextField txtVersion;
-	public JTextField txtJar;
-	public JTextField txtJson;
+	private JTextField txtVersion;
+	private JTextField txtJar;
+	private JTextField txtJson;
 	private JTextField txtInstallInfo;
 	private final ButtonGroup btnGroupJar = new ButtonGroup();
 	private final ButtonGroup btnGroupJson = new ButtonGroup();
@@ -240,7 +231,7 @@ public class PanelMinecraftSettings extends JPanel implements IPageHandler {
 
 	}
 
-	public String getJsonUpdateType() {
+	private String getJsonUpdateType() {
 		String s = btnGroupJson.getSelection().getActionCommand();
 		if(s == null || s.isEmpty()) {
 			return Strings.jsonDirectDownload;
@@ -248,7 +239,7 @@ public class PanelMinecraftSettings extends JPanel implements IPageHandler {
 		return s;
 	}
 
-	public String getJarUpdateType() {
+	private String getJarUpdateType() {
 		String s = btnGroupJar.getSelection().getActionCommand();
 		if(s == null || s.isEmpty()) {
 			return Strings.jarDirectDownload;
@@ -260,7 +251,7 @@ public class PanelMinecraftSettings extends JPanel implements IPageHandler {
 	 * used for import, sets the radio buttons
 	 * @param type
 	 */
-	public void setJsonUpdateType(String type) {
+	private void setJsonUpdateType(String type) {
 		if(type == null || type.isEmpty()) {
 			type = Strings.jsonDirectDownload;
 		}
@@ -279,7 +270,7 @@ public class PanelMinecraftSettings extends JPanel implements IPageHandler {
 	 * used for import, sets the radio buttons
 	 * @param type
 	 */
-	public void setJarUpdateType(String type) {
+	private void setJarUpdateType(String type) {
 		if(type == null || type.isEmpty()) {
 			type = Strings.jarDirectDownload;
 		}
@@ -297,7 +288,7 @@ public class PanelMinecraftSettings extends JPanel implements IPageHandler {
 	/**
 	 * opens the edit arguments dialog
 	 */
-	protected void editArguments() {
+	private void editArguments() {
 		Dialog d = new EditArgumentsDialog(creator.modpack.minecraft.arguments, frame, true);
 		d.setVisible(true);
 	}
@@ -305,7 +296,7 @@ public class PanelMinecraftSettings extends JPanel implements IPageHandler {
 	/**
 	 * opens the edit libraries dialog
 	 */
-	protected void editLibraries() {
+	private void editLibraries() {
 		JOptionPane.showMessageDialog(this, "No implemented yet!");
 	}
 
@@ -339,7 +330,8 @@ public class PanelMinecraftSettings extends JPanel implements IPageHandler {
 					|| txtJson.getText() == null || txtJson.getText().isEmpty()) {
 				b = false;
 			}
-			if (b == false) {
+			if (!b) {
+				//noinspection PointlessBooleanExpression
 				if(!CreatorWindow.DEBUG) {
 					JOptionPane.showMessageDialog(this,
 							"Not all requiered fields are filled in!", "Error",

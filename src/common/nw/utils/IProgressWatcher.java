@@ -2,19 +2,19 @@ package common.nw.utils;
 
 public interface IProgressWatcher {
 
-	public boolean displayError();
+	boolean displayError();
 
-	public boolean isCancelled();
+	boolean isCancelled();
 
-	public void setDownloadProgress(String msg);
+	void setDownloadProgress(String msg);
 
-	public void setDownloadProgress(int progress);
+	void setDownloadProgress(int progress);
 
-	public void setDownloadProgress(String msg, int progress);
+	void setDownloadProgress(String msg, int progress);
 
-	public void setDownloadProgress(String msg, int progress, int maxProgress);
+	void setDownloadProgress(String msg, int progress, int maxProgress);
 
-	public void setOverallProgress(int progress);
+	void setOverallProgress(int progress);
 
-	public void setOverallProgress(String msg, int progress);
+	void setOverallProgress(String msg, int progress);
 }

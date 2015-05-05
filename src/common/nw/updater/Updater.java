@@ -1,5 +1,19 @@
 package common.nw.updater;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import common.nw.installer.Installer;
+import common.nw.modpack.*;
+import common.nw.updater.gui.IProgressWatcher;
+import common.nw.utils.DownloadHelper;
+import common.nw.utils.UpdateResult;
+import common.nw.utils.Utils;
+import common.nw.utils.log.NwLogger;
+import joptsimple.ArgumentAcceptingOptionSpec;
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+
+import javax.swing.*;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -8,29 +22,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-
-import joptsimple.ArgumentAcceptingOptionSpec;
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-import joptsimple.OptionSpec;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import common.nw.installer.Installer;
-import common.nw.modpack.LocalModpack;
-import common.nw.modpack.ModInfo;
-import common.nw.modpack.RepoMod;
-import common.nw.modpack.RepoModpack;
-import common.nw.modpack.Strings;
-import common.nw.updater.gui.IProgressWatcher;
-import common.nw.utils.DownloadHelper;
-import common.nw.utils.UpdateResult;
-import common.nw.utils.Utils;
-import common.nw.utils.log.NwLogger;
 
 public class Updater {
 
@@ -46,7 +37,7 @@ public class Updater {
 	/** is the update finished */
 	private boolean finished = false;
 	/** retry the whole update? */
-	public boolean retry = false;
+	private boolean retry = false;
 
 	/** progress listener */
 	private IProgressWatcher listener;
@@ -130,7 +121,7 @@ public class Updater {
 	/**
 	 * performs the update
 	 */
-	public void doUpdate() {
+	private void doUpdate() {
 		//init vars
 		finished = false;
 		retry = false;
@@ -255,7 +246,7 @@ public class Updater {
 	 * handles finish of the update
 	 * prints error messages
 	 */
-	public void onUpdateFinished() {
+	private void onUpdateFinished() {
 		if (warningMessage != null && !warningMessage.equals("")) {
 			int ans = listener.showErrorDialog("Error during update", "An Error occured:\n" + warningMessage);
 			if (ans == JOptionPane.YES_OPTION) {
@@ -279,7 +270,7 @@ public class Updater {
 					.accepts("modpack").withRequiredArg().ofType(String.class);
 			ArgumentAcceptingOptionSpec<String> modPackRepoOption = optionParser
 					.accepts("modpackrepo")
-					.requiredIf(modPackOption, new OptionSpec[0])
+					.requiredIf(modPackOption)
 					.withRequiredArg().ofType(String.class);
 			ArgumentAcceptingOptionSpec<String> modPackversionOption = optionParser
 					.accepts("modpackversion")
@@ -621,7 +612,7 @@ public class Updater {
 		boolean success = true;
 
 		// delete old or blacklisted mods
-		if (modsToDelete != null && modsToDelete.size() > 0) {
+		if (modsToDelete.size() > 0) {
 			for (ModInfo mod : modsToDelete) {
 				File fileToDelete = new File(gameDir, mod.fileName);
 				if(fileToDelete.exists()) {
@@ -671,9 +662,9 @@ public class Updater {
 
 			logger.info(String
 					.format("Starting update for %s mod %s [%s] to version [%s] from %s",
-							new Object[] { updateReason, mod.name, mod.version,
-									mod.getRemoteInfo().version,
-									mod.getRemoteInfo().downloadUrl }));
+							updateReason, mod.name, mod.version,
+							mod.getRemoteInfo().version,
+							mod.getRemoteInfo().downloadUrl));
 
 			modNumber++;
 			if(mod.getRemoteInfo().downloadType == null || mod.getRemoteInfo().downloadType.equals(Strings.modDirectDownload)) {
@@ -694,6 +685,7 @@ public class Updater {
 		return true;
 	}
 	
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	private boolean performDirectModDownload(ModInfo mod, int modNumber, float modValue) {
 		int attempts = 0;
 		boolean retry;
@@ -737,6 +729,7 @@ public class Updater {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	private boolean save() {
 		// setting new variables
 
@@ -767,7 +760,8 @@ public class Updater {
 		return true;
 	}
 	
-	public void waitForUi() {
+	private void waitForUi() {
+		//noinspection SynchronizeOnNonFinalField
 		synchronized (updateThread) {
 			while(listener.isPaused()) {
 				try {

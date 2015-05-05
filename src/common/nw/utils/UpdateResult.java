@@ -16,5 +16,7 @@ public enum UpdateResult {
 	
 	FailedCreatingDirs,
 
-	Unknown;
+	FailedDeletingFile,
+
+	Unknown
 }

@@ -9,5 +9,5 @@ public interface IDropFileHandler {
 	 * @param file
 	 * @return
 	 */
-	public boolean dropFile(File file);
+	boolean dropFile(File file);
 }

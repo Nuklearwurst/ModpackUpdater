@@ -1,22 +1,13 @@
 package common.nw.updater.gui;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import common.nw.updater.Updater;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-
-import javax.swing.Icon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JProgressBar;
-
-import common.nw.updater.Updater;
 
 public class UpdateWindow implements IProgressWatcher, WindowListener {
 
@@ -33,7 +24,7 @@ public class UpdateWindow implements IProgressWatcher, WindowListener {
 	/**
 	 * Create the application.
 	 */
-	public UpdateWindow() {
+	private UpdateWindow() {
 		initialize();
 	}
 	
@@ -43,6 +34,7 @@ public class UpdateWindow implements IProgressWatcher, WindowListener {
 		updater.setListener(this);
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	public void setVisible(boolean b) {
 		frmUpdater.setVisible(b);
 	}

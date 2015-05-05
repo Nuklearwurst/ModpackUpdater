@@ -1,19 +1,5 @@
 package common.nw.creator.gui.pages;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.LayoutStyle.ComponentPlacement;
-
 import common.nw.creator.Creator;
 import common.nw.creator.gui.CreatorWindow;
 import common.nw.creator.gui.Reference;
@@ -21,16 +7,23 @@ import common.nw.gui.IPageHandler;
 import common.nw.gui.PageHolder;
 import common.nw.utils.Utils;
 
+import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+
 public class PanelSettings extends JPanel implements IPageHandler {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public JTextField txtOutput;
-	public JTextField txtName;
-	public JTextField txtFiles;
-	public JTextField txtUrl;
-	public JCheckBox chbxRead;
+	private JTextField txtOutput;
+	private JTextField txtName;
+	private JTextField txtFiles;
+	private JTextField txtUrl;
+	private JCheckBox chbxRead;
 	private JButton btnOpenFiles;
 
 	private Creator creator;
@@ -340,6 +333,7 @@ public class PanelSettings extends JPanel implements IPageHandler {
 		}
 	}
 
+	@SuppressWarnings("PointlessBooleanExpression")
 	@Override
 	public boolean onPageClosed(PageHolder holder, boolean forward) {
 		// validating entries
@@ -349,8 +343,7 @@ public class PanelSettings extends JPanel implements IPageHandler {
 					|| txtOutput.getText() == null
 					|| txtOutput.getText().isEmpty()) {
 				b = false;
-			}
-			if (!new File(txtOutput.getText()).exists()) {
+			} else if (!new File(txtOutput.getText()).exists()) {
 				b = false;
 			}
 			if (chbxRead.isSelected()) {
@@ -358,8 +351,7 @@ public class PanelSettings extends JPanel implements IPageHandler {
 						|| txtUrl.getText() == null
 						|| txtUrl.getText().isEmpty()) {
 					b = false;
-				}
-				if (!new File(txtFiles.getText()).exists()) {
+				} else if (!new File(txtFiles.getText()).exists()) {
 					b = false;
 				}
 			}

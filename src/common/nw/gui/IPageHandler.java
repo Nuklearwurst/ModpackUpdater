@@ -2,10 +2,10 @@ package common.nw.gui;
 
 public interface IPageHandler {
 	
-	public Object getProperty(String s);
+	Object getProperty(String s);
 	
-	public void onPageOpened(PageHolder holder, boolean forward);
+	void onPageOpened(PageHolder holder, boolean forward);
 
-	public boolean onPageClosed(PageHolder holder, boolean forward);
+	boolean onPageClosed(PageHolder holder, boolean forward);
 
 }

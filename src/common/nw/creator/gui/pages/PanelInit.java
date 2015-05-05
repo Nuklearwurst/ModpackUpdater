@@ -1,23 +1,6 @@
 package common.nw.creator.gui.pages;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileReader;
-
-import javax.swing.ButtonGroup;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import javax.swing.LayoutStyle.ComponentPlacement;
-
 import com.google.gson.Gson;
-
 import common.nw.creator.Creator;
 import common.nw.creator.gui.FileTransferHandler;
 import common.nw.creator.gui.IDropFileHandler;
@@ -27,13 +10,21 @@ import common.nw.gui.PageHolder;
 import common.nw.modpack.RepoModpack;
 import common.nw.utils.Utils;
 
+import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileReader;
+
 public class PanelInit extends JPanel implements IPageHandler, IDropFileHandler {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public JTextField txtOpen;
+	private JTextField txtOpen;
 	private JButton btnOpen;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JRadioButton rbtnEdit;

@@ -1,10 +1,9 @@
 package common.nw.gui;
 
-import java.awt.CardLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JPanel;
 
 public class PageHolder {
 	
@@ -42,7 +41,7 @@ public class PageHolder {
 		return getPageProperty(s, page);
 	}
 	
-	public Object getPageProperty(String s, int page) {
+	private Object getPageProperty(String s, int page) {
 		return getCurrentPageHandler().getProperty(s);
 	}
 	
@@ -50,10 +49,11 @@ public class PageHolder {
 	 * returns the current page Handler, if there is none return the global one if wanted
 	 * @return
 	 */
-	public IPageHandler getCurrentPageHandler() {
+	private IPageHandler getCurrentPageHandler() {
 		return getCurrentPageHandler(true, false);
 	}
-	public IPageHandler getCurrentPageHandler(boolean fallback, boolean ignoreFallbackSettings) {
+	@SuppressWarnings("SameParameterValue")
+	private IPageHandler getCurrentPageHandler(boolean fallback, boolean ignoreFallbackSettings) {
 		IPageHandler handler = getPageHandler(getCurrentPageIndex());
 		if(fallback && handler == null) {
 			if(ignoreFallbackSettings) {
@@ -72,7 +72,7 @@ public class PageHolder {
 		return globalHandler;
 	}
 	
-	public IPageHandler getPageHandler(int page) {
+	private IPageHandler getPageHandler(int page) {
 		return handler.get(page);
 	}
 	
@@ -112,7 +112,7 @@ public class PageHolder {
 	 * returns the number of pages
 	 * @return
 	 */
-	public int getPageCount() {
+	private int getPageCount() {
 		return mainPanel.getComponentCount();
 	}
 	
@@ -188,7 +188,7 @@ public class PageHolder {
 	 * is there a page after this one
 	 * @return
 	 */
-	public boolean hasNextPage() {
+	private boolean hasNextPage() {
 		return page < getLastPageIndex();
 	}
 	
@@ -196,7 +196,7 @@ public class PageHolder {
 	 * is there a page before this one
 	 * @return
 	 */
-	public boolean hasPreviousPage() {
+	private boolean hasPreviousPage() {
 		return page > 0;
 	}
 	
@@ -208,6 +208,7 @@ public class PageHolder {
 		return !hasPreviousPage();
 	}
 
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	private boolean tryLeavePage(boolean dir) {
 		IPageHandler h = getCurrentPageHandler(false, false);
 		boolean b = true;

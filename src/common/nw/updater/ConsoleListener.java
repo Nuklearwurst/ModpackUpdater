@@ -1,14 +1,13 @@
 package common.nw.updater;
 
+import common.nw.updater.gui.IProgressWatcher;
+import common.nw.utils.log.NwLogger;
+
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
-
-import javax.swing.Icon;
-import javax.swing.JOptionPane;
-
-import common.nw.updater.gui.IProgressWatcher;
 
 public class ConsoleListener implements IProgressWatcher {
 
@@ -116,13 +115,14 @@ public class ConsoleListener implements IProgressWatcher {
 				}
 			}
 			//read number
+			//noinspection EmptyCatchBlock
 			try {
 				int input_int = Integer.parseInt(input_str);
 				if(input_int < options.length && input_int >= 0) {
 					return input_int;
 				}
 			} catch(NumberFormatException e) {}
-			System.out.println("Invalid input!");
+			NwLogger.NW_LOGGER.error("Invalid input!");
 
 		}
 		//error handling (after 3 trys no result)
@@ -158,7 +158,7 @@ public class ConsoleListener implements IProgressWatcher {
 			return System.console().readLine();
 		}
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-		String s = null;
+		String s;
 		try {
 			s = reader.readLine();
 		} catch (IOException e) {

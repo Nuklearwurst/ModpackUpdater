@@ -1,13 +1,11 @@
 package common.nw.utils;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import common.nw.modpack.ModInfo;
+import common.nw.updater.Updater;
+import common.nw.updater.gui.IProgressWatcher;
+import common.nw.utils.log.NwLogHelper;
+
+import java.io.*;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -15,11 +13,7 @@ import java.net.URLConnection;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 
-import common.nw.modpack.ModInfo;
-import common.nw.updater.Updater;
-import common.nw.updater.gui.IProgressWatcher;
-import common.nw.utils.log.NwLogHelper;
-
+@SuppressWarnings({"WeakerAccess", "EmptyCatchBlock"})
 public class DownloadHelper {
 
 	public static String getString(String strUrl, IProgressWatcher watcher) throws IOException {
@@ -39,7 +33,7 @@ public class DownloadHelper {
 
 		InputStream httpStream = httpClient.getInputStream();
 		int max = httpStream.available();
-		if(watcher != null) {
+		if (watcher != null) {
 			watcher.setDownloadProgress("Downloading...", 0, max);
 		}
 		try {
@@ -48,8 +42,8 @@ public class DownloadHelper {
 					httpStream));
 			String readLine;
 			while ((readLine = reader.readLine()) != null) {
-				if(watcher != null) {
-					watcher.setDownloadProgress(max - httpStream.available());;
+				if (watcher != null) {
+					watcher.setDownloadProgress(max - httpStream.available());
 				}
 				readString.append(readLine).append("\n");
 			}
@@ -63,7 +57,7 @@ public class DownloadHelper {
 	}
 
 	public static boolean downloadFile(String url, File out) {
-		URLConnection http = null;
+		URLConnection http;
 		InputStream httpInputStream = null;
 		DataOutputStream fileOutputStream = null;
 
@@ -84,7 +78,9 @@ public class DownloadHelper {
 					return true;
 				}
 
-				out.delete();
+				if (!out.delete()) {
+					return false;
+				}
 			}
 			fileOutputStream = new DataOutputStream(new FileOutputStream(out));
 
@@ -126,8 +122,9 @@ public class DownloadHelper {
 
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	public static UpdateResult getMod(IProgressWatcher listener, ModInfo mod,
-			int modNumber, float modValue, File baseDir, boolean ignoreDuplicates) {
+	                                  int modNumber, float modValue, File baseDir, boolean ignoreDuplicates) {
 
 		/** mod file */
 		String file = baseDir + File.separator + mod.fileName;
@@ -135,7 +132,7 @@ public class DownloadHelper {
 		// create dirs
 		if (file.lastIndexOf(File.separator) != -1) {
 			File dirs = new File(file.substring(0, file.lastIndexOf(File.separator)));
-			if(!dirs.exists() && !dirs.mkdirs()) {
+			if (!dirs.exists() && !dirs.mkdirs()) {
 				//use better error messages
 				return UpdateResult.FailedCreatingDirs;
 			}
@@ -143,12 +140,12 @@ public class DownloadHelper {
 
 		//main file
 		File modFile = new File(file);
-		
-		if(!ignoreDuplicates) {
-			if(modFile.exists()) {
+
+		if (!ignoreDuplicates) {
+			if (modFile.exists()) {
 				Updater.logger.fine("ModFile " + mod.fileName + " does already exsist, checking md5!");
 				String hash = getHash(modFile);
-				if(hash != null && !hash.isEmpty() && hash.equals(mod.getRemoteInfo().md5)) {
+				if (hash != null && !hash.isEmpty() && hash.equals(mod.getRemoteInfo().md5)) {
 					Updater.logger.info("Using already exsisting modFile! Aborting Download...");
 					return UpdateResult.Good;
 				} else {
@@ -162,30 +159,31 @@ public class DownloadHelper {
 
 		Updater.logger.info("Creating HTTP client for " + mod.name + " from " + mod.getRemoteInfo().downloadUrl + ". Using temp file " + tempFile);
 		listener.setDownloadProgress("Downloding " + mod.name + " from " + mod.getRemoteInfo().downloadUrl + ".", 0);
-		if(listener.isCancelled()) {
+		if (listener.isCancelled()) {
 			return UpdateResult.Cancelled;
 		}
 		//download the mod
 		UpdateResult result = downloadMod(tempFile, mod, listener);
 		if (result == UpdateResult.Good) {
 			Updater.logger.info("HTTP fetch request for " + mod.name + " completed with success!");
-			
+
 			if (!checkHash(mod.getRemoteInfo().md5, tempFile)) {
 				NwLogHelper.severe("Downloading mod: " + mod.name + " failed!");
 				NwLogHelper.severe("MD5 does not match! Remote: " + mod.getRemoteInfo().md5 + "; Local: " + getHash(tempFile));
 				listener.setDownloadProgress("Downloading " + mod.name
 						+ "failed! MD5 does not match");
+				//noinspection ResultOfMethodCallIgnored
 				tempFile.delete();
 				return UpdateResult.BadDownload;
 			}
-			
+
 
 			//overall progress
 			listener.setOverallProgress((int) (10.0F + modNumber * modValue));
-			
+
 			if (modFile.exists()) {
 				Updater.logger.fine("Modfile " + modFile.getAbsolutePath().replace(File.separator, "/") + "already exsists. Deleting...");
-				if(!modFile.delete()) {
+				if (!modFile.delete()) {
 					Updater.logger.warning("Modfile " + modFile.getAbsolutePath().replace(File.separator, "/") + "could not be deleted!");
 				}
 			}
@@ -216,7 +214,7 @@ public class DownloadHelper {
 
 	/**
 	 * compares the given hash with the file
-	 * 
+	 *
 	 * @param md5
 	 * @param tempFile
 	 * @return
@@ -230,7 +228,7 @@ public class DownloadHelper {
 
 	/**
 	 * creates an md5 of the given file
-	 * 
+	 *
 	 * @param file
 	 * @return
 	 */
@@ -240,12 +238,9 @@ public class DownloadHelper {
 			is = new DigestInputStream(new FileInputStream(file),
 					MessageDigest.getInstance("MD5"));
 			byte[] ignored = new byte[65536];
-			for (int readBytes = is.read(ignored); readBytes >= 1; readBytes = is
-					.read(ignored)) {
-				;
-			}
-			return String.format("%1$032x", new Object[] { new BigInteger(1, is
-					.getMessageDigest().digest()) });
+			for (int readBytes = is.read(ignored); readBytes >= 1; readBytes = is.read(ignored)) ;
+			return String.format("%1$032x", new BigInteger(1, is
+					.getMessageDigest().digest()));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		} finally {
@@ -260,12 +255,12 @@ public class DownloadHelper {
 	}
 
 	public static UpdateResult downloadMod(File tempFile, ModInfo mod,
-			IProgressWatcher listener) {
-		
-		URLConnection http = null;
+	                                       IProgressWatcher listener) {
+
+		URLConnection http;
 		InputStream httpInputStream = null;
 		DataOutputStream fileOutputStream = null;
-		
+
 
 		try {
 			byte[] buffer = new byte[4096];
@@ -275,13 +270,13 @@ public class DownloadHelper {
 					"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)");
 
 			float progress = 0.0F;
-			float progressMax = 0;
+			float progressMax;
 
 			httpInputStream = http.getInputStream();
 			progressMax = http.getContentLength();
 			int contentLength = http.getContentLength();
-			
-			if(listener.isCancelled()) {
+
+			if (listener.isCancelled()) {
 				return UpdateResult.Cancelled;
 			}
 
@@ -295,7 +290,9 @@ public class DownloadHelper {
 				Updater.logger.info("Deleting " + tempFile
 						+ " as it does not match what we currently have ("
 						+ contentLength + " vs our " + receivedBytes + ").");
-				tempFile.delete();
+				if (!tempFile.delete()) {
+					return UpdateResult.FailedDeletingFile;
+				}
 			}
 			fileOutputStream = new DataOutputStream(new FileOutputStream(
 					tempFile));
@@ -307,7 +304,7 @@ public class DownloadHelper {
 				progress += readBytes;
 				fileOutputStream.write(buffer, 0, readBytes);
 				listener.setDownloadProgress((int) progress);
-				if(listener.isCancelled()) {
+				if (listener.isCancelled()) {
 					return UpdateResult.Cancelled;
 				}
 			}

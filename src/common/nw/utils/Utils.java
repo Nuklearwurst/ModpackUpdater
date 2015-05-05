@@ -1,12 +1,12 @@
 package common.nw.utils;
 
-import java.awt.Component;
+import common.nw.utils.log.NwLogger;
+
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.sql.Date;
 import java.util.Locale;
-
-import javax.swing.JFileChooser;
-import javax.swing.UIManager;
 
 public class Utils {
 
@@ -16,16 +16,17 @@ public class Utils {
 	public static void setWindowsLookAndFeel() {
 		try {
 //			if (System.getProperty("os.name").toLowerCase().contains("win")) {
-				UIManager.setLookAndFeel(UIManager
-						.getSystemLookAndFeelClassName());
+			UIManager.setLookAndFeel(UIManager
+					.getSystemLookAndFeelClassName());
 //			}
 		} catch (Throwable t) {
+			NwLogger.NW_LOGGER.error("Error when setting Look and Feel!", t);
 		}
 	}
 
 	/**
 	 * calculate the time passed since the given date(in Days)
-	 * 
+	 *
 	 * @param date
 	 * @return
 	 */
@@ -37,7 +38,7 @@ public class Utils {
 
 	/**
 	 * get the default minecraft directory for different operating systems
-	 * 
+	 *
 	 * @return
 	 */
 	public static String getMinecraftDir() {
@@ -58,12 +59,12 @@ public class Utils {
 
 	/**
 	 * opens a FileChooser to select a file
-	 * 
-	 * @param c
-	 *            parent
+	 *
+	 * @param c                 parent
 	 * @param currrentDirectory
 	 * @return null if nothing is selected, otherwise the absolutePath
 	 */
+	@SuppressWarnings("SameParameterValue")
 	public static String openFile(Component c, File currrentDirectory) {
 		File file = openJFileChooser(c, currrentDirectory,
 				JFileChooser.FILES_ONLY, null);
@@ -75,9 +76,8 @@ public class Utils {
 
 	/**
 	 * opens a FileChooser to select a folder
-	 * 
-	 * @param c
-	 *            parent
+	 *
+	 * @param c                 parent
 	 * @param currrentDirectory
 	 * @return null if nothing is selected, otherwise the absolutePath
 	 */
@@ -93,16 +93,15 @@ public class Utils {
 	/**
 	 * opens a FileChooser to select a file or folder if a folder is selected a
 	 * default filename is appended
-	 * 
-	 * @param c
-	 *            parent
+	 *
+	 * @param c                parent
 	 * @param currentDirectory
-	 * @param fileName
-	 *            default file name (in case a folder is selected)
+	 * @param fileName         default file name (in case a folder is selected)
 	 * @return null if nothing got selected, otherwise the absolute path
 	 */
+	@SuppressWarnings("SameParameterValue")
 	public static String openFileOrDirectoryWithDefaultFileName(Component c,
-			File currentDirectory, String fileName) {
+	                                                            File currentDirectory, String fileName) {
 		File file = openJFileChooser(c, currentDirectory,
 				JFileChooser.FILES_AND_DIRECTORIES, null);
 		if (file == null) {
@@ -121,18 +120,16 @@ public class Utils {
 
 	/**
 	 * opens a file using a JFileChooser
-	 * 
-	 * @param c
-	 *            parent
+	 *
+	 * @param c                parent
 	 * @param currentDirectory
-	 * @param mode
-	 *            selection Mode {@link JFileChooser}
-	 * @param buttonText
-	 *            buttonText, uses "Open" when null ({@link JFileChooser})
+	 * @param mode             selection Mode {@link JFileChooser}
+	 * @param buttonText       buttonText, uses "Open" when null ({@link JFileChooser})
 	 * @return File
 	 */
+	@SuppressWarnings({"SameParameterValue", "WeakerAccess"})
 	public static File openJFileChooser(Component c, File currentDirectory,
-			int mode, String buttonText) {
+	                                    int mode, String buttonText) {
 		JFileChooser fc = new JFileChooser(currentDirectory);
 		fc.setFileSelectionMode(mode);
 		int result;
@@ -146,27 +143,34 @@ public class Utils {
 		}
 		return null;
 	}
-	
+
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public static boolean deleteFileOrDir(File file) {
-		if(!file.exists()) {
+		if (!file.exists()) {
 			return true;
 		}
-		if(file.isDirectory()) {
-			for(File sub : file.listFiles()) {
-				if(!deleteFileOrDir(sub)) {
-					return false;
+		if (file.isDirectory()) {
+			File[] files = file.listFiles();
+			if(files != null) {
+				for (File sub : files) {
+					if (!deleteFileOrDir(sub)) {
+						return false;
+					}
 				}
+			} else {
+				return false;
 			}
 			return file.delete();
 		} else {
 			return file.delete();
 		}
 	}
-	
+
+	@SuppressWarnings("SameParameterValue")
 	public static String parseIntWithMinLength(int number, int length) {
 		String str = String.valueOf(number);
 		String prefix = "";
-		for(int i = 0; i < length - str.length(); i++) {
+		for (int i = 0; i < length - str.length(); i++) {
 			prefix += "0";
 		}
 		return prefix + str;

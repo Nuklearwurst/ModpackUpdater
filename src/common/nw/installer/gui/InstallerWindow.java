@@ -69,6 +69,7 @@ public class InstallerWindow {
 					UIManager.setLookAndFeel(UIManager
 							.getSystemLookAndFeelClassName());
 				} catch (Throwable t) {
+					NwLogger.INSTALLER_LOGGER.error("Error when setting Look and Feel!", t);
 				}
 				try {
 					InstallerWindow window = new InstallerWindow();
@@ -213,7 +214,6 @@ public class InstallerWindow {
 					}
 					updatePageInfo();
 				}
-				return;
 			} else {
 				//Error: invalid download
 				installing = false;
@@ -224,7 +224,6 @@ public class InstallerWindow {
 				cl_contentPanel.first(contentPanel);
 				currentPage = 0;
 				updatePageInfo();
-				return;
 			}
 		}
 	}
@@ -410,7 +409,7 @@ public class InstallerWindow {
 		mainFrame = new JFrame();
 		mainFrame.setTitle("Modpack Installer");
 		mainFrame.setBounds(100, 100, 450, 300);
-		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		mainFrame.getContentPane().setLayout(new BorderLayout(0, 0));
 
 		cl_contentPanel = new CardLayout();

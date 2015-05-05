@@ -3,6 +3,7 @@ package common.nw.creator.gui;
 import common.nw.creator.Creator;
 import common.nw.creator.gui.pages.*;
 import common.nw.gui.PageHolder;
+import common.nw.utils.log.NwLogger;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -44,6 +45,7 @@ public class CreatorWindow {
 								.getSystemLookAndFeelClassName());
 						
 					} catch (Throwable t) {
+						NwLogger.CREATOR_LOGGER.error("Error when setting Look and Feel!", t);
 					}
 					CreatorWindow window = new CreatorWindow();
 					window.window.setVisible(true);
@@ -71,7 +73,7 @@ public class CreatorWindow {
 		window = new JFrame();
 		window.setTitle("Modpack Creator");
 		window.setBounds(100, 100, 450, 400);
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		window.getContentPane().setLayout(new BorderLayout(0, 0));
 
 		//btn panel
@@ -169,7 +171,7 @@ public class CreatorWindow {
 		window.dispose();
 	}
 
-	public void updatePage() {
+	private void updatePage() {
 		// updateButtons
 		Object o = pageHolder.getCurrentPageProperty(Reference.KEY_TURNABLE);
 		if(o != null && o instanceof Boolean) {

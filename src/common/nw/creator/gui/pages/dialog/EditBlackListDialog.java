@@ -36,6 +36,7 @@ public class EditBlackListDialog extends JDialog implements ITableHolder {
 	/**
 	 * Create the dialog.
 	 */
+	@SuppressWarnings("SameParameterValue")
 	public EditBlackListDialog(Frame parent, boolean modal, List<RepoMod> blacklist) {
 		super(parent, modal);
 		setPreferredSize(new Dimension(300, 200));

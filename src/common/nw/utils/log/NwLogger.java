@@ -5,14 +5,15 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@SuppressWarnings("WeakerAccess")
 public class NwLogger {
 	
-	public static NwLogger NW_LOGGER = new NwLogger("NwLogger");
-	public static NwLogger UPDATER_LOGGER = new NwLogger("Modpack Updater");
-	public static NwLogger INSTALLER_LOGGER = new NwLogger("Modpack Installer");
+	public static final NwLogger NW_LOGGER = new NwLogger("NwLogger");
+	public static final NwLogger UPDATER_LOGGER = new NwLogger("Modpack Updater");
+	public static final NwLogger INSTALLER_LOGGER = new NwLogger("Modpack Installer");
 	public static NwLogger CREATOR_LOGGER = new NwLogger("Modpack Creator");
 
-	public Logger logger;
+	private final Logger logger;
 	
 	public NwLogger(String name) {
 		logger = Logger.getLogger(name);
@@ -34,10 +35,12 @@ public class NwLogger {
 		logger.severe(msg);
 	}
 	
+	@SuppressWarnings("SameParameterValue")
 	public void error(String msg) {
 		logger.severe(msg);
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	public void error(String msg, Throwable throwable) {
 		log(Level.SEVERE, msg, throwable);
 	}

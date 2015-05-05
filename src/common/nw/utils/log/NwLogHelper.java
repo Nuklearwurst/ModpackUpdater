@@ -1,5 +1,6 @@
 package common.nw.utils.log;
 
+@SuppressWarnings("WeakerAccess")
 public class NwLogHelper {
 	
 	
