@@ -1,43 +1,22 @@
 package common.nw.installer.gui;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Desktop;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.SystemColor;
+import common.nw.installer.Installer;
+import common.nw.installer.PrepackedInstall;
+import common.nw.modpack.RepoModpack;
+import common.nw.utils.Utils;
+import common.nw.utils.log.NwLogger;
+
+import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JEditorPane;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.UIManager;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
-
-import common.nw.installer.Installer;
-import common.nw.modpack.RepoModpack;
-import common.nw.utils.Utils;
 
 public class InstallerWindow {
 
@@ -60,7 +39,10 @@ public class InstallerWindow {
 	private static final int lastPage = 4;
 	private JPanel contentPanel;
 
+	/** true when an installation or download is in progress */
 	private boolean installing = false;
+
+	/** error log */
 	private String errorMessage = "";
 	private JProgressBar progressBar;
 
@@ -103,7 +85,12 @@ public class InstallerWindow {
 	 */
 	public InstallerWindow() {
 		initialize();
-		updatePageInfo();
+		if(PrepackedInstall.IS_BUILD_PREPACKED) {
+			txtUrl.setText(PrepackedInstall.MODPACK_URL);
+			nextPage();
+		} else {
+			updatePageInfo();
+		}
 	}
 
 	/**
@@ -111,89 +98,90 @@ public class InstallerWindow {
 	 */
 	private void updatePageInfo() {
 		switch (currentPage) {
-		case 0:
-			btnBack.setEnabled(false);
-			btnNext.setEnabled(true);
-			btnNext.setText("Next");
-			modpack = null;
-			break;
-		case 1:
-			if (modpack == null) {
-				installing = true;
-				System.out.println("Downloading modpack.json...");
-				new DownloadThread().start();
-			} else {
-				if (modpack.minecraft.installInfoUrl == null
-						|| modpack.minecraft.installInfoUrl.isEmpty()) {
-					nextPage();
-					break;
+			case 0:
+				btnBack.setEnabled(false);
+				btnNext.setEnabled(true);
+				btnNext.setText("Next");
+				modpack = null;
+				break;
+			case 1:
+				if (modpack == null) {
+					installing = true;
+					NwLogger.INSTALLER_LOGGER.info("Downloading modpack.json...");
+					new DownloadThread().start();
+				} else {
+					if (modpack.minecraft.installInfoUrl == null
+							|| modpack.minecraft.installInfoUrl.isEmpty()) {
+						nextPage();
+						break;
+					}
 				}
-			}
-			if (installing) {
-				btnBack.setEnabled(false);
-				btnNext.setEnabled(false);
-			} else {
+				if (installing) {
+					btnBack.setEnabled(false);
+					btnNext.setEnabled(false);
+				} else {
+					btnBack.setEnabled(true);
+					btnNext.setEnabled(true);
+				}
+				btnNext.setText("Next");
+				break;
+			case 2:
 				btnBack.setEnabled(true);
 				btnNext.setEnabled(true);
-			}
-			btnNext.setText("Next");
-			break;
-		case 2:
-			btnBack.setEnabled(true);
-			btnNext.setEnabled(true);
-			btnNext.setText("Install");
-			// settings default values
-			if (txtMinecraft.getText() == null
-					|| txtMinecraft.getText().isEmpty()) {
-				txtMinecraft.setText(Utils.getMinecraftDir());
-			}
-			if (txtVersionName.getText() == null
-					|| txtVersionName.getText().isEmpty()) {
-				txtVersionName.setText(modpack.modpackName);
-			}
-			break;
-		case 3:
+				btnNext.setText("Install");
+				// settings default values
+				if (txtMinecraft.getText() == null
+						|| txtMinecraft.getText().isEmpty()) {
+					txtMinecraft.setText(Utils.getMinecraftDir());
+				}
+				if (txtVersionName.getText() == null
+						|| txtVersionName.getText().isEmpty()) {
+					txtVersionName.setText(modpack.modpackName);
+				}
+				break;
+			case 3:
 
-			errorMessage = "";
-			new InstallThread().start();
-			if (installing) {
-				btnBack.setEnabled(false);
-				btnNext.setEnabled(false);
-			} else {
+				errorMessage = "";
+				new InstallThread().start();
+				if (installing) {
+					btnBack.setEnabled(false);
+					btnNext.setEnabled(false);
+				} else {
+					btnBack.setEnabled(true);
+					btnNext.setEnabled(true);
+				}
+				btnNext.setText("Next");
+				break;
+			case 4:
 				btnBack.setEnabled(true);
 				btnNext.setEnabled(true);
-			}
-			btnNext.setText("Next");
-			break;
-		case 4:
-			btnBack.setEnabled(true);
-			btnNext.setEnabled(true);
-			btnNext.setText("Finish");
-			if (errorMessage == null || errorMessage.isEmpty()) {
-				txtpnFinish
-						.setText("Installation finished without any errors!");
-			} else {
-				txtpnFinish.setText("Installation errored! \n" + errorMessage);
-			}
-			break;
+				btnNext.setText("Finish");
+				if (errorMessage == null || errorMessage.isEmpty()) {
+					txtpnFinish
+							.setText("Installation finished without any errors!");
+				} else {
+					txtpnFinish.setText("Installation errored! \n" + errorMessage);
+				}
+				break;
 		}
 
 	}
 
 	/**
 	 * downloads the modpack.json and loads modpackInformation
-	 * 
+	 *
 	 * @author Nukelarwurst
-	 * 
 	 */
 	private class DownloadThread extends Thread {
 		@Override
 		public void run() {
+			//read the modpack url
 			String url = txtUrl.getText();
 			if (url == null || url.isEmpty()) {
+				//Error: no url specified
 				installing = false;
 				JOptionPane.showMessageDialog(mainFrame,
-						"Invalid Modpack URL!", "Error",
+						"Please enter a modpack url!", "Error",
 						JOptionPane.ERROR_MESSAGE);
 				currentPage = 0;
 				cl_contentPanel.first(contentPanel);
@@ -202,8 +190,8 @@ public class InstallerWindow {
 			}
 			modpack = Installer.downloadModpack(url);
 			if (modpack != null) {
+				//success
 				installing = false;
-
 				String info = modpack.minecraft.installInfoUrl;
 				if (info == null) {
 					nextPage();
@@ -217,11 +205,8 @@ public class InstallerWindow {
 							}
 							txtpnModpackInfo.setPage(info);
 						} catch (IOException e) {
-							e.printStackTrace();
-							System.out
-									.println("Error: invalid modpackinfo url!");
-							txtpnModpackInfo
-									.setText("Error, modpack info could not be downloadded!");
+							NwLogger.INSTALLER_LOGGER.error("Error: invalid modpackinfo url!", e);
+							txtpnModpackInfo.setText("Error, modpack info could not be downloadded!");
 						}
 					} else {
 						txtpnModpackInfo.setText(info);
@@ -230,9 +215,9 @@ public class InstallerWindow {
 				}
 				return;
 			} else {
+				//Error: invalid download
 				installing = false;
-				JOptionPane
-						.showMessageDialog(
+				JOptionPane.showMessageDialog(
 								mainFrame,
 								"Error when downloading modpack.json!\n Make sure you've got the right link!",
 								"Error", JOptionPane.ERROR_MESSAGE);
@@ -246,9 +231,8 @@ public class InstallerWindow {
 
 	/**
 	 * runs the installer
-	 * 
+	 *
 	 * @author Nukelarwurst
-	 * 
 	 */
 	private class InstallThread extends Thread {
 
@@ -356,12 +340,12 @@ public class InstallerWindow {
 
 	/**
 	 * sets the progress of the progressbar/progressLabel (page3)
-	 * 
+	 *
 	 * @param s
 	 * @param i
 	 */
 	private void setProgress(String s, int i) {
-		System.out.println(s + "  Progress: " + i);
+		NwLogger.INSTALLER_LOGGER.info(s + "  Progress: " + i);
 		lblProgress.setText(s);
 		progressBar.setValue(i);
 	}
@@ -443,8 +427,7 @@ public class InstallerWindow {
 		txtpnWelcome.setBackground(SystemColor.menu);
 		txtpnWelcome.setFont(new Font("Arial", Font.BOLD, 12));
 		txtpnWelcome.setEditable(false);
-		txtpnWelcome
-				.setText("Welcome to The Modpack Installer\r\n\r\nThis installer will guide you through the modpack installation process.\r\n\r\nNow insert the modpack Url:");
+		txtpnWelcome.setText("Welcome to The Modpack Installer\r\n\r\nThis installer will guide you through the modpack installation process.\r\n\r\nNow insert the modpack Url:");
 
 		JLabel lblModpackUrl = new JLabel("Modpack Url:");
 
@@ -452,10 +435,8 @@ public class InstallerWindow {
 		txtUrl.setToolTipText("Insert you Modpack Url here.");
 		txtUrl.setColumns(10);
 
-		chckbxDownloadLib = new JCheckBox(
-				"Download supported Libraries (recommended)");
-		chckbxDownloadLib
-				.setToolTipText("You should download supportet libraries using the installer. Otherwise you have to do it manually.");
+		chckbxDownloadLib = new JCheckBox("Download supported Libraries (recommended)");
+		chckbxDownloadLib.setToolTipText("You should download supported libraries using the installer. Otherwise you have to do it manually.");
 		chckbxDownloadLib.setSelected(true);
 		GroupLayout gl_page0 = new GroupLayout(page0);
 		gl_page0.setHorizontalGroup(gl_page0
@@ -789,11 +770,11 @@ public class InstallerWindow {
 		JPanel page3 = new JPanel();
 		contentPanel.add(page3, "name_37458451519289");
 		GridBagLayout gbl_page3 = new GridBagLayout();
-		gbl_page3.columnWidths = new int[] { 0, 0 };
-		gbl_page3.rowHeights = new int[] { 0, 0, 0, 0, 0 };
-		gbl_page3.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-		gbl_page3.rowWeights = new double[] { 1.0, 0.0, 0.0, 1.0,
-				Double.MIN_VALUE };
+		gbl_page3.columnWidths = new int[]{0, 0};
+		gbl_page3.rowHeights = new int[]{0, 0, 0, 0, 0};
+		gbl_page3.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_page3.rowWeights = new double[]{1.0, 0.0, 0.0, 1.0,
+				Double.MIN_VALUE};
 		page3.setLayout(gbl_page3);
 
 		lblProgress = new JLabel("Doing something...");
@@ -816,40 +797,40 @@ public class InstallerWindow {
 		txtpnFinish = new JTextPane();
 		txtpnFinish.setBackground(SystemColor.menu);
 		txtpnFinish.setText("Installation finished!");
-		
+
 		JTextPane txtpnToUseThe = new JTextPane();
 		txtpnToUseThe.setText("To use the modpack select the versionname you chose\r\nin the profile editor under 'use Version'\r\nYou might also want to change the Game-Directory and \r\nJVM-arguments (for bigger modpacks)");
-		
+
 		txtJVMOptions = new JTextField();
 		txtJVMOptions.setEditable(false);
 		txtJVMOptions.setText("-Xmx2G -XX:PermSize=256m -XX:MaxPermSize=512m");
 		txtJVMOptions.setColumns(10);
-		
+
 		JLabel lblExampleJvmarguments = new JLabel("Example JVM-arguments:");
 		GroupLayout gl_page4 = new GroupLayout(page4);
 		gl_page4.setHorizontalGroup(
-			gl_page4.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_page4.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_page4.createParallelGroup(Alignment.TRAILING)
-						.addComponent(txtpnFinish, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
-						.addComponent(txtJVMOptions, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
-						.addComponent(lblExampleJvmarguments, Alignment.LEADING)
-						.addComponent(txtpnToUseThe, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE))
-					.addContainerGap())
+				gl_page4.createParallelGroup(Alignment.LEADING)
+						.addGroup(Alignment.TRAILING, gl_page4.createSequentialGroup()
+								.addContainerGap()
+								.addGroup(gl_page4.createParallelGroup(Alignment.TRAILING)
+										.addComponent(txtpnFinish, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
+										.addComponent(txtJVMOptions, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
+										.addComponent(lblExampleJvmarguments, Alignment.LEADING)
+										.addComponent(txtpnToUseThe, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE))
+								.addContainerGap())
 		);
 		gl_page4.setVerticalGroup(
-			gl_page4.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_page4.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(txtpnFinish, GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(txtpnToUseThe, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(lblExampleJvmarguments)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(txtJVMOptions, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap())
+				gl_page4.createParallelGroup(Alignment.LEADING)
+						.addGroup(Alignment.TRAILING, gl_page4.createSequentialGroup()
+								.addContainerGap()
+								.addComponent(txtpnFinish, GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
+								.addPreferredGap(ComponentPlacement.RELATED)
+								.addComponent(txtpnToUseThe, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(ComponentPlacement.RELATED)
+								.addComponent(lblExampleJvmarguments)
+								.addPreferredGap(ComponentPlacement.RELATED)
+								.addComponent(txtJVMOptions, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addContainerGap())
 		);
 		page4.setLayout(gl_page4);
 

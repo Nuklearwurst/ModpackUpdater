@@ -2,6 +2,7 @@ package common.nw.utils.log;
 
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class NwLogger {
@@ -36,6 +37,18 @@ public class NwLogger {
 	public void error(String msg) {
 		logger.severe(msg);
 	}
+
+	public void error(String msg, Throwable throwable) {
+		log(Level.SEVERE, msg, throwable);
+	}
+
+	public void severe(String msg, Throwable throwable) {
+		log(Level.SEVERE, msg, throwable);
+	}
+
+	public void warn(String msg, Throwable throwable) {
+		log(Level.WARNING, msg, throwable);
+	}
 	
 	public void warn(String msg) {
 		logger.warning(msg);
@@ -51,6 +64,14 @@ public class NwLogger {
 	
 	public void fine(String msg) {
 		logger.fine(msg);
+	}
+
+	public void log(Level level, String msg) {
+		logger.log(level, msg);
+	}
+
+	public void log(Level level, String msg, Throwable throwable) {
+		logger.log(level, msg, throwable);
 	}
 	
 }
