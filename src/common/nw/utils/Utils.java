@@ -151,7 +151,7 @@ public class Utils {
 		}
 		if (file.isDirectory()) {
 			File[] files = file.listFiles();
-			if(files != null) {
+			if (files != null) {
 				for (File sub : files) {
 					if (!deleteFileOrDir(sub)) {
 						return false;

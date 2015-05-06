@@ -1,13 +1,13 @@
-package common.nw.creator.gui.pages;
+package common.nw.creator.gui_legacy.pages;
 
 import common.nw.creator.Creator;
-import common.nw.creator.gui.FileTransferHandler;
-import common.nw.creator.gui.IDropFileHandler;
-import common.nw.creator.gui.Reference;
-import common.nw.creator.gui.TableModelList;
-import common.nw.creator.gui.pages.dialog.EditBlackListDialog;
-import common.nw.creator.gui.pages.dialog.EditModDialog;
-import common.nw.creator.gui.pages.dialog.ITableHolder;
+import common.nw.creator.gui.pages.dialog.DialogEditMod;
+import common.nw.creator.gui_legacy.FileTransferHandler;
+import common.nw.creator.gui_legacy.IDropFileHandler;
+import common.nw.creator.gui_legacy.Reference;
+import common.nw.creator.gui_legacy.TableModelList;
+import common.nw.creator.gui_legacy.pages.dialog.EditBlackListDialog;
+import common.nw.creator.gui_legacy.pages.dialog.ITableHolder;
 import common.nw.gui.IPageHandler;
 import common.nw.gui.PageHolder;
 import common.nw.modpack.ModInfo;
@@ -257,7 +257,8 @@ public class PanelEditMods extends JPanel implements IPageHandler, IDropFileHand
 		if (index == -1) {
 			return;
 		}
-		Dialog d = new EditModDialog(frame, true, mode, index, this);
+//		Dialog d = new EditModDialog_legacy(frame, true, mode, index, this);
+		Dialog d = new DialogEditMod(frame, mode, index, this);
 		d.setVisible(true);
 	}
 
@@ -278,7 +279,9 @@ public class PanelEditMods extends JPanel implements IPageHandler, IDropFileHand
 		/** path within the minecraft installation */
 		String mcRelativePath = absolutePath;
 		/** base dir */
-		String baseDirPath = null;
+		String baseDirPath = "";
+		/** added base dir */
+		String baseDirToAdd = "";
 
 		//split absolutePath in two parts
 		if(mcRelativePath.contains(File.separator + "mods" + File.separator)) {
@@ -289,10 +292,24 @@ public class PanelEditMods extends JPanel implements IPageHandler, IDropFileHand
 			int index = absolutePath.indexOf("config" + File.separator);
 			mcRelativePath = absolutePath.substring(index);
 			baseDirPath = absolutePath.substring(0, index);
+		} else if(mcRelativePath.endsWith(".jar")) {
+			int index = absolutePath.lastIndexOf(File.separator);
+			mcRelativePath = absolutePath.substring(index);
+			baseDirPath = absolutePath.substring(0, index);
+			baseDirToAdd = File.separator + "mods";
+		} else if(mcRelativePath.endsWith(".cfg")) {
+			int index = absolutePath.lastIndexOf(File.separator);
+			mcRelativePath = absolutePath.substring(index);
+			baseDirPath = absolutePath.substring(0, index);
+			baseDirToAdd = File.separator + "config";
 		}
 
 		ModInfo mod = new ModInfo(mcRelativePath);
 		mod.loadInfo(new File(baseDirPath));
+		//insert default folders if needed after info loaded
+		mod.fileName = baseDirToAdd + mod.fileName;
+		mod.name = mod.version = mod.fileName.replace(File.separator, "/");
+
 		RepoMod repo = new RepoMod();
 		repo.name = mod.name;
 		repo.version = mod.version;

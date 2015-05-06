@@ -1,33 +1,25 @@
-package common.nw.creator.gui.pages.dialog;
+package common.nw.creator.gui_legacy.pages.dialog;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.util.Date;
-
-import javax.swing.ButtonGroup;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.border.EmptyBorder;
-
+import common.nw.creator.properties.CreatorProperties;
+import common.nw.creator.util.CreatorUtils;
 import common.nw.modpack.ModInfo;
 import common.nw.modpack.RepoMod;
 import common.nw.modpack.Strings;
 import common.nw.utils.DownloadHelper;
 import common.nw.utils.Utils;
 
-public class EditModDialog extends JDialog {
+import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.text.DateFormat;
+import java.util.Date;
+
+public class EditModDialog_legacy extends JDialog {
 
 	/**
 	 * 
@@ -60,8 +52,8 @@ public class EditModDialog extends JDialog {
 	 * Create the dialog.
 	 */
 	@SuppressWarnings("SameParameterValue")
-	public EditModDialog(Frame parent, boolean modal, boolean mode, int index,
-			ITableHolder table) {
+	public EditModDialog_legacy(Frame parent, boolean modal, boolean mode, int index,
+	                            ITableHolder table) {
 		super(parent, modal);
 		setTitle("Add/Edit mod");
 		this.mode = mode;
@@ -259,12 +251,12 @@ public class EditModDialog extends JDialog {
 				okButton.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						// if(EditModDialog.this.mode)
+						// if(EditModDialog_legacy.this.mode)
 						// {
-						// EditModDialog.this.panel.creator.modpack.files.add(new
+						// EditModDialog_legacy.this.panel.creator.modpack.files.add(new
 						// RepoMod());
-						// EditModDialog.this.panel.updateTable();
-						// EditModDialog.this.dispose();
+						// EditModDialog_legacy.this.panel.updateTable();
+						// EditModDialog_legacy.this.dispose();
 						// }
 						finish();
 					}
@@ -289,13 +281,10 @@ public class EditModDialog extends JDialog {
 	}
 
 	private void openFile() {
-		String filePath = Utils.openFile(this, null);
+		String filePath = Utils.openFile(this, new File(CreatorProperties.LAST_OPENED_MOD_DIRECTORY));
 		if (filePath != null) {
-			// int lIndex = filePath.lastIndexOf(File.separator);
-			// String dir = filePath.substring(0, lIndex);
-			// String file = filePath.substring(lIndex + 1);
-			ModInfo mod = new ModInfo(filePath);
-			mod.loadInfo(null);
+			CreatorProperties.LAST_OPENED_MOD_DIRECTORY = filePath;
+			ModInfo mod = CreatorUtils.createModInfoFromFile(filePath);
 			txtName.setText(mod.name);
 			txtVersion.setText(mod.version);
 			txtFilename.setText(mod.fileName);

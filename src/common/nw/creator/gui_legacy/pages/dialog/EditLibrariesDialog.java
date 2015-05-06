@@ -1,4 +1,4 @@
-package common.nw.creator.gui.pages.dialog;
+package common.nw.creator.gui_legacy.pages.dialog;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;

@@ -1,4 +1,4 @@
-package common.nw.creator.gui.pages.dialog;
+package common.nw.creator.gui_legacy.pages.dialog;
 
 import java.awt.Frame;
 import java.util.List;
@@ -11,7 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
-import common.nw.creator.gui.TableModelList;
+import common.nw.creator.gui_legacy.TableModelList;
 import common.nw.modpack.RepoMod;
 
 import javax.swing.JButton;
@@ -145,7 +145,7 @@ public class EditBlackListDialog extends JDialog implements ITableHolder {
 		if (index == -1) {
 			return;
 		}
-		EditModDialog dialog = new EditModDialog(parent, true, create, index, this);
+		EditModDialog_legacy dialog = new EditModDialog_legacy(parent, true, create, index, this);
 		dialog.setVisible(true);
 	}
 	

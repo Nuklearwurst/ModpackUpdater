@@ -1,6 +1,6 @@
-package common.nw.creator.gui.pages;
+package common.nw.creator.gui_legacy.pages;
 
-import common.nw.creator.gui.TableModelList;
+import common.nw.creator.gui_legacy.TableModelList;
 
 import javax.swing.table.AbstractTableModel;
 

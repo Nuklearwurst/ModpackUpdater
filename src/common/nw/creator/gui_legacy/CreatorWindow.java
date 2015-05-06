@@ -1,7 +1,9 @@
-package common.nw.creator.gui;
+package common.nw.creator.gui_legacy;
 
 import common.nw.creator.Creator;
-import common.nw.creator.gui.pages.*;
+import common.nw.creator.gui.pages.PanelInit;
+import common.nw.creator.gui_legacy.pages.*;
+import common.nw.creator.properties.CreatorProperties;
 import common.nw.gui.PageHolder;
 import common.nw.utils.log.NwLogger;
 
@@ -40,10 +42,10 @@ public class CreatorWindow {
 			@Override
 			public void run() {
 				try {
-					try {						
+					try {
 						UIManager.setLookAndFeel(UIManager
 								.getSystemLookAndFeelClassName());
-						
+
 					} catch (Throwable t) {
 						NwLogger.CREATOR_LOGGER.error("Error when setting Look and Feel!", t);
 					}
@@ -60,6 +62,7 @@ public class CreatorWindow {
 	 * Create the application.
 	 */
 	public CreatorWindow() {
+		CreatorProperties.readProperties();
 		initData();
 		initialize();
 	}
@@ -94,7 +97,7 @@ public class CreatorWindow {
 
 		page0 = new PanelInit(creator);
 		page0.setBorder(new LineBorder(new Color(0, 0, 0)));
-		pageHolder.addPage(page0, (String) page0.getProperty(Reference.KEY_NAME));
+		pageHolder.addPage(page0.getPanel(), page0, (String) page0.getProperty(Reference.KEY_NAME));
 
 		page1 = new PanelSettings(creator);
 		page1.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -165,9 +168,14 @@ public class CreatorWindow {
 		gbc_btnNext.gridx = 3;
 		gbc_btnNext.gridy = 0;
 		panelButtons.add(btnNext, gbc_btnNext);
+
+		updatePage();
 	}
 
 	private void cancel() {
+		if(page0.shouldSaveProperties()) {
+			CreatorProperties.saveProperties();
+		}
 		window.dispose();
 	}
 
@@ -181,7 +189,7 @@ public class CreatorWindow {
 			} else {
 				btnNext.setEnabled(true);
 				if (pageHolder.isLastPage() || pageHolder.getCurrentPageIndex() == 4) { // last pages
-					btnNext.setText("Finsih");
+					btnNext.setText("Finish");
 				} else {
 					btnNext.setText("Next");
 				}

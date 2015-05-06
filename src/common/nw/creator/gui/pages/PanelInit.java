@@ -2,184 +2,43 @@ package common.nw.creator.gui.pages;
 
 import com.google.gson.Gson;
 import common.nw.creator.Creator;
-import common.nw.creator.gui.FileTransferHandler;
-import common.nw.creator.gui.IDropFileHandler;
-import common.nw.creator.gui.Reference;
+import common.nw.creator.gui_legacy.IDropFileHandler;
+import common.nw.creator.gui_legacy.Reference;
+import common.nw.creator.properties.CreatorProperties;
 import common.nw.gui.IPageHandler;
 import common.nw.gui.PageHolder;
 import common.nw.modpack.RepoModpack;
+import common.nw.utils.SwingUtils;
 import common.nw.utils.Utils;
 
 import javax.swing.*;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.border.Border;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileReader;
 
-public class PanelInit extends JPanel implements IPageHandler, IDropFileHandler {
+/**
+ * @author Nuklearwurst
+ */
+public class PanelInit implements IPageHandler, IDropFileHandler {
+	private JRadioButton rdbtnCreate;
+	private JPanel panel_init;
+	private JRadioButton rdbtnLoad;
+	private JTextField txtLoadFrom;
+	private JButton btnLoadOpen;
+	private JCheckBox chbxProperties;
+	private JLabel lblLoading;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private JTextField txtOpen;
-	private JButton btnOpen;
-	private final ButtonGroup buttonGroup = new ButtonGroup();
-	private JRadioButton rbtnEdit;
-
-	private JLabel lblImporting;
-	
 	private Creator creator;
 
-	/**
-	 * Create the panel.
-	 */
 	public PanelInit(Creator creator) {
-
 		this.creator = creator;
-		JRadioButton rbtnCreate = new JRadioButton("Create new Modpack");
-		rbtnCreate.setActionCommand("create");
-		rbtnCreate.addActionListener(checkBoxListener);
-		buttonGroup.add(rbtnCreate);
-		rbtnCreate.setToolTipText("Create a new modpack from scratch.");
-		rbtnCreate.setSelected(true);
-
-		rbtnEdit = new JRadioButton("Open existing Modpack");
-		rbtnEdit.setActionCommand("edit");
-		rbtnEdit.addActionListener(checkBoxListener);
-		buttonGroup.add(rbtnEdit);
-		rbtnEdit.setToolTipText("Edit an exsiting modpack.json file.");
-
-		txtOpen = new JTextField();
-		txtOpen.setEnabled(false);
-		txtOpen.setColumns(10);
-
-		btnOpen = new JButton("Open");
-		btnOpen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				String file = Utils.openFile(PanelInit.this, null);
-				if (file != null) {
-					txtOpen.setText(file);
-				}
-			}
-		});
-		btnOpen.setEnabled(false);
-
-		lblImporting = new JLabel("Importing...");
-		lblImporting.setVisible(false);
-		GroupLayout groupLayout = new GroupLayout(this);
-		groupLayout
-				.setHorizontalGroup(groupLayout
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								groupLayout
-										.createSequentialGroup()
-										.addGap(19)
-										.addGroup(
-												groupLayout
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addPreferredGap(
-																				ComponentPlacement.RELATED)
-																		.addComponent(
-																				rbtnCreate,
-																				GroupLayout.PREFERRED_SIZE,
-																				127,
-																				GroupLayout.PREFERRED_SIZE))
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addPreferredGap(
-																				ComponentPlacement.RELATED)
-																		.addGroup(
-																				groupLayout
-																						.createParallelGroup(
-																								Alignment.LEADING)
-																						.addComponent(
-																								rbtnEdit,
-																								GroupLayout.PREFERRED_SIZE,
-																								137,
-																								GroupLayout.PREFERRED_SIZE)
-																						.addGroup(
-																								groupLayout
-																										.createSequentialGroup()
-																										.addGap(21)
-																										.addGroup(
-																												groupLayout
-																														.createParallelGroup(
-																																Alignment.LEADING)
-																														.addGroup(
-																																groupLayout
-																																		.createSequentialGroup()
-																																		.addGap(10)
-																																		.addComponent(
-																																				lblImporting))
-																														.addGroup(
-																																groupLayout
-																																		.createSequentialGroup()
-																																		.addComponent(
-																																				txtOpen,
-																																				GroupLayout.DEFAULT_SIZE,
-																																				321,
-																																				Short.MAX_VALUE)
-																																		.addPreferredGap(
-																																				ComponentPlacement.RELATED)
-																																		.addComponent(
-																																				btnOpen,
-																																				GroupLayout.PREFERRED_SIZE,
-																																				73,
-																																				GroupLayout.PREFERRED_SIZE)))))))
-										.addContainerGap()));
-		groupLayout
-				.setVerticalGroup(groupLayout
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								groupLayout
-										.createSequentialGroup()
-										.addContainerGap()
-										.addComponent(rbtnCreate)
-										.addPreferredGap(
-												ComponentPlacement.RELATED)
-										.addComponent(rbtnEdit)
-										.addPreferredGap(
-												ComponentPlacement.RELATED)
-										.addGroup(
-												groupLayout
-														.createParallelGroup(
-																Alignment.BASELINE)
-														.addComponent(
-																txtOpen,
-																GroupLayout.PREFERRED_SIZE,
-																GroupLayout.DEFAULT_SIZE,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(btnOpen))
-										.addPreferredGap(
-												ComponentPlacement.RELATED)
-										.addComponent(lblImporting)
-										.addContainerGap(202, Short.MAX_VALUE)));
-		setLayout(groupLayout);
-
-		this.setTransferHandler(new FileTransferHandler(this));
 	}
 
-	private ActionListener checkBoxListener = new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (e.getActionCommand().equals("create")) {
-				txtOpen.setEnabled(false);
-				btnOpen.setEnabled(false);
-			} else {
-				txtOpen.setEnabled(true);
-				btnOpen.setEnabled(true);
-			}
-		}
-	};
+	public void setBorder(Border lineBorder) {
+		panel_init.setBorder(lineBorder);
+	}
 
 	@Override
 	public boolean dropFile(File file) {
@@ -187,7 +46,7 @@ public class PanelInit extends JPanel implements IPageHandler, IDropFileHandler 
 			if (!file.getAbsolutePath().endsWith(".json")) { // check for json
 				int result = JOptionPane
 						.showConfirmDialog(
-								this,
+								panel_init,
 								"WARNING! \nFile appears to be no valid json File! \nThis might not work. \nContinue anyway?",
 								"Invalid Filename", JOptionPane.YES_NO_OPTION,
 								JOptionPane.WARNING_MESSAGE);
@@ -195,11 +54,11 @@ public class PanelInit extends JPanel implements IPageHandler, IDropFileHandler 
 					return false;
 				}
 			}
-			txtOpen.setText(file.getAbsolutePath());
+			txtLoadFrom.setText(file.getAbsolutePath());
 			// enable gui elements
-			rbtnEdit.setSelected(true);
-			txtOpen.setEnabled(true);
-			btnOpen.setEnabled(true);
+			rdbtnLoad.setSelected(true);
+			txtLoadFrom.setEnabled(true);
+			btnLoadOpen.setEnabled(true);
 		}
 		return false;
 	}
@@ -217,35 +76,92 @@ public class PanelInit extends JPanel implements IPageHandler, IDropFileHandler 
 
 	@Override
 	public void onPageOpened(PageHolder holder, boolean forward) {
-		lblImporting.setVisible(false);
+		lblLoading.setVisible(false);
 	}
 
 	@Override
 	public boolean onPageClosed(PageHolder holder, boolean forward) {
-		if (forward && rbtnEdit.isSelected()) {
-			lblImporting.setVisible(true);
-			File file = new File(txtOpen.getText());
+		if(txtLoadFrom.getText() != null && !txtLoadFrom.getText().isEmpty()) {
+			CreatorProperties.LAST_OPENED_MODPACK = txtLoadFrom.getText();
+		}
+		if (forward && rdbtnLoad.isSelected()) {
+			lblLoading.setVisible(true);
+			File file = new File(txtLoadFrom.getText());
 			if (file.exists() && !file.isDirectory()) {
 				Gson gson = new Gson();
 				try {
 					FileReader reader = new FileReader(file);
 					creator.modpack = gson.fromJson(reader,
 							RepoModpack.class);
-					creator.outputLoc = txtOpen.getText();
+					creator.outputLoc = txtLoadFrom.getText();
 					reader.close();
 
 				} catch (Exception e) {
 					e.printStackTrace();
-					JOptionPane.showMessageDialog(this,
+					JOptionPane.showMessageDialog(panel_init,
 							"Error reading file!", "Error",
 							JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
-				JOptionPane.showMessageDialog(this, "File not found!",
+				JOptionPane.showMessageDialog(panel_init, "File not found!",
 						"Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		return true;
+	}
+
+	public JPanel getPanel() {
+		return panel_init;
+	}
+
+	private void createUIComponents() {
+		ActionListener checkBoxListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (e.getActionCommand().equals("create")) {
+					txtLoadFrom.setEnabled(false);
+					btnLoadOpen.setEnabled(false);
+				} else {
+					txtLoadFrom.setEnabled(true);
+					btnLoadOpen.setEnabled(true);
+				}
+			}
+		};
+
+		rdbtnCreate = new JRadioButton("Create new Modpack");
+		rdbtnCreate.addActionListener(checkBoxListener);
+
+		rdbtnLoad = new JRadioButton("Open existing Modpack");
+		rdbtnLoad.addActionListener(checkBoxListener);
+
+		txtLoadFrom = new JTextField();
+		txtLoadFrom.setEnabled(false);
+		txtLoadFrom.setColumns(10);
+		txtLoadFrom.setText(CreatorProperties.LAST_OPENED_MODPACK);
+		txtLoadFrom.setComponentPopupMenu(SwingUtils.createTextPopupMenu(txtLoadFrom));
+
+		btnLoadOpen = new JButton("Open");
+		btnLoadOpen.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String file = Utils.openFile(panel_init, new File(txtLoadFrom.getText()));
+				if (file != null) {
+					txtLoadFrom.setText(file);
+					CreatorProperties.LAST_OPENED_MODPACK = file;
+				}
+			}
+		});
+		btnLoadOpen.setEnabled(false);
+
+		lblLoading = new JLabel("Importing modpack...");
+		lblLoading.setVisible(false);
+
+		chbxProperties = new JCheckBox("Generate a properties file", true);
+		chbxProperties.setEnabled(!CreatorProperties.hasProperties());
+	}
+
+	public boolean shouldSaveProperties() {
+		return chbxProperties.isSelected();
 	}
 
 }

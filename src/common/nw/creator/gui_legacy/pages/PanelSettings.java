@@ -1,8 +1,9 @@
-package common.nw.creator.gui.pages;
+package common.nw.creator.gui_legacy.pages;
 
 import common.nw.creator.Creator;
-import common.nw.creator.gui.CreatorWindow;
-import common.nw.creator.gui.Reference;
+import common.nw.creator.gui_legacy.CreatorWindow;
+import common.nw.creator.gui_legacy.Reference;
+import common.nw.creator.properties.CreatorProperties;
 import common.nw.gui.IPageHandler;
 import common.nw.gui.PageHolder;
 import common.nw.utils.Utils;
@@ -74,6 +75,7 @@ public class PanelSettings extends JPanel implements IPageHandler {
 		txtFiles = new JTextField();
 		txtFiles.setEnabled(false);
 		txtFiles.setColumns(10);
+		txtFiles.setText(CreatorProperties.LAST_INPUT_DIRECTORY);
 
 		txtUrl = new JTextField();
 		txtUrl.setEnabled(false);
@@ -336,6 +338,10 @@ public class PanelSettings extends JPanel implements IPageHandler {
 	@SuppressWarnings("PointlessBooleanExpression")
 	@Override
 	public boolean onPageClosed(PageHolder holder, boolean forward) {
+		//save properties
+		if(txtFiles.getText() != null && !txtFiles.getText().isEmpty()) {
+			CreatorProperties.LAST_INPUT_DIRECTORY = txtFiles.getText();
+		}
 		// validating entries
 		if (forward) {
 			boolean b = true;

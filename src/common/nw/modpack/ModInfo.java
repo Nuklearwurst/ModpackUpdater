@@ -98,8 +98,12 @@ public class ModInfo {
 	 */
 	@SuppressWarnings("unchecked")
 	public void loadInfo(File baseDir) {
+		loadInfoFromFile(new File(baseDir, fileName));
+	}
+
+	@SuppressWarnings("unchecked")
+	public void loadInfoFromFile(File file) {
 		// loading file
-		File file = new File(baseDir, fileName);
 		if (file.exists()) {
 			this.file = file;
 
