@@ -284,7 +284,7 @@ public class EditModDialog_legacy extends JDialog {
 		String filePath = Utils.openFile(this, new File(CreatorProperties.LAST_OPENED_MOD_DIRECTORY));
 		if (filePath != null) {
 			CreatorProperties.LAST_OPENED_MOD_DIRECTORY = filePath;
-			ModInfo mod = CreatorUtils.createModInfoFromFile(filePath);
+			ModInfo mod = CreatorUtils.createModInfoFromFile(new File(filePath));
 			txtName.setText(mod.name);
 			txtVersion.setText(mod.version);
 			txtFilename.setText(mod.fileName);

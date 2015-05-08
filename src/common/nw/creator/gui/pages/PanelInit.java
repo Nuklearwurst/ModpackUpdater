@@ -121,21 +121,25 @@ public class PanelInit implements IPageHandler, IDropFileHandler {
 				if (e.getActionCommand().equals("create")) {
 					txtLoadFrom.setEnabled(false);
 					btnLoadOpen.setEnabled(false);
+					CreatorProperties.LOAD = false;
 				} else {
 					txtLoadFrom.setEnabled(true);
 					btnLoadOpen.setEnabled(true);
+					CreatorProperties.LOAD = true;
 				}
 			}
 		};
 
 		rdbtnCreate = new JRadioButton("Create new Modpack");
 		rdbtnCreate.addActionListener(checkBoxListener);
+		rdbtnCreate.setSelected(!CreatorProperties.LOAD);
 
 		rdbtnLoad = new JRadioButton("Open existing Modpack");
 		rdbtnLoad.addActionListener(checkBoxListener);
+		rdbtnLoad.setSelected(CreatorProperties.LOAD);
 
 		txtLoadFrom = new JTextField();
-		txtLoadFrom.setEnabled(false);
+		txtLoadFrom.setEnabled(CreatorProperties.LOAD);
 		txtLoadFrom.setColumns(10);
 		txtLoadFrom.setText(CreatorProperties.LAST_OPENED_MODPACK);
 		txtLoadFrom.setComponentPopupMenu(SwingUtils.createTextPopupMenu(txtLoadFrom));
@@ -151,10 +155,7 @@ public class PanelInit implements IPageHandler, IDropFileHandler {
 				}
 			}
 		});
-		btnLoadOpen.setEnabled(false);
-
-		lblLoading = new JLabel("Importing modpack...");
-		lblLoading.setVisible(false);
+		btnLoadOpen.setEnabled(CreatorProperties.LOAD);
 
 		chbxProperties = new JCheckBox("Generate a properties file", true);
 		chbxProperties.setEnabled(!CreatorProperties.hasProperties());

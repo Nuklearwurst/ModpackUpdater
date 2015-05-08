@@ -4,6 +4,9 @@ import common.nw.updater.ConsoleListener;
 import common.nw.updater.Updater;
 import common.nw.updater.gui.UpdateWindow;
 import common.nw.utils.Utils;
+import joptsimple.ArgumentAcceptingOptionSpec;
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
 import net.minecraft.launchwrapper.ITweaker;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 
@@ -135,9 +138,48 @@ public class Launch implements ITweaker {
 
 	public static void main(String[] args) {
 		boolean useGui = true;
-		if (args != null && args.length > 0 && args[0].equals("nogui")) {
-			useGui = false;
+		String gameDir = System.getProperty("user.dir");
+		String assetDir = System.getProperty("user.dir");
+		String profileName = "None";
+		try {
+			OptionParser optionParser = new OptionParser();
+			ArgumentAcceptingOptionSpec<Boolean> noGuiOption = optionParser
+					.accepts("nogui").withOptionalArg().ofType(Boolean.class).defaultsTo(false);
+			ArgumentAcceptingOptionSpec<String> gamedirOption = optionParser
+					.accepts("gamedir")
+					.withRequiredArg().ofType(String.class).defaultsTo("user.dir");
+			ArgumentAcceptingOptionSpec<String> assetdirOption = optionParser
+					.accepts("assetdir")
+					.withRequiredArg().ofType(String.class);
+			ArgumentAcceptingOptionSpec<String> profileNameOption = optionParser
+					.accepts("profile")
+					.withRequiredArg().ofType(String.class);
+			optionParser.allowsUnrecognizedOptions();
+			OptionSet options = optionParser.parse(args);
+
+			if(options.has(noGuiOption)) {
+				useGui = !noGuiOption.value(options);
+			}
+			if (options.has(gamedirOption)) {
+				assetDir = gameDir = gamedirOption.value(options);
+			}
+			if (options.has(assetdirOption)) {
+				assetDir = gamedirOption.value(options);
+			}
+			if(options.has(profileNameOption)) {
+				profileName = profileNameOption.value(options);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			Updater.logger.severe("Error parsing commandline!");
 		}
+//		if(gameDir == null || gameDir.isEmpty()) {
+//			gameDir = "user.dir";
+//		}
+//		if(assetDir == null || assetDir.isEmpty()) {
+//			assetDir = gameDir;
+//		}
+
 		Launch launch = new Launch(useGui);
 		launch.getLaunchArguments(); // testing
 		/** 
@@ -145,8 +187,9 @@ public class Launch implements ITweaker {
 		 * TODO support choosing directory via program arguments 
 		 */
 		launch.acceptOptions(Arrays.asList(args),
-				new File(System.getProperty("user.dir")),
-				new File(System.getProperty("user.dir")), "none");
+				new File(gameDir),
+				new File(assetDir),
+				profileName);
 	}
 
 }

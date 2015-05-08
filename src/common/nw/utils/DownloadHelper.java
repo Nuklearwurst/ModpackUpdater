@@ -4,14 +4,18 @@ import common.nw.modpack.ModInfo;
 import common.nw.updater.Updater;
 import common.nw.updater.gui.IProgressWatcher;
 import common.nw.utils.log.NwLogHelper;
+import common.nw.utils.log.NwLogger;
 
 import java.io.*;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 @SuppressWarnings({"WeakerAccess", "EmptyCatchBlock"})
 public class DownloadHelper {
@@ -310,10 +314,13 @@ public class DownloadHelper {
 			}
 			return UpdateResult.Good;
 
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (MalformedURLException e) {
 			listener.setDownloadProgress("Error during download of " + mod.fileName + ": " + e.getMessage());
-			Updater.logger.severe("Failed downloading " + mod.fileName.replace(File.separator, "/") + "!");
+			Updater.logger.severe("Failed downloading " + mod.fileName.replace(File.separator, "/") + "!", e);
+			return UpdateResult.INVALID_URL;
+		} catch (IOException e) {
+			listener.setDownloadProgress("Error during download of " + mod.fileName + ": " + e.getMessage());
+			Updater.logger.severe("Failed downloading " + mod.fileName.replace(File.separator, "/") + "!", e);
 		} finally {
 			try {
 				if (httpInputStream != null) {
@@ -341,5 +348,59 @@ public class DownloadHelper {
 		} catch (IOException localIOException7) {
 		}
 		return UpdateResult.Failed;
+	}
+
+	public static boolean extractArchive(File archive, File outputDir) {
+		if (!outputDir.exists()) {
+			if (!outputDir.mkdirs()) {
+				return false;
+			}
+		} else if (!outputDir.isDirectory()) {
+			return false;
+		}
+		if(!archive.getName().endsWith(".zip")) {
+			NwLogger.NW_LOGGER.warn("Trying to decompress non .zip file!");
+		}
+		NwLogger.NW_LOGGER.info("Unzipping archive: " + archive.getName());
+
+		byte[] buffer = new byte[1024];
+
+		try {
+			//get the zip file content
+			ZipInputStream zis = new ZipInputStream(new FileInputStream(archive));
+			//get the zipped file list entry
+			ZipEntry ze;
+
+			while ((ze = zis.getNextEntry()) != null) {
+
+				File newFile = new File(outputDir + File.separator + ze.getName());
+
+				NwLogger.NW_LOGGER.fine("extracting file : " + newFile.getAbsoluteFile());
+
+				//create all non exists folders
+				//else you will hit FileNotFoundException for compressed folder
+				//noinspection ResultOfMethodCallIgnored
+				new File(newFile.getParent()).mkdirs();
+
+				//copy file
+				FileOutputStream fos = new FileOutputStream(newFile);
+
+				int len;
+				while ((len = zis.read(buffer)) > 0) {
+					fos.write(buffer, 0, len);
+				}
+
+				fos.close();
+			}
+
+			zis.closeEntry();
+			zis.close();
+
+			NwLogger.NW_LOGGER.info("Successfully decompressed archive.");
+			return true;
+		} catch (IOException ex) {
+			NwLogger.NW_LOGGER.error("Error reading archive!", ex);
+		}
+		return false;
 	}
 }

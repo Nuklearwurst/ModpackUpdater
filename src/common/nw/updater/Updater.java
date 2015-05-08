@@ -44,6 +44,8 @@ public class Updater {
 
 	/** error message, if not empty error gets displayed to the user */
 	private String warningMessage = "";
+	private boolean errored = false;
+
 	/** ModpackUpdater Logger */
 	public static final NwLogger logger = NwLogger.UPDATER_LOGGER;
 
@@ -112,6 +114,7 @@ public class Updater {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				Updater.this.warningMessage += "\nError:  " + ex.getMessage() + "\nData: " + ex.toString(); //handle unknown errors
+				errored = true;
 			}
 			Updater.this.onUpdateFinished();
 			Updater.this.finished = true;
@@ -135,6 +138,7 @@ public class Updater {
 		// checking local stuff
 		listener.setOverallProgress("Reading local modpack info!", 0);
 		if (!readLocalModpack()) { // read modpack
+			//do not set error flag, respect cancelling
 			warningMessage = warningMessage + "\nError: no modpack found!";
 			return;
 		}
@@ -149,7 +153,8 @@ public class Updater {
 
 		// read local mod info
 		listener.setOverallProgress(2);
-		if (!readLocalData()) { 
+		if (!readLocalData()) {
+			errored = true;
 			warningMessage = warningMessage + "\nError reading local data!";
 		}
 		listener.setDownloadProgress("", 0);
@@ -162,6 +167,7 @@ public class Updater {
 		// check for updates
 		listener.setOverallProgress("Reading remote data!", 3);
 		if (!readRemoteData()) { // read remote mod info
+			errored = true;
 			listener.setOverallProgress("Could not download modpack.json!", 0);
 			logger.warning(warningMessage);
 			return; // don't continue or save when internet connection failes
@@ -183,6 +189,7 @@ public class Updater {
 			listener.setOverallProgress("Updating minecraft", 6);
 			if (!updateVersion()) {
 				warningMessage = warningMessage + "\nFailed updating minecraft!";
+				errored = true;
 				//not really needed as we should always cancel further updating, after having updated minecraft
 				return;
 			}
@@ -197,6 +204,7 @@ public class Updater {
 		//update mod list
 		listener.setOverallProgress("Adding remote information!", 7);
 		if (!addRemoteInformation()) {
+			errored = true;
 			warningMessage = warningMessage + "\nStrange error!Bug!";
 		}
 		waitForUi();
@@ -209,6 +217,7 @@ public class Updater {
 		if (!deleteOldMods()) {
 			warningMessage = warningMessage
 					+ "\nError deleting mods. Is an other instance running?";
+			errored = true;
 		}
 		waitForUi();
 		if (listener.isCancelled()) {
@@ -219,6 +228,7 @@ public class Updater {
 		listener.setOverallProgress("Updating Mods!", 10);
 		if (!updateMods()) {
 			warningMessage = warningMessage + "\nError updating mods!";
+			errored = true;
 		}
 		waitForUi();
 		if (listener.isCancelled()) {
@@ -234,10 +244,12 @@ public class Updater {
 				if (!save()) {
 					warningMessage = warningMessage
 							+ "\nError while saving modpack.json!";
+					errored = true;
 				}
 			} else {
 				warningMessage = warningMessage
 						+ "\nError while saving modpack.json!";
+				errored = true;
 			}
 		}
 	}
@@ -247,7 +259,7 @@ public class Updater {
 	 * prints error messages
 	 */
 	private void onUpdateFinished() {
-		if (warningMessage != null && !warningMessage.equals("")) {
+		if (errored) {
 			int ans = listener.showErrorDialog("Error during update", "An Error occured:\n" + warningMessage);
 			if (ans == JOptionPane.YES_OPTION) {
 				retry = true;
@@ -358,6 +370,7 @@ public class Updater {
 		}
 		if (local == null) {
 			warningMessage = warningMessage + "\nNo modpack could be found!";
+			errored = true;
 			return false;
 		}
 		return true;
@@ -446,6 +459,7 @@ public class Updater {
 		} catch (Exception e) {
 			e.printStackTrace();
 			warningMessage = "error downloading modpack.json from: " + local.url;
+			errored = true;
 			return false;
 		}
 		return true;
@@ -530,24 +544,28 @@ public class Updater {
 			listener.setDownloadProgress("Creating dirs.", 10);
 			if (!installer.createDirs()) {
 				warningMessage = warningMessage + "\nError when creating dirs.";
+				errored = true;
 				return false;
 			}
 			listener.setDownloadProgress("Creating version .json...", 20);
 			if (!installer.createJson()) {
 				warningMessage = warningMessage
 						+ "\nError when creating version.json file.";
+				errored = true;
 				return false;
 			}
 			listener.setDownloadProgress("Creating jar...", 50);
 			if (!installer.createJar()) {
 				warningMessage = warningMessage
 						+ "\nError when creating version.jar file.";
+				errored = true;
 				return false;
 			}
 			listener.setDownloadProgress("Updating updater...", 80);
 			if (!installer.downloadLibraries()) {
 				warningMessage = warningMessage
 						+ "\nError when downloading updater.\nRun the installer manually if you experience problems";
+				errored = true;
 				//do not return as error is not critical
 //				return true;
 			}
@@ -557,6 +575,7 @@ public class Updater {
 			//TODO decide about profile creation
 			if (!installer.createProfile(profileName, null, null, -1)) {
 				warningMessage = warningMessage + "\nError when creating profile.";
+				errored = true;
 				//do not return as the error is not critical
 			}
 
@@ -671,13 +690,23 @@ public class Updater {
 				if(!performDirectModDownload(mod, modNumber, modValue)) {
 					return false;
 				}				
+			} else if(mod.getRemoteInfo().downloadType.equals(Strings.modExtractDownload)) {
+				if(!performDirectModDownload(mod, modNumber, modValue)) {
+					return false;
+				}
+				if(!DownloadHelper.extractArchive(mod.file, mod.file.getParentFile())) {
+					return false;
+				}
+				//keep file for versioning
 			} else if(mod.getRemoteInfo().downloadType.equals(Strings.modUserDownload)) {
 				warningMessage += "\nUnsupported downloadType: " + mod.getRemoteInfo().downloadType + " \nConsider updating your updater.jar to the newest version!";
+				errored = true;
 				return false;
 			} else {
 				//TODO default to user Download
 				warningMessage += "\nUnsupported downloadType: " + mod.getRemoteInfo().downloadType + " \nDefaulting to " + Strings.modDirectDownload + "\nConsider updating your updater.jar to the newest version!";
 				if(!performDirectModDownload(mod, modNumber, modValue)) {
+					errored = true;
 					return false;
 				}
 			}
@@ -708,6 +737,7 @@ public class Updater {
 				int r = listener.showConfirmDialog("Downloading mod \"" + mod.name + "\" version: \"" + mod.version + "\" failed!\nDo you want to retry?", "Retry?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				if(r != JOptionPane.YES_OPTION) {
 					warningMessage = "Failed updating mod: " + mod.fileName + "\nError when downloading: " + result;
+					errored = true;
 					logger.severe(warningMessage);
 					return false;
 				} else {

@@ -9,8 +9,9 @@ import java.io.File;
  */
 public class CreatorUtils {
 
-	public static ModInfo createModInfoFromFile(String pathToFile) {
-		if (pathToFile != null) {
+	public static ModInfo createModInfoFromFile(File file) {
+		if (file != null && file.exists()) {
+			String pathToFile = file.getAbsolutePath();
 			String fileName = pathToFile;
 			if (fileName.contains(File.separator + "mods" + File.separator)) {
 				int index = fileName.indexOf("mods" + File.separator);
@@ -26,7 +27,7 @@ public class CreatorUtils {
 				fileName = "config" + fileName.substring(index);
 			}
 			ModInfo mod = new ModInfo(fileName);
-			mod.loadInfoFromFile(new File(pathToFile));
+			mod.loadInfoFromFile(file);
 			return mod;
 		}
 		return null;

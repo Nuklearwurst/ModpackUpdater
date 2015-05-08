@@ -5,6 +5,7 @@ public class Strings {
 	private final static  String directDownload = "directDownload";
 	private final static String userDownload = "userDownload";
 	private final static String localFile = "localFile";
+	private final static String extractArchive = "extractArchive";
 	
 	public final static String jarDirectDownload = directDownload;
 	public final static String jarUserDownload = userDownload;
@@ -16,6 +17,7 @@ public class Strings {
 	
 	public final static String modDirectDownload = directDownload;
 	public final static String modUserDownload = userDownload;
+	public final static String modExtractDownload = extractArchive;
 	
 
 	/** use filename as name */

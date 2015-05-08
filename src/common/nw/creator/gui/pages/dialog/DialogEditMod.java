@@ -7,6 +7,7 @@ import common.nw.modpack.ModInfo;
 import common.nw.modpack.RepoMod;
 import common.nw.modpack.Strings;
 import common.nw.utils.DownloadHelper;
+import common.nw.utils.UpdateResult;
 import common.nw.utils.Utils;
 
 import javax.swing.*;
@@ -36,6 +37,7 @@ public class DialogEditMod extends JDialog {
 	private JButton btnOpen;
 	private JButton btnRemove;
 	private JButton btnDownload;
+	private JRadioButton rdbtnDownloadExtract;
 	private ButtonGroup btnGroupDownloadType;
 	private ButtonGroup btnGroupVersionType;
 	private ButtonGroup btnGroupNameType;
@@ -68,6 +70,7 @@ public class DialogEditMod extends JDialog {
 		rdbtnVersionTracked.setActionCommand(Strings.versionTypeTracked);
 		rdbtnDownloadDirect.setActionCommand(Strings.modDirectDownload);
 		rdbtnDownloadFolder.setActionCommand(Strings.modUserDownload);
+		rdbtnDownloadExtract.setActionCommand(Strings.modExtractDownload);
 
 		btnOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -127,33 +130,56 @@ public class DialogEditMod extends JDialog {
 	}
 
 	private void download() {
-		//TODO: downloading file
+		final String ans = JOptionPane.showInputDialog(this, "Enter a URL:");
+		if(ans == null) {
+			return;
+		}
+		//TODO: validate URL
+		int index = ans.lastIndexOf("/");
+		DialogDownload d = new DialogDownload(this, new File("." + File.separator + (index > 0 ? ans.substring(index) : ans)), new DialogDownload.DownloadFileHandler() {
+			@Override
+			public void onDownloadFinished(File file, UpdateResult result) {
+				if(result == UpdateResult.Good) {
+					openFile(file);
+					txtUrl.setText(ans);
+				} else {
+					JOptionPane.showMessageDialog(contentPane, "Error Downloading File\nResult: " + result, "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				//noinspection ResultOfMethodCallIgnored
+				file.delete();
+			}
+		}, DialogDownload.createModInfoFromUrl(ans));
+		d.setVisible(true);
 	}
 
 	private void openFile() {
 		String filePath = Utils.openFile(this, new File(CreatorProperties.LAST_OPENED_MOD_DIRECTORY));
 		if (filePath != null) {
 			CreatorProperties.LAST_OPENED_MOD_DIRECTORY = filePath;
-			ModInfo mod = CreatorUtils.createModInfoFromFile(filePath);
-			txtName.setText(mod.name);
-			txtVersion.setText(mod.version);
-			txtFile.setText(mod.fileName);
-			txtMD5.setText(DownloadHelper.getHash(mod.file));
+			openFile(new File(filePath));
+		}
+	}
 
-			if (mod.hasName) {
-				rdbtnNameZip.setSelected(true);
-			} else {
-				rdbtnNameFilename.setSelected(true);
-			}
+	private void openFile(File filePath) {
+		ModInfo mod = CreatorUtils.createModInfoFromFile(filePath);
+		txtName.setText(mod.name);
+		txtVersion.setText(mod.version);
+		txtFile.setText(mod.fileName);
+		txtMD5.setText(DownloadHelper.getHash(mod.file));
 
-			if (mod.hasVersionFile) {
-				rdbtnVersionZip.setSelected(true);
-			} else if(mod.fileName.startsWith("config/")) {
-				txtVersion.setText(DateFormat.getDateInstance().format(new Date(System.currentTimeMillis())));
-				rdbtnVersionTracked.setSelected(true);
-			} else {
-				rdbtnVersionFilename.setSelected(true);
-			}
+		if (mod.hasName) {
+			rdbtnNameZip.setSelected(true);
+		} else {
+			rdbtnNameFilename.setSelected(true);
+		}
+
+		if (mod.hasVersionFile) {
+			rdbtnVersionZip.setSelected(true);
+		} else if(mod.fileName.startsWith("config/")) {
+			txtVersion.setText(DateFormat.getDateInstance().format(new Date(System.currentTimeMillis())));
+			rdbtnVersionTracked.setSelected(true);
+		} else {
+			rdbtnVersionFilename.setSelected(true);
 		}
 
 	}

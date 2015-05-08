@@ -18,11 +18,13 @@ public class CreatorProperties {
 		public static final String LAST_OPENED_MODPACK = "last_opened_modpack";
 		public static final String LAST_OPENED_MOD_DIRECTORY = "last_opened_mod_directory";
 		public static final String LAST_INPUT_DIRECTORY = "last_input_directory";
+		public static final String LOAD = "load";
 	}
 
 	public static String LAST_OPENED_MODPACK = "";
 	public static String LAST_OPENED_MOD_DIRECTORY = "";
 	public static String LAST_INPUT_DIRECTORY = "";
+	public static boolean LOAD = false;
 
 	public static boolean readProperties() {
 		File propFile = new File(CreatorProperties.PROPERTIES_FILE);
@@ -34,6 +36,10 @@ public class CreatorProperties {
 				LAST_OPENED_MOD_DIRECTORY = prop.getProperty(Keys.LAST_OPENED_MOD_DIRECTORY);
 				LAST_OPENED_MODPACK = prop.getProperty(Keys.LAST_OPENED_MODPACK);
 				LAST_INPUT_DIRECTORY = prop.getProperty(Keys.LAST_INPUT_DIRECTORY);
+				Boolean load = (Boolean) Boolean.valueOf(prop.getProperty(Keys.LOAD));
+				if (load != null) {
+					LOAD = load;
+				}
 				try {
 					fs.close();
 				} catch (IOException ignored) {
@@ -69,6 +75,7 @@ public class CreatorProperties {
 			prop.setProperty(Keys.LAST_OPENED_MODPACK, LAST_OPENED_MODPACK);
 			prop.setProperty(Keys.LAST_OPENED_MOD_DIRECTORY, LAST_OPENED_MOD_DIRECTORY);
 			prop.setProperty(Keys.LAST_INPUT_DIRECTORY, LAST_INPUT_DIRECTORY);
+			prop.setProperty(Keys.LOAD, String.valueOf(LOAD));
 			prop.store(propFile, "Modpack Creator Properties File");
 			try {
 				propFile.close();

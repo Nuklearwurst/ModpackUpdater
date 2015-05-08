@@ -18,5 +18,5 @@ public enum UpdateResult {
 
 	FailedDeletingFile,
 
-	Unknown
+	INVALID_URL, Unknown
 }
