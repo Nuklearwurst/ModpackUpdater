@@ -1,6 +1,6 @@
 package common.nw.modpack;
 
-public class Strings {
+public class ModpackValues {
 	
 	private final static  String directDownload = "directDownload";
 	private final static String userDownload = "userDownload";
@@ -33,5 +33,9 @@ public class Strings {
 	public final static String versionTypeMD5 = "md5";
 	/** tracks last updates and update on version String change */
 	public final static String versionTypeTracked = "tracked";
+
+	public final static int fileTypeServer = 1; //0b1
+	public final static int fileTypeClient = 2; //0b10
+	public final static int fileTypeAdmin = 4; //0b100
 
 }

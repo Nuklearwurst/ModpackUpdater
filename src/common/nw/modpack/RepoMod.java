@@ -14,7 +14,7 @@ public class RepoMod {
 	
 	/** 
 	 * how the mod should be downloaded
-	 * @see {@link common.nw.modpack.Strings}  
+	 * @see {@link ModpackValues}
 	 */
 	public String downloadType;
 	
@@ -23,5 +23,8 @@ public class RepoMod {
 	
 	/** contains dir and name in minecraft folder */
 	public String fileName;
+
+	/** Filetype info, eg.: admin/client/server - only WIP, uses flags */
+	public int fileType; // currently not supported
 
 }

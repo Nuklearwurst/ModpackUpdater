@@ -80,10 +80,10 @@ public class ModInfo {
 	private void validateVersion() {
 		if (remoteInfo != null) {
 			if (remoteInfo.versionType != null) {
-				if (remoteInfo.versionType.equals(Strings.versionTypeMD5) && file != null
+				if (remoteInfo.versionType.equals(ModpackValues.versionTypeMD5) && file != null
 						&& file.exists()) {
 					version = DownloadHelper.getHash(file);
-				} else if (remoteInfo.versionType.equals(Strings.versionTypeFileName)
+				} else if (remoteInfo.versionType.equals(ModpackValues.versionTypeFileName)
 						&& this.hasVersionFile) {
 					version = fileName;
 				}
@@ -242,10 +242,10 @@ public class ModInfo {
 	 */
 	public boolean equals(RepoMod mod, File baseDir) {
 		if (mod.nameType != null) {
-			if (mod.nameType.equals(Strings.nameTypeFileName) && this.hasName) {
+			if (mod.nameType.equals(ModpackValues.nameTypeFileName) && this.hasName) {
 				return this.fileName.equals(mod.name.replace(File.separator,
 						"/"));
-			} else if (mod.nameType.equals(Strings.nameTypeZipEntry) && !this.hasName) {
+			} else if (mod.nameType.equals(ModpackValues.nameTypeZipEntry) && !this.hasName) {
 				return false;
 			}
 		}
