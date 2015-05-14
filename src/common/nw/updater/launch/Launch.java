@@ -138,8 +138,8 @@ public class Launch implements ITweaker {
 
 	public static void main(String[] args) {
 		boolean useGui = true;
-		String gameDir = System.getProperty("user.dir");
-		String assetDir = System.getProperty("user.dir");
+		String gameDir = "./";
+		String assetDir = "./";
 		String profileName = "None";
 		try {
 			OptionParser optionParser = new OptionParser();
@@ -173,12 +173,6 @@ public class Launch implements ITweaker {
 			e.printStackTrace();
 			Updater.logger.severe("Error parsing commandline!");
 		}
-//		if(gameDir == null || gameDir.isEmpty()) {
-//			gameDir = "user.dir";
-//		}
-//		if(assetDir == null || assetDir.isEmpty()) {
-//			assetDir = gameDir;
-//		}
 
 		Launch launch = new Launch(useGui);
 		launch.getLaunchArguments(); // testing
