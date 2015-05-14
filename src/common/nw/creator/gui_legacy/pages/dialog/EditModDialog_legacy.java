@@ -3,8 +3,8 @@ package common.nw.creator.gui_legacy.pages.dialog;
 import common.nw.creator.properties.CreatorProperties;
 import common.nw.creator.util.CreatorUtils;
 import common.nw.modpack.ModInfo;
+import common.nw.modpack.ModpackValues;
 import common.nw.modpack.RepoMod;
-import common.nw.modpack.Strings;
 import common.nw.utils.DownloadHelper;
 import common.nw.utils.Utils;
 
@@ -73,7 +73,7 @@ public class EditModDialog_legacy extends JDialog {
 
 		rdbtnNameFilename = new JRadioButton("Filename");
 		rdbtnNameFilename.setSelected(true);
-		rdbtnNameFilename.setActionCommand(Strings.nameTypeFileName);
+		rdbtnNameFilename.setActionCommand(ModpackValues.nameTypeFileName);
 		btnGroupNameType.add(rdbtnNameFilename);
 
 		JLabel lblVersion = new JLabel("Version:");
@@ -85,7 +85,7 @@ public class EditModDialog_legacy extends JDialog {
 
 		rdbtnVersionFilename = new JRadioButton("Filename");
 		rdbtnVersionFilename.setSelected(true);
-		rdbtnVersionFilename.setActionCommand(Strings.versionTypeFileName);
+		rdbtnVersionFilename.setActionCommand(ModpackValues.versionTypeFileName);
 		btnGroupVersionType.add(rdbtnVersionFilename);
 
 		JLabel lblDownloadUrl = new JLabel("Download URL:");
@@ -101,7 +101,7 @@ public class EditModDialog_legacy extends JDialog {
 
 		rdbtnDownloadDirect = new JRadioButton("Direct");
 		rdbtnDownloadDirect.setSelected(true);
-		rdbtnDownloadDirect.setActionCommand(Strings.modDirectDownload);
+		rdbtnDownloadDirect.setActionCommand(ModpackValues.modDirectDownload);
 		btnGroupDownloadType.add(rdbtnDownloadDirect);
 
 		txtFilename = new JTextField();
@@ -112,26 +112,26 @@ public class EditModDialog_legacy extends JDialog {
 
 		rdbtnNameZip = new JRadioButton("Zip-Mod-Name");
 		rdbtnNameZip.setEnabled(false);
-		rdbtnNameZip.setActionCommand(Strings.nameTypeZipEntry);
+		rdbtnNameZip.setActionCommand(ModpackValues.nameTypeZipEntry);
 		btnGroupNameType.add(rdbtnNameZip);
 
 		rdbtnVerisionZip = new JRadioButton("Zip-Mod-Version");
 		rdbtnVerisionZip.setEnabled(false);
-		rdbtnVerisionZip.setActionCommand(Strings.versionTypeZipEntry);
+		rdbtnVerisionZip.setActionCommand(ModpackValues.versionTypeZipEntry);
 		btnGroupVersionType.add(rdbtnVerisionZip);
 
 		rdbtnDownloadFolder = new JRadioButton("Folder");
-		rdbtnDownloadFolder.setActionCommand(Strings.modUserDownload);
+		rdbtnDownloadFolder.setActionCommand(ModpackValues.modUserDownload);
 		btnGroupDownloadType.add(rdbtnDownloadFolder);
 		rdbtnDownloadFolder.setEnabled(false);
 
 		rdbtnVersionMD5 = new JRadioButton("MD5");
 		btnGroupVersionType.add(rdbtnVersionMD5);
-		rdbtnVersionMD5.setActionCommand(Strings.versionTypeMD5);
+		rdbtnVersionMD5.setActionCommand(ModpackValues.versionTypeMD5);
 		
 		rdbtnVersionTracked = new JRadioButton("Tracked");
 		btnGroupVersionType.add(rdbtnVersionTracked);
-		rdbtnVersionTracked.setActionCommand(Strings.versionTypeTracked);
+		rdbtnVersionTracked.setActionCommand(ModpackValues.versionTypeTracked);
 
 		GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
 		gl_contentPanel.setHorizontalGroup(
@@ -377,7 +377,7 @@ public class EditModDialog_legacy extends JDialog {
 
 			// modNameType
 			if (mod.nameType != null) {
-				if (mod.nameType.equals(Strings.nameTypeZipEntry)) {
+				if (mod.nameType.equals(ModpackValues.nameTypeZipEntry)) {
 					rdbtnNameZip.setSelected(true);
 				} else {
 					rdbtnNameFilename.setSelected(true);
@@ -386,11 +386,11 @@ public class EditModDialog_legacy extends JDialog {
 
 			// modVersionType
 			if (mod.versionType != null) {
-				if (mod.versionType.equals(Strings.versionTypeZipEntry)) {
+				if (mod.versionType.equals(ModpackValues.versionTypeZipEntry)) {
 					rdbtnVerisionZip.setSelected(true);
-				} else if (mod.versionType.equals(Strings.versionTypeMD5)) {
+				} else if (mod.versionType.equals(ModpackValues.versionTypeMD5)) {
 					rdbtnVersionMD5.setSelected(true);
-				} else if (mod.versionType.equals(Strings.versionTypeTracked)) {
+				} else if (mod.versionType.equals(ModpackValues.versionTypeTracked)) {
 					rdbtnVersionTracked.setSelected(true);
 				} else {
 					rdbtnVersionFilename.setSelected(true);
@@ -399,7 +399,7 @@ public class EditModDialog_legacy extends JDialog {
 
 			// modDownloadType
 			if (mod.downloadType != null) {
-				if (mod.downloadType.equals(Strings.modUserDownload)) {
+				if (mod.downloadType.equals(ModpackValues.modUserDownload)) {
 					rdbtnDownloadFolder.setSelected(true);
 				} else {
 					rdbtnDownloadDirect.setSelected(true);

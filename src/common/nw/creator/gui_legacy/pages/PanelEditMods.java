@@ -11,8 +11,8 @@ import common.nw.creator.gui_legacy.pages.dialog.ITableHolder;
 import common.nw.gui.IPageHandler;
 import common.nw.gui.PageHolder;
 import common.nw.modpack.ModInfo;
+import common.nw.modpack.ModpackValues;
 import common.nw.modpack.RepoMod;
-import common.nw.modpack.Strings;
 import common.nw.utils.DownloadHelper;
 
 import javax.swing.*;
@@ -322,17 +322,17 @@ public class PanelEditMods extends JPanel implements IPageHandler, IDropFileHand
 		repo.md5 = DownloadHelper.getHash(file);
 
 		if (mod.hasName) {
-			repo.nameType = Strings.nameTypeZipEntry;
+			repo.nameType = ModpackValues.nameTypeZipEntry;
 		} else {
-			repo.nameType = Strings.nameTypeFileName;
+			repo.nameType = ModpackValues.nameTypeFileName;
 		}
 		if (mod.hasVersionFile) {
-			repo.versionType = Strings.versionTypeZipEntry;
+			repo.versionType = ModpackValues.versionTypeZipEntry;
 		} else if(mod.fileName.startsWith("config" + File.separator)) {
 			repo.version = DateFormat.getDateInstance().format(new Date(System.currentTimeMillis()));
-			repo.versionType = Strings.versionTypeTracked;
+			repo.versionType = ModpackValues.versionTypeTracked;
 		} else {
-			repo.versionType = Strings.versionTypeFileName;
+			repo.versionType = ModpackValues.versionTypeFileName;
 		}
 		this.mods.add(repo);
 		updateTable();

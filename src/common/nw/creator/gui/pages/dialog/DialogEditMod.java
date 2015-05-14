@@ -4,8 +4,8 @@ import common.nw.creator.gui_legacy.pages.dialog.ITableHolder;
 import common.nw.creator.properties.CreatorProperties;
 import common.nw.creator.util.CreatorUtils;
 import common.nw.modpack.ModInfo;
+import common.nw.modpack.ModpackValues;
 import common.nw.modpack.RepoMod;
-import common.nw.modpack.Strings;
 import common.nw.utils.DownloadHelper;
 import common.nw.utils.UpdateResult;
 import common.nw.utils.Utils;
@@ -62,15 +62,15 @@ public class DialogEditMod extends JDialog {
 		this.table = table;
 
 
-		rdbtnNameFilename.setActionCommand(Strings.nameTypeFileName);
-		rdbtnNameZip.setActionCommand(Strings.nameTypeZipEntry);
-		rdbtnVersionFilename.setActionCommand(Strings.versionTypeFileName);
-		rdbtnVersionZip.setActionCommand(Strings.versionTypeZipEntry);
-		rdbtnVersionMD5.setActionCommand(Strings.versionTypeMD5);
-		rdbtnVersionTracked.setActionCommand(Strings.versionTypeTracked);
-		rdbtnDownloadDirect.setActionCommand(Strings.modDirectDownload);
-		rdbtnDownloadFolder.setActionCommand(Strings.modUserDownload);
-		rdbtnDownloadExtract.setActionCommand(Strings.modExtractDownload);
+		rdbtnNameFilename.setActionCommand(ModpackValues.nameTypeFileName);
+		rdbtnNameZip.setActionCommand(ModpackValues.nameTypeZipEntry);
+		rdbtnVersionFilename.setActionCommand(ModpackValues.versionTypeFileName);
+		rdbtnVersionZip.setActionCommand(ModpackValues.versionTypeZipEntry);
+		rdbtnVersionMD5.setActionCommand(ModpackValues.versionTypeMD5);
+		rdbtnVersionTracked.setActionCommand(ModpackValues.versionTypeTracked);
+		rdbtnDownloadDirect.setActionCommand(ModpackValues.modDirectDownload);
+		rdbtnDownloadFolder.setActionCommand(ModpackValues.modUserDownload);
+		rdbtnDownloadExtract.setActionCommand(ModpackValues.modExtractDownload);
 
 		btnOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -253,7 +253,7 @@ public class DialogEditMod extends JDialog {
 
 			// modNameType
 			if (mod.nameType != null) {
-				if (mod.nameType.equals(Strings.nameTypeZipEntry)) {
+				if (mod.nameType.equals(ModpackValues.nameTypeZipEntry)) {
 					rdbtnNameZip.setSelected(true);
 				} else {
 					rdbtnNameFilename.setSelected(true);
@@ -262,11 +262,11 @@ public class DialogEditMod extends JDialog {
 
 			// modVersionType
 			if (mod.versionType != null) {
-				if (mod.versionType.equals(Strings.versionTypeZipEntry)) {
+				if (mod.versionType.equals(ModpackValues.versionTypeZipEntry)) {
 					rdbtnVersionZip.setSelected(true);
-				} else if (mod.versionType.equals(Strings.versionTypeMD5)) {
+				} else if (mod.versionType.equals(ModpackValues.versionTypeMD5)) {
 					rdbtnVersionMD5.setSelected(true);
-				} else if (mod.versionType.equals(Strings.versionTypeTracked)) {
+				} else if (mod.versionType.equals(ModpackValues.versionTypeTracked)) {
 					rdbtnVersionTracked.setSelected(true);
 				} else {
 					rdbtnVersionFilename.setSelected(true);
@@ -275,7 +275,7 @@ public class DialogEditMod extends JDialog {
 
 			// modDownloadType
 			if (mod.downloadType != null) {
-				if (mod.downloadType.equals(Strings.modUserDownload)) {
+				if (mod.downloadType.equals(ModpackValues.modUserDownload)) {
 					rdbtnDownloadFolder.setSelected(true);
 				} else {
 					rdbtnDownloadDirect.setSelected(true);

@@ -2,10 +2,10 @@ package common.nw.creator;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import common.nw.modpack.ModpackValues;
 import common.nw.modpack.RepoMod;
 import common.nw.modpack.RepoModpack;
 import common.nw.modpack.RepoVersionInfo;
-import common.nw.modpack.Strings;
 import common.nw.utils.DownloadHelper;
 
 import javax.swing.*;
@@ -67,12 +67,12 @@ public class Creator {
 
 		workingDir = new File(fileLoc);
 		return !modpack.modpackRepo.contains(" ")
-				&& (modpack.minecraft.jarUpdateType.equals(Strings.jarDirectDownload)
-						|| modpack.minecraft.jarUpdateType.equals(Strings.jarLocalFile)
-						|| modpack.minecraft.jarUpdateType.equals(Strings.jarUserDownload))
-				&& (modpack.minecraft.jsonUpdateType.equals(Strings.jsonDirectDownload)
-						|| modpack.minecraft.jsonUpdateType.equals(Strings.jsonLocalFile)
-						|| modpack.minecraft.jsonUpdateType.equals(Strings.jsonUserDownload))
+				&& (modpack.minecraft.jarUpdateType.equals(ModpackValues.jarDirectDownload)
+						|| modpack.minecraft.jarUpdateType.equals(ModpackValues.jarLocalFile)
+						|| modpack.minecraft.jarUpdateType.equals(ModpackValues.jarUserDownload))
+				&& (modpack.minecraft.jsonUpdateType.equals(ModpackValues.jsonDirectDownload)
+						|| modpack.minecraft.jsonUpdateType.equals(ModpackValues.jsonLocalFile)
+						|| modpack.minecraft.jsonUpdateType.equals(ModpackValues.jsonUserDownload))
 				&& workingDir.exists();
 	}
 
@@ -132,12 +132,12 @@ public class Creator {
 		mod.name = mod.fileName;
 		
 		//update types
-		mod.versionType = Strings.versionTypeFileName;
-		mod.nameType = Strings.nameTypeFileName;
+		mod.versionType = ModpackValues.versionTypeFileName;
+		mod.nameType = ModpackValues.nameTypeFileName;
 		
 		//handle config
 		if(mod.fileName.startsWith("config/")) {
-			mod.versionType = Strings.versionTypeTracked;
+			mod.versionType = ModpackValues.versionTypeTracked;
 			mod.version = DateFormat.getDateInstance().format(new Date(System.currentTimeMillis()));
 		}
 
@@ -151,7 +151,7 @@ public class Creator {
 
 		//replace whitespaces in URL
 		mod.downloadUrl = dir + file.getName().replace(" ", "%20");
-		mod.downloadType = Strings.modDirectDownload;
+		mod.downloadType = ModpackValues.modDirectDownload;
 
 		mod.md5 = DownloadHelper.getHash(file);
 

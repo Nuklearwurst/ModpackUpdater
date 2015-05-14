@@ -483,7 +483,7 @@ public class Updater {
 	}
 
 	/**
-	 * adds remote information to existign mods, used to check which mods need
+	 * adds remote information to existing mods, used to check which mods need
 	 * an update
 	 * 
 	 * @return
@@ -686,11 +686,11 @@ public class Updater {
 							mod.getRemoteInfo().downloadUrl));
 
 			modNumber++;
-			if(mod.getRemoteInfo().downloadType == null || mod.getRemoteInfo().downloadType.equals(Strings.modDirectDownload)) {
+			if(mod.getRemoteInfo().downloadType == null || mod.getRemoteInfo().downloadType.equals(ModpackValues.modDirectDownload)) {
 				if(!performDirectModDownload(mod, modNumber, modValue)) {
 					return false;
 				}				
-			} else if(mod.getRemoteInfo().downloadType.equals(Strings.modExtractDownload)) {
+			} else if(mod.getRemoteInfo().downloadType.equals(ModpackValues.modExtractDownload)) {
 				if(!performDirectModDownload(mod, modNumber, modValue)) {
 					return false;
 				}
@@ -698,13 +698,13 @@ public class Updater {
 					return false;
 				}
 				//keep file for versioning
-			} else if(mod.getRemoteInfo().downloadType.equals(Strings.modUserDownload)) {
+			} else if(mod.getRemoteInfo().downloadType.equals(ModpackValues.modUserDownload)) {
 				warningMessage += "\nUnsupported downloadType: " + mod.getRemoteInfo().downloadType + " \nConsider updating your updater.jar to the newest version!";
 				errored = true;
 				return false;
 			} else {
 				//TODO default to user Download
-				warningMessage += "\nUnsupported downloadType: " + mod.getRemoteInfo().downloadType + " \nDefaulting to " + Strings.modDirectDownload + "\nConsider updating your updater.jar to the newest version!";
+				warningMessage += "\nUnsupported downloadType: " + mod.getRemoteInfo().downloadType + " \nDefaulting to " + ModpackValues.modDirectDownload + "\nConsider updating your updater.jar to the newest version!";
 				if(!performDirectModDownload(mod, modNumber, modValue)) {
 					errored = true;
 					return false;
@@ -770,7 +770,7 @@ public class Updater {
 		for (ModInfo mod : mods) {
 			if (!mod.shouldBeDeleted()) {
 				local.files.add(mod.fileName);
-				if(mod.getRemoteInfo() != null && mod.getRemoteInfo().versionType != null && mod.getRemoteInfo().versionType.equals(Strings.versionTypeTracked)) {
+				if(mod.getRemoteInfo() != null && mod.getRemoteInfo().versionType != null && mod.getRemoteInfo().versionType.equals(ModpackValues.versionTypeTracked)) {
 					//save local tracked versions to disk 
 					local.trackedFileVersions.put(mod.fileName, mod.version); //TODO check wether this use is correct
 				}

@@ -15,370 +15,132 @@ import common.nw.utils.Utils;
 import common.nw.utils.log.NwLogger;
 
 import javax.swing.*;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileReader;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DialogProfileSettings extends JDialog {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private final JPanel contentPanel = new JPanel();
-	private JTextField txtProfileName;
-	private JTextField txtGameDirectory;
-	private JFormattedTextField txtUpdateFreq;
-	private JTextField txtJavaOptions;
-
-	public static final String DEFAULT_JAVA_OPTIONS = "-Xmx2G -XX:PermSize=256m -XX:MaxPermSize=512m";
-	private final ButtonGroup buttonGroup = new ButtonGroup();
-
-	private InstallerWindow installer;
-	private JRadioButton rdbtnLaunch;
+	private JPanel contentPane;
+	private JButton btnOk;
+	private JButton btnCancel;
+	private JButton btnUseProfile;
+	private JTextField txtName;
+	private JButton btnReset;
+	private JTextField txtDirectory;
+	private JButton btnOpen;
 	private JRadioButton rdbtnDay;
+	private JRadioButton rdbtnLaunch;
 	private JRadioButton rdbtnWeek;
 	private JRadioButton rdbtnCustom;
+	private JFormattedTextField txtFreq;
+	private JTextField txtJavaOptions;
+	private JButton btnDefault;
+	private ButtonGroup btnGroupUpdateFreq;
 
-	/**
-	 * Create the dialog.
-	 */
-	@SuppressWarnings("SameParameterValue")
+	private InstallerWindow installer;
+
+	public static final String DEFAULT_JAVA_OPTIONS = "-Xmx2G -XX:PermSize=256m -XX:MaxPermSize=512m";
+
 	public DialogProfileSettings(Frame parent, boolean modal,
-			InstallerWindow installer) {
+	                             InstallerWindow installer) {
 		super(parent, modal);
 		this.installer = installer;
 
 		setTitle("Profile Settings");
 
-		setBounds(100, 100, 380, 233);
+		setBounds(parent.getX() + 10, parent.getY() + 10, 400, 260);
 
-		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		setContentPane(contentPane);
+		getRootPane().setDefaultButton(btnOk);
 
-		JLabel lblProfileName = new JLabel("Profile Name:");
 
-		txtProfileName = new JTextField();
-		txtProfileName.setColumns(10);
-
-		JButton btnModpackName = new JButton("Reset");
-		btnModpackName.addActionListener(new ActionListener() {
+		btnReset.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				resetName();
 			}
 		});
 
-		JLabel lblGameDirectory = new JLabel("Game Directory:");
-
-		txtGameDirectory = new JTextField();
-		txtGameDirectory.setColumns(10);
-
-		JButton btnOpen = new JButton("Open");
 		btnOpen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				String s;
-				if (txtGameDirectory.getText() == null
-						|| txtGameDirectory.getText().isEmpty()) {
-					s = Utils.openFolder(contentPanel,
-							new File(Utils.getMinecraftDir()));
+				if (txtDirectory.getText() == null
+						|| txtDirectory.getText().isEmpty()) {
+					s = Utils.getMinecraftDir();
 				} else {
-					s = txtGameDirectory.getText();
+					s = txtDirectory.getText();
 				}
+				s = Utils.openFolder(contentPane,
+						new File(s));
 				if (s != null) {
-					txtGameDirectory.setText(s);
+					txtDirectory.setText(s);
 				}
 			}
 		});
 
-		JLabel lblUpdateFrequency = new JLabel("Update Frequency:");
-
-		rdbtnLaunch = new JRadioButton("Every Launch");
-		rdbtnLaunch.setActionCommand("launch");
-		rdbtnLaunch.setSelected(true);
-		rdbtnLaunch.addActionListener(new ActionListener() {
+		btnOk.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				updateRadioButtons();
+			public void actionPerformed(ActionEvent e) {
+				finish();
 			}
 		});
-		buttonGroup.add(rdbtnLaunch);
 
-		rdbtnDay = new JRadioButton("Every Day");
-		rdbtnDay.setActionCommand("day");
-		rdbtnDay.addActionListener(new ActionListener() {
-			@Override
+		btnUseProfile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				updateRadioButtons();
+				chooseExistingProfile();
 			}
 		});
-		buttonGroup.add(rdbtnDay);
 
-		rdbtnWeek = new JRadioButton("Every 7 Days");
-		rdbtnWeek.setActionCommand("week");
-		rdbtnWeek.addActionListener(new ActionListener() {
+		btnCancel.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				updateRadioButtons();
+			public void actionPerformed(ActionEvent e) {
+				cancel();
 			}
 		});
-		buttonGroup.add(rdbtnWeek);
 
-		rdbtnCustom = new JRadioButton("Every");
-		rdbtnCustom.setActionCommand("custom");
-		rdbtnCustom.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				updateRadioButtons();
-			}
-		});
-		buttonGroup.add(rdbtnCustom);
-
-		txtUpdateFreq = new JFormattedTextField(NumberFormat.getInstance());
-		txtUpdateFreq.setText("0");
-		txtUpdateFreq.setColumns(10);
-
-		JLabel lblDays = new JLabel("Days");
-
-		JLabel lblJavaOptions = new JLabel("Java Options:");
-
-		txtJavaOptions = new JTextField();
-		txtJavaOptions.setColumns(10);
-
-		JButton btnDefault = new JButton("Default");
-		btnDefault.addActionListener(new ActionListener() {
+		btnReset.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				txtJavaOptions.setText(DEFAULT_JAVA_OPTIONS);
 			}
 		});
 
-		GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
-		gl_contentPanel
-		.setHorizontalGroup(gl_contentPanel
-				.createParallelGroup(Alignment.LEADING)
-				.addGroup(
-						gl_contentPanel
-						.createSequentialGroup()
-						.addGroup(
-								gl_contentPanel
-								.createParallelGroup(
-										Alignment.LEADING)
-										.addComponent(
-												lblGameDirectory)
-												.addComponent(
-														lblProfileName))
-														.addPreferredGap(
-																ComponentPlacement.UNRELATED)
-																.addGroup(
-																		gl_contentPanel
-																		.createParallelGroup(
-																				Alignment.LEADING)
-																				.addGroup(
-																						gl_contentPanel
-																						.createSequentialGroup()
-																						.addComponent(
-																								txtProfileName,
-																								GroupLayout.DEFAULT_SIZE,
-																								169,
-																								Short.MAX_VALUE)
-																								.addPreferredGap(
-																										ComponentPlacement.RELATED)
-																										.addComponent(
-																												btnModpackName))
-																												.addGroup(
-																														gl_contentPanel
-																														.createSequentialGroup()
-																														.addComponent(
-																																txtGameDirectory,
-																																GroupLayout.DEFAULT_SIZE,
-																																215,
-																																Short.MAX_VALUE)
-																																.addPreferredGap(
-																																		ComponentPlacement.RELATED)
-																																		.addComponent(
-																																				btnOpen))))
-																																				.addGroup(
-																																						gl_contentPanel.createSequentialGroup()
-																																						.addComponent(lblUpdateFrequency)
-																																						.addContainerGap())
-																																						.addGroup(
-																																								gl_contentPanel
-																																								.createSequentialGroup()
-																																								.addGap(10)
-																																								.addGroup(
-																																										gl_contentPanel
-																																										.createParallelGroup(
-																																												Alignment.LEADING,
-																																												false)
-																																												.addGroup(
-																																														gl_contentPanel
-																																														.createSequentialGroup()
-																																														.addComponent(
-																																																rdbtnCustom)
-																																																.addPreferredGap(
-																																																		ComponentPlacement.RELATED)
-																																																		.addComponent(
-																																																				txtUpdateFreq,
-																																																				0,
-																																																				0,
-																																																				Short.MAX_VALUE))
-																																																				.addComponent(
-																																																						rdbtnLaunch))
-																																																						.addPreferredGap(
-																																																								ComponentPlacement.RELATED)
-																																																								.addGroup(
-																																																										gl_contentPanel
-																																																										.createParallelGroup(
-																																																												Alignment.LEADING)
-																																																												.addGroup(
-																																																														gl_contentPanel
-																																																														.createSequentialGroup()
-																																																														.addComponent(
-																																																																rdbtnDay)
-																																																																.addGap(18)
-																																																																.addComponent(
-																																																																		rdbtnWeek))
-																																																																		.addComponent(lblDays))
-																																																																		.addGap(53))
-																																																																		.addGroup(
-																																																																				gl_contentPanel
-																																																																				.createSequentialGroup()
-																																																																				.addComponent(lblJavaOptions)
-																																																																				.addPreferredGap(
-																																																																						ComponentPlacement.RELATED)
-																																																																						.addComponent(txtJavaOptions,
-																																																																								GroupLayout.DEFAULT_SIZE, 210,
-																																																																								Short.MAX_VALUE)
-																																																																								.addPreferredGap(
-																																																																										ComponentPlacement.RELATED)
-																																																																										.addComponent(btnDefault)));
-		gl_contentPanel
-		.setVerticalGroup(gl_contentPanel
-				.createParallelGroup(Alignment.LEADING)
-				.addGroup(
-						gl_contentPanel
-						.createSequentialGroup()
-						.addGroup(
-								gl_contentPanel
-								.createParallelGroup(
-										Alignment.BASELINE)
-										.addComponent(
-												lblProfileName)
-												.addComponent(
-														txtProfileName,
-														GroupLayout.PREFERRED_SIZE,
-														GroupLayout.DEFAULT_SIZE,
-														GroupLayout.PREFERRED_SIZE)
-														.addComponent(
-																btnModpackName))
-																.addPreferredGap(
-																		ComponentPlacement.RELATED)
-																		.addGroup(
-																				gl_contentPanel
-																				.createParallelGroup(
-																						Alignment.BASELINE)
-																						.addComponent(
-																								lblGameDirectory)
-																								.addComponent(
-																										txtGameDirectory,
-																										GroupLayout.PREFERRED_SIZE,
-																										GroupLayout.DEFAULT_SIZE,
-																										GroupLayout.PREFERRED_SIZE)
-																										.addComponent(btnOpen))
-																										.addPreferredGap(
-																												ComponentPlacement.RELATED)
-																												.addComponent(lblUpdateFrequency)
-																												.addPreferredGap(
-																														ComponentPlacement.RELATED)
-																														.addGroup(
-																																gl_contentPanel
-																																.createParallelGroup(
-																																		Alignment.BASELINE)
-																																		.addComponent(
-																																				rdbtnLaunch)
-																																				.addComponent(rdbtnDay)
-																																				.addComponent(rdbtnWeek))
-																																				.addPreferredGap(
-																																						ComponentPlacement.RELATED)
-																																						.addGroup(
-																																								gl_contentPanel
-																																								.createParallelGroup(
-																																										Alignment.BASELINE)
-																																										.addComponent(
-																																												rdbtnCustom)
-																																												.addComponent(
-																																														txtUpdateFreq,
-																																														GroupLayout.PREFERRED_SIZE,
-																																														GroupLayout.DEFAULT_SIZE,
-																																														GroupLayout.PREFERRED_SIZE)
-																																														.addComponent(lblDays))
-																																														.addPreferredGap(
-																																																ComponentPlacement.RELATED)
-																																																.addGroup(
-																																																		gl_contentPanel
-																																																		.createParallelGroup(
-																																																				Alignment.BASELINE)
-																																																				.addComponent(
-																																																						lblJavaOptions)
-																																																						.addComponent(
-																																																								txtJavaOptions,
-																																																								GroupLayout.PREFERRED_SIZE,
-																																																								GroupLayout.DEFAULT_SIZE,
-																																																								GroupLayout.PREFERRED_SIZE)
-																																																								.addComponent(
-																																																										btnDefault))
-																																																										.addContainerGap(80, Short.MAX_VALUE)));
-		contentPanel.setLayout(gl_contentPanel);
-		{
-			JPanel buttonPane = new JPanel();
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			{
-				JButton okButton = new JButton("OK");
-				okButton.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						finish();
-					}
-				});
-				{
-					JButton btnUseExistingProfile = new JButton(
-							"Use Existing Profile");
-					btnUseExistingProfile.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent arg0) {
-							chooseExistingProfile();
-						}
-					});
-					buttonPane.add(btnUseExistingProfile);
-				}
-				okButton.setActionCommand("OK");
-				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
+		rdbtnLaunch.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				updateRadioButtons();
 			}
-			{
-				JButton cancelButton = new JButton("Cancel");
-				cancelButton.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						cancel();
-					}
-				});
-				cancelButton.setActionCommand("Cancel");
-				buttonPane.add(cancelButton);
+		});
+
+		rdbtnDay.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				updateRadioButtons();
 			}
-		}
+		});
+
+		rdbtnWeek.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				updateRadioButtons();
+			}
+		});
+
+		rdbtnCustom.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				updateRadioButtons();
+			}
+		});
+
+		txtFreq.setValue(0);
+
 		init();
 	}
 
@@ -427,18 +189,18 @@ public class DialogProfileSettings extends JDialog {
 		for(Map.Entry<JsonStringNode, JsonNode> entry : profileCopy.entrySet()) {
 			if(entry.getKey().getText().equals(selection)) {
 				//minecraft data
-				txtProfileName.setText(entry.getValue().getStringValue("name"));
-				txtGameDirectory.setText(entry.getValue().getStringValue("gameDir"));
+				txtName.setText(entry.getValue().getStringValue("name"));
+				txtDirectory.setText(entry.getValue().getStringValue("gameDir"));
 				txtJavaOptions.setText(entry.getValue().getStringValue("javaArgs"));
-				File modpack = new File(txtGameDirectory.getText() + File.separator + "modpack.json");
+				File modpack = new File(txtDirectory.getText() + File.separator + "modpack.json");
 				//modpack data
 				if(modpack.exists()) {
 					try {
 						LocalModpack local = new Gson().fromJson(new FileReader(modpack),
 								LocalModpack.class);
 						rdbtnCustom.setSelected(true);
-						txtUpdateFreq.setText(local.updateFrequency + "");
-						txtUpdateFreq.setEnabled(true);
+						txtFreq.setText(local.updateFrequency + "");
+						txtFreq.setEnabled(true);
 					} catch (Exception e) {
 						e.printStackTrace();
 						JOptionPane.showMessageDialog(this, "Error when reading existing modpack.json file!", "Warning!", JOptionPane.WARNING_MESSAGE);
@@ -451,29 +213,29 @@ public class DialogProfileSettings extends JDialog {
 	}
 
 	private void resetName() {
-		txtProfileName.setText(installer.txtProfile.getText());
+		txtName.setText(installer.txtProfile.getText());
 	}
 
 	private void updateRadioButtons() {
 		if (rdbtnCustom.isSelected()) {
-			txtUpdateFreq.setEnabled(true);
+			txtFreq.setEnabled(true);
 		} else {
-			txtUpdateFreq.setEnabled(false);
+			txtFreq.setEnabled(false);
 		}
-		txtUpdateFreq.setText("" + getUpdateFrequency());
+		txtFreq.setText("" + getUpdateFrequency());
 	}
 
 	/** ok button */
 	private void finish() {
-		installer.profile_gameDirectory = txtGameDirectory.getText();
+		installer.profile_gameDirectory = txtDirectory.getText();
 		installer.profile_javaOptions = txtJavaOptions.getText();
 		installer.profile_updateFrequency = getUpdateFrequency();
-		installer.txtProfile.setText(txtProfileName.getText());
+		installer.txtProfile.setText(txtName.getText());
 		this.dispose();
 	}
 
 	private int getUpdateFrequency() {
-		String s = buttonGroup.getSelection().getActionCommand();
+		String s = btnGroupUpdateFreq.getSelection().getActionCommand();
 		if (s.equals("launch")) {
 			return 0;
 		}
@@ -484,7 +246,7 @@ public class DialogProfileSettings extends JDialog {
 			return 7;
 		}
 		if (s.equals("custom")) {
-			String freq = txtUpdateFreq.getText();
+			String freq = txtFreq.getText();
 			try {
 				return Integer.parseInt(freq);
 			} catch (NumberFormatException e) {
@@ -503,23 +265,23 @@ public class DialogProfileSettings extends JDialog {
 	 * read values
 	 */
 	private void init() {
-		txtProfileName.setText(installer.txtProfile.getText());
-		txtGameDirectory.setText(installer.profile_gameDirectory);
+		txtName.setText(installer.txtProfile.getText());
+		txtDirectory.setText(installer.profile_gameDirectory);
 		txtJavaOptions.setText(installer.profile_javaOptions);
-		txtUpdateFreq.setText("" + installer.profile_updateFrequency);
+		txtFreq.setText("" + installer.profile_updateFrequency);
 		switch (installer.profile_updateFrequency) {
-		case 0:
-			rdbtnLaunch.setSelected(true);
-			break;
-		case 1:
-			rdbtnDay.setSelected(true);
-			break;
-		case 7:
-			rdbtnWeek.setSelected(true);
-			break;
-		default:
-			rdbtnCustom.setSelected(true);
-			break;
+			case 0:
+				rdbtnDay.setSelected(true);
+				break;
+			case 1:
+				rdbtnDay.setSelected(true);
+				break;
+			case 7:
+				rdbtnWeek.setSelected(true);
+				break;
+			default:
+				rdbtnCustom.setSelected(true);
+				break;
 		}
 		updateRadioButtons();
 	}

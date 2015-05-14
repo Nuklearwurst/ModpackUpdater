@@ -20,7 +20,7 @@ import java.net.URISyntaxException;
 
 public class InstallerWindow {
 
-	private JFrame mainFrame;
+	public JFrame mainFrame;
 	private JTextField txtUrl;
 	private JCheckBox chckbxDownloadLib;
 	private JButton btnNext;
@@ -85,8 +85,12 @@ public class InstallerWindow {
 	 * Create the application.
 	 */
 	public InstallerWindow() {
+		this(false);
+	}
+
+	public InstallerWindow(boolean presetInstall) {
 		initialize();
-		if(PrepackedInstall.IS_BUILD_PREPACKED) {
+		if(presetInstall) {
 			txtUrl.setText(PrepackedInstall.MODPACK_URL);
 			nextPage();
 		} else {

@@ -6,7 +6,7 @@ import common.nw.creator.gui_legacy.Reference;
 import common.nw.creator.gui_legacy.pages.dialog.EditArgumentsDialog;
 import common.nw.gui.IPageHandler;
 import common.nw.gui.PageHolder;
-import common.nw.modpack.Strings;
+import common.nw.modpack.ModpackValues;
 
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
@@ -81,13 +81,13 @@ public class PanelMinecraftSettings extends JPanel implements IPageHandler {
 		btnGroupJson.add(rdbtnDownloadJson);
 		rdbtnDownloadJson.setSelected(true);
 		rdbtnDownloadJson.setEnabled(false);
-		rdbtnDownloadJson.setActionCommand(Strings.jsonDirectDownload);
+		rdbtnDownloadJson.setActionCommand(ModpackValues.jsonDirectDownload);
 
 		rdbtnDownloadJar = new JRadioButton("Download");
 		btnGroupJar.add(rdbtnDownloadJar);
 		rdbtnDownloadJar.setSelected(true);
 		rdbtnDownloadJar.setEnabled(false);
-		rdbtnDownloadJar.setActionCommand(Strings.jarDirectDownload);
+		rdbtnDownloadJar.setActionCommand(ModpackValues.jarDirectDownload);
 
 		txtVersion = new JTextField();
 		txtVersion.setColumns(10);
@@ -111,22 +111,22 @@ public class PanelMinecraftSettings extends JPanel implements IPageHandler {
 		rdbtnJarLocal = new JRadioButton("Local");
 		btnGroupJar.add(rdbtnJarLocal);
 		rdbtnJarLocal.setEnabled(false);
-		rdbtnJarLocal.setActionCommand(Strings.jarLocalFile);
+		rdbtnJarLocal.setActionCommand(ModpackValues.jarLocalFile);
 
 		rdbtnJsonLocal = new JRadioButton("Local");
 		btnGroupJson.add(rdbtnJsonLocal);
 		rdbtnJsonLocal.setEnabled(false);
-		rdbtnJsonLocal.setActionCommand(Strings.jsonLocalFile);
+		rdbtnJsonLocal.setActionCommand(ModpackValues.jsonLocalFile);
 
 		rdbtnJarManualDownload = new JRadioButton("Manual Download");
 		btnGroupJar.add(rdbtnJarManualDownload);
 		rdbtnJarManualDownload.setEnabled(false);
-		rdbtnJarManualDownload.setActionCommand(Strings.jarUserDownload);
+		rdbtnJarManualDownload.setActionCommand(ModpackValues.jarUserDownload);
 
 		rdbtnJsonManualDownload = new JRadioButton("Manual Download");
 		btnGroupJson.add(rdbtnJsonManualDownload);
 		rdbtnJsonManualDownload.setEnabled(false);
-		rdbtnJsonManualDownload.setActionCommand(Strings.jsonUserDownload);
+		rdbtnJsonManualDownload.setActionCommand(ModpackValues.jsonUserDownload);
 
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
@@ -234,7 +234,7 @@ public class PanelMinecraftSettings extends JPanel implements IPageHandler {
 	private String getJsonUpdateType() {
 		String s = btnGroupJson.getSelection().getActionCommand();
 		if(s == null || s.isEmpty()) {
-			return Strings.jsonDirectDownload;
+			return ModpackValues.jsonDirectDownload;
 		}
 		return s;
 	}
@@ -242,7 +242,7 @@ public class PanelMinecraftSettings extends JPanel implements IPageHandler {
 	private String getJarUpdateType() {
 		String s = btnGroupJar.getSelection().getActionCommand();
 		if(s == null || s.isEmpty()) {
-			return Strings.jarDirectDownload;
+			return ModpackValues.jarDirectDownload;
 		}
 		return s;
 	}
@@ -253,13 +253,13 @@ public class PanelMinecraftSettings extends JPanel implements IPageHandler {
 	 */
 	private void setJsonUpdateType(String type) {
 		if(type == null || type.isEmpty()) {
-			type = Strings.jsonDirectDownload;
+			type = ModpackValues.jsonDirectDownload;
 		}
-		if(type.equals(Strings.jsonDirectDownload)) {
+		if(type.equals(ModpackValues.jsonDirectDownload)) {
 			rdbtnDownloadJson.setSelected(true);
-		} else if(type.equals(Strings.jsonLocalFile)) {
+		} else if(type.equals(ModpackValues.jsonLocalFile)) {
 			rdbtnJsonLocal.setSelected(true);
-		} else if(type.equals(Strings.jsonUserDownload)) {
+		} else if(type.equals(ModpackValues.jsonUserDownload)) {
 			rdbtnJsonManualDownload.setSelected(true);
 		} else {
 			rdbtnDownloadJson.setSelected(true);
@@ -272,13 +272,13 @@ public class PanelMinecraftSettings extends JPanel implements IPageHandler {
 	 */
 	private void setJarUpdateType(String type) {
 		if(type == null || type.isEmpty()) {
-			type = Strings.jarDirectDownload;
+			type = ModpackValues.jarDirectDownload;
 		}
-		if(type.equals(Strings.jarDirectDownload)) {
+		if(type.equals(ModpackValues.jarDirectDownload)) {
 			rdbtnDownloadJar.setSelected(true);
-		} else if(type.equals(Strings.jarLocalFile)) {
+		} else if(type.equals(ModpackValues.jarLocalFile)) {
 			rdbtnJarLocal.setSelected(true);
-		} else if(type.equals(Strings.jarUserDownload)) {
+		} else if(type.equals(ModpackValues.jarUserDownload)) {
 			rdbtnJarManualDownload.setSelected(true);
 		} else {
 			rdbtnDownloadJar.setSelected(true);
