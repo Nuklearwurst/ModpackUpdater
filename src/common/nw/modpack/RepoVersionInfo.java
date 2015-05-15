@@ -16,7 +16,7 @@ public class RepoVersionInfo {
 	 */
 	public String installInfoUrl;
 
-	/** has to change with whenever forgeversion got changed */
+	/** has to change with whenever forge-version got changed */
 	public String version;
 
 	/**
@@ -30,7 +30,7 @@ public class RepoVersionInfo {
 	 */
 	public String jarUpdateType;
 
-	/** where to get the verion-json file from */
+	/** where to get the version-json file from */
 	public String jsonName;
 
 	/** where to get the version-json file from (eg. download, local) */

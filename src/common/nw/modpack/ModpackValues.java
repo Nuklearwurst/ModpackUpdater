@@ -2,14 +2,21 @@ package common.nw.modpack;
 
 public class ModpackValues {
 	
-	private final static  String directDownload = "directDownload";
+	private final static String directDownload = "directDownload";
 	private final static String userDownload = "userDownload";
 	private final static String localFile = "localFile";
 	private final static String extractArchive = "extractArchive";
+	private final static String minecraft = "minecraft";
+	private final static String minecraft_inherit = "minecraft_inherit";
 	
 	public final static String jarDirectDownload = directDownload;
 	public final static String jarUserDownload = userDownload;
-	public final static String jarLocalFile = localFile; 
+	public final static String jarLocalFile = localFile;
+	/** specify the target minecraft version (omit the .jar extension) */
+	public final static String jarMinecraft = minecraft;
+	/** same as minecraft but does not create an own jar, instead the version.json has to be configured to inherit from the mc-jar */
+	public final static String jarMinecraftInherit = minecraft_inherit;
+	//TODO support inheriting from minecraft forge version files
 
 	public final static String jsonDirectDownload = directDownload;
 	public final static String jsonUserDownload = userDownload;
