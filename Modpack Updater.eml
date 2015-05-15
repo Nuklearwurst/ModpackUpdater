@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inheritJdk="true">
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<lib name="gson-2.2.4.jar" scope="COMPILE">
+		<srcroot url="jar://$MODULE_DIR$/../../../Tools/Lib/Gson/google-gson-2.2.4/gson-2.2.4-sources.jar!/"/>
+	</lib>
+	<lib name="jopt-simple-4.5.jar" scope="COMPILE">
+		<srcroot url="jar://$MODULE_DIR$/../../../Tools/Lib/JOPT-simple/jopt-simple-master.zip!/"/>
+	</lib>
+	<lib name="guava-17.0.jar" scope="COMPILE">
+		<srcroot url="jar://$MODULE_DIR$/../../../Tools/Lib/Guava/guava-17.0-sources.jar!/"/>
+	</lib>
+</component>
