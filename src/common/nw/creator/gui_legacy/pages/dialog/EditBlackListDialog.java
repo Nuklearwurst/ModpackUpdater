@@ -11,7 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
-import common.nw.creator.gui_legacy.TableModelList;
+import common.nw.creator.gui.TableModelList;
 import common.nw.modpack.RepoMod;
 
 import javax.swing.JButton;

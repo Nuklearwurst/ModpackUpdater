@@ -1,4 +1,4 @@
-package common.nw.creator.gui_legacy;
+package common.nw.creator.gui;
 
 public class Reference {
 

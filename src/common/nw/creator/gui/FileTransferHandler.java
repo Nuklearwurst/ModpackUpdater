@@ -1,4 +1,4 @@
-package common.nw.creator.gui_legacy;
+package common.nw.creator.gui;
 
 import javax.swing.*;
 import java.awt.datatransfer.DataFlavor;

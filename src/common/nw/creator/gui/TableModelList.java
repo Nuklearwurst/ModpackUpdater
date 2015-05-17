@@ -1,4 +1,4 @@
-package common.nw.creator.gui_legacy;
+package common.nw.creator.gui;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.Arrays;

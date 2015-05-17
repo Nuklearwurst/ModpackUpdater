@@ -14,7 +14,7 @@ import javax.swing.SwingConstants;
 
 import common.nw.creator.Creator;
 import common.nw.creator.IProgressListener;
-import common.nw.creator.gui_legacy.Reference;
+import common.nw.creator.gui.Reference;
 import common.nw.gui.IPageHandler;
 import common.nw.gui.PageHolder;
 

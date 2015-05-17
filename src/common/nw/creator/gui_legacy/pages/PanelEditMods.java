@@ -2,10 +2,10 @@ package common.nw.creator.gui_legacy.pages;
 
 import common.nw.creator.Creator;
 import common.nw.creator.gui.pages.dialog.DialogEditMod;
-import common.nw.creator.gui_legacy.FileTransferHandler;
-import common.nw.creator.gui_legacy.IDropFileHandler;
-import common.nw.creator.gui_legacy.Reference;
-import common.nw.creator.gui_legacy.TableModelList;
+import common.nw.creator.gui.FileTransferHandler;
+import common.nw.creator.gui.IDropFileHandler;
+import common.nw.creator.gui.Reference;
+import common.nw.creator.gui.TableModelList;
 import common.nw.creator.gui_legacy.pages.dialog.EditBlackListDialog;
 import common.nw.creator.gui_legacy.pages.dialog.ITableHolder;
 import common.nw.gui.IPageHandler;
@@ -213,14 +213,14 @@ public class PanelEditMods extends JPanel implements IPageHandler, IDropFileHand
 		//hide mods
 		if(chckbxHideMods.isSelected()) {
 			for(int i = mods.size() - 1; i >= 0; i--) {
-				if(mods.get(i).fileName.startsWith("mods/") && !hiddenFiles.contains(mods.get(i))) {
+				if((mods.get(i).fileName.startsWith("mods/") || mods.get(i).fileName.startsWith("mods" + File.separator)) && !hiddenFiles.contains(mods.get(i))) {
 					hiddenFiles.add(mods.get(i));
 					mods.remove(i);
 				}
 			}
 		} else {
 			for(int i = hiddenFiles.size() - 1; i >= 0 ; i--) {
-				if(hiddenFiles.get(i).fileName.startsWith("mods/")) {
+				if(hiddenFiles.get(i).fileName.startsWith("mods/") || hiddenFiles.get(i).fileName.startsWith("mods" + File.separator)) {
 					if(!mods.contains(hiddenFiles.get(i))) {
 						mods.add(hiddenFiles.get(i));
 					}
@@ -231,14 +231,14 @@ public class PanelEditMods extends JPanel implements IPageHandler, IDropFileHand
 		//hids config
 		if(chckbxHideConfig.isSelected()) {
 			for(int i = mods.size() - 1; i >= 0; i--) {
-				if(mods.get(i).fileName.startsWith("config/") && !hiddenFiles.contains(mods.get(i))) {
+				if((mods.get(i).fileName.startsWith("config/") || mods.get(i).fileName.startsWith("config" + File.separator)) && !hiddenFiles.contains(mods.get(i))) {
 					hiddenFiles.add(mods.get(i));
 					mods.remove(i);
 				}
 			}
 		} else {
 			for(int i = hiddenFiles.size() - 1; i >= 0 ; i--) {
-				if(hiddenFiles.get(i).fileName.startsWith("config/")) {
+				if(hiddenFiles.get(i).fileName.startsWith("config/") || hiddenFiles.get(i).fileName.startsWith("config" + File.separator)) {
 					if(!mods.contains(hiddenFiles.get(i))) {
 						mods.add(hiddenFiles.get(i));
 					}

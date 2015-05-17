@@ -1,4 +1,4 @@
-package common.nw.creator.gui_legacy;
+package common.nw.creator.gui;
 
 import common.nw.creator.Creator;
 import common.nw.creator.gui.pages.PanelInit;

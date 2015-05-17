@@ -2,8 +2,8 @@ package common.nw.creator.gui.pages;
 
 import com.google.gson.Gson;
 import common.nw.creator.Creator;
-import common.nw.creator.gui_legacy.IDropFileHandler;
-import common.nw.creator.gui_legacy.Reference;
+import common.nw.creator.gui.IDropFileHandler;
+import common.nw.creator.gui.Reference;
 import common.nw.creator.properties.CreatorProperties;
 import common.nw.gui.IPageHandler;
 import common.nw.gui.PageHolder;
