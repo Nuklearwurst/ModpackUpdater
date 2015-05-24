@@ -1,0 +1,83 @@
+apply plugin: 'maven'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'net.sf.proguard:proguard-gradle:4.10'
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://libraries.minecraft.net/"
+    }
+}
+
+group = 'common.nw'
+sourceCompatibility = 1.6
+
+dependencies {
+    compile 'net.sf.jopt-simple:jopt-simple:4.5'
+    compile 'net.sourceforge.argo:argo:3.7'
+    compile 'com.google.guava:guava:14.0'
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'net.minecraft:launchwrapper:1.11'
+}
+
+task presetInstaller(type: Jar) {
+    baseName = 'installer'
+    version = '2.2.2'
+    classifier = 'preset'
+    from sourceSets.main.output
+    manifest { attributes 'Main-Class': 'common.nw.installer.PrepackedInstall' }
+}
+
+task installer(type: Jar) {
+    baseName = 'installer'
+    version = '2.2.2'
+    from sourceSets.main.output
+    manifest { attributes 'Main-Class': 'common.nw.installer.gui.InstallerWindow' }
+}
+
+task creator(type: Jar) {
+    baseName = 'creator'
+    version = '2.3.0'
+    from sourceSets.main.output
+    manifest { attributes 'Main-Class': 'common.nw.creator.gui.CreatorWindow' }
+}
+
+task updater(type: Jar) {
+    baseName = 'updater'
+    version = '2.1.5'
+    classifier = 'executeable'
+    from sourceSets.main.output
+    manifest { attributes 'Main-Class': 'common.nw.updater.launch.Launch' }
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+jar {
+    baseName = 'updater'
+    version = '2.1.5'
+}
+
+artifacts {
+    archives installer
+    archives presetInstaller
+    archives updater
+    archives creator
+    archives sourcesJar
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.6'
+}
