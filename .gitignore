@@ -31,9 +31,5 @@ $RECYCLE.BIN/
 .project
 .classpath
 
-
-*.bin
-*.properties
-
 ## gradle
 .gradle
