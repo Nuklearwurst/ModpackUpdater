@@ -28,6 +28,7 @@ dependencies {
     compile 'com.google.guava:guava:14.0'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'net.minecraft:launchwrapper:1.11'
+    compile 'com.intellij:forms_rt:7.0.3'
 }
 
 task presetInstaller(type: Jar) {

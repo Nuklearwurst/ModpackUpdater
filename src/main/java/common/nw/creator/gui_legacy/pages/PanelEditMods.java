@@ -259,6 +259,7 @@ public class PanelEditMods extends JPanel implements IPageHandler, IDropFileHand
 		}
 //		Dialog d = new EditModDialog_legacy(frame, true, mode, index, this);
 		Dialog d = new DialogEditMod(frame, mode, index, this);
+		d.pack();
 		d.setVisible(true);
 	}
 
