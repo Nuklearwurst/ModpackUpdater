@@ -4,6 +4,7 @@
 bin/
 build/
 run/
+creator.properties
 
 
 ### Idea
