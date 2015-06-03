@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class PanelEditMods extends JPanel implements IPageHandler, IDropFileHandler, ITableHolder {
+public class PanelEditMods_legacy extends JPanel implements IPageHandler, IDropFileHandler, ITableHolder {
 
 	/**
 	 * 
@@ -52,7 +52,7 @@ public class PanelEditMods extends JPanel implements IPageHandler, IDropFileHand
 	 * 
 	 * @param creator
 	 */
-	public PanelEditMods(Creator creator, JFrame frame) {
+	public PanelEditMods_legacy(Creator creator, JFrame frame) {
 
 		this.frame = frame;
 		this.creator = creator;
@@ -72,7 +72,7 @@ public class PanelEditMods extends JPanel implements IPageHandler, IDropFileHand
 				if(index.length > 1) {
 					if (JOptionPane
 							.showConfirmDialog(
-									PanelEditMods.this,
+									PanelEditMods_legacy.this,
 									"Are you sure you want to remove that file from the list?",
 									"Are you sure", JOptionPane.YES_NO_OPTION,
 									JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {

@@ -44,7 +44,7 @@ public class Launch implements ITweaker {
 		Updater.logger.info("Starting modpack updater!");
 		if (useGui) {
 			Updater.logger.fine("Setting lood and feel for gui");
-			Utils.setWindowsLookAndFeel();
+			Utils.setOSLookAndFeel();
 		}
 
 		// init updater

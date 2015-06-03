@@ -1,5 +1,7 @@
 package common.nw.creator.gui;
 
+import common.nw.utils.log.NwLogger;
+
 import javax.swing.table.AbstractTableModel;
 import java.util.Arrays;
 import java.util.List;
@@ -19,9 +21,9 @@ public class TableModelList extends AbstractTableModel {
 	public TableModelList(Object[] heads, String[] fieldNames, List<?> list) {
 		//display warnings 
 		if(fieldNames == null && heads.length > 1) {
-			System.err.println("Warning, array length of 'heads' is too long!");			
+			NwLogger.CREATOR_LOGGER.error("Warning, array length of 'heads' is too long!");
 		} else if (fieldNames != null && heads.length != fieldNames.length) {
-			System.err.println("Warning, array length of 'heads' is not the same as 'fieldNames'!");
+			NwLogger.CREATOR_LOGGER.error("Warning, array length of 'heads' is not the same as 'fieldNames'!");
 		}
 		this.heads = heads;
 		this.fields = fieldNames;
@@ -31,7 +33,7 @@ public class TableModelList extends AbstractTableModel {
 	public void updateData() {
 		//error checking
 		if (heads == null || list == null) {
-			System.err.println("Warning, 'list' = " + list + " 'heads' = "
+			NwLogger.CREATOR_LOGGER.error("Warning, 'list' = " + list + " 'heads' = "
 					+ Arrays.toString(heads) + " !");
 			return;
 		}

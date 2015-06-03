@@ -1,10 +1,12 @@
 package common.nw.creator.gui;
 
 import common.nw.creator.Creator;
+import common.nw.creator.gui.pages.PanelEditMods;
 import common.nw.creator.gui.pages.PanelInit;
 import common.nw.creator.gui_legacy.pages.*;
 import common.nw.creator.properties.CreatorProperties;
 import common.nw.gui.PageHolder;
+import common.nw.utils.Utils;
 import common.nw.utils.log.NwLogger;
 
 import javax.swing.*;
@@ -42,17 +44,11 @@ public class CreatorWindow {
 			@Override
 			public void run() {
 				try {
-					try {
-						UIManager.setLookAndFeel(UIManager
-								.getSystemLookAndFeelClassName());
-
-					} catch (Throwable t) {
-						NwLogger.CREATOR_LOGGER.error("Error when setting Look and Feel!", t);
-					}
+					Utils.setOSLookAndFeel();
 					CreatorWindow window = new CreatorWindow();
 					window.window.setVisible(true);
 				} catch (Exception e) {
-					e.printStackTrace();
+					NwLogger.CREATOR_LOGGER.error("Error starting creator GUI", e);
 				}
 			}
 		});
@@ -111,8 +107,10 @@ public class CreatorWindow {
 		gbl_page3.rowHeights = new int[] { 64, 0, 0, 0 };
 		pageHolder.addPage(page3, (String) page3.getProperty(Reference.KEY_NAME));
 
+//		page4 = new PanelEditMods_legacy(creator, window);
+//		pageHolder.addPage(page4, (String) page4.getProperty(Reference.KEY_NAME));
 		page4 = new PanelEditMods(creator, window);
-		pageHolder.addPage(page4, (String) page4.getProperty(Reference.KEY_NAME));
+		pageHolder.addPage(page4.getPanel(), page4, (String) page4.getProperty(Reference.KEY_NAME));
 
 		page5 = new PanelFinish(creator);
 		pageHolder.addPage(page5, (String) page5.getProperty(Reference.KEY_NAME));

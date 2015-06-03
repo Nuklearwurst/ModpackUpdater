@@ -4,7 +4,12 @@ import common.nw.utils.log.NwLogger;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
+import java.io.IOException;
 import java.sql.Date;
 import java.util.Locale;
 
@@ -13,12 +18,9 @@ public class Utils {
 	/**
 	 * sets LookAndFeel
 	 */
-	public static void setWindowsLookAndFeel() {
+	public static void setOSLookAndFeel() {
 		try {
-//			if (System.getProperty("os.name").toLowerCase().contains("win")) {
-			UIManager.setLookAndFeel(UIManager
-					.getSystemLookAndFeelClassName());
-//			}
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Throwable t) {
 			NwLogger.NW_LOGGER.error("Error when setting Look and Feel!", t);
 		}
@@ -174,5 +176,22 @@ public class Utils {
 			prefix += "0";
 		}
 		return prefix + str;
+	}
+
+	/**
+	 * Gets System Text Clipboard if available
+	 * @return found value
+	 */
+	public static String getStringClipboard() {
+		try {
+			Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+			Transferable transferData = systemClipboard.getContents(null);
+			return  (String) transferData.getTransferData(DataFlavor.stringFlavor);
+		} catch (IOException e) {
+			NwLogger.NW_LOGGER.error("Error getting system clipboard", e);
+		} catch (UnsupportedFlavorException e) {
+			NwLogger.NW_LOGGER.error("Error getting system clipboard", e);
+		}
+		return null;
 	}
 }

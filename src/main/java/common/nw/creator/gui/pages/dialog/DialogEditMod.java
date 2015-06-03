@@ -91,7 +91,7 @@ public class DialogEditMod extends JDialog {
 				openFile();
 			}
 		});
-		btnOpen.setVisible(mode);
+//		btnOpen.setVisible(mode);
 
 		btnDownload.addActionListener(new ActionListener() {
 			@Override
@@ -99,7 +99,7 @@ public class DialogEditMod extends JDialog {
 				download();
 			}
 		});
-		btnDownload.setVisible(mode);
+//		btnDownload.setVisible(mode);
 
 
 		btnRemove.addActionListener(new ActionListener() {
@@ -130,7 +130,7 @@ public class DialogEditMod extends JDialog {
 	}
 
 	private void download() {
-		final String ans = JOptionPane.showInputDialog(this, "Enter a URL:");
+		final String ans = JOptionPane.showInputDialog(this, "Enter a URL:", Utils.getStringClipboard());
 		if(ans == null) {
 			return;
 		}
