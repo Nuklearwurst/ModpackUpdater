@@ -45,7 +45,7 @@ public class ModInfo {
 	}
 
 	/**
-	 * create a modInfo instance using the remote data(validateVersion checks
+	 * create a modInfo instance using the remote data(updateVersionInformation checks
 	 * for local files, but it might not exist)
 	 */
 	public ModInfo(RepoMod remoteMod) {
@@ -67,17 +67,17 @@ public class ModInfo {
 	 * sets the remote data of a local mod (check first wether they are both the
 	 * same using equals!) and validates the VersionData
 	 * 
-	 * @param mod
+	 * @param mod remote mod
 	 */
 	public void setRemoteInfo(RepoMod mod) {
 		this.remoteInfo = mod;
-		validateVersion();
+		updateVersionInformation();
 	}
 
 	/**
-	 * uses correcct version information
+	 * uses correct version information
 	 */
-	private void validateVersion() {
+	private void updateVersionInformation() {
 		if (remoteInfo != null) {
 			if (remoteInfo.versionType != null) {
 				if (remoteInfo.versionType.equals(ModpackValues.versionTypeMD5) && file != null
@@ -94,7 +94,7 @@ public class ModInfo {
 	/**
 	 * read version from file
 	 * 
-	 * @param baseDir
+	 * @param baseDir directory this mod file is contained in
 	 */
 	@SuppressWarnings("unchecked")
 	public void loadInfo(File baseDir) {
@@ -135,20 +135,9 @@ public class ModInfo {
 				//TODO: read forge mods
 			}
 			if (remoteInfo != null) {
-				validateVersion(); // update version info according to the
+				updateVersionInformation(); // update version info according to the
 									// version type specified in remoteMods
 									// config
-
-				// mot needed as validateVersion checks version of the mod file
-				// (--> fixes redownloading configs when modpack.json got
-				// corrupted)
-				// if this mod file is only tracked on remote (not in list, eg.
-				// manually added) and no forge or .litemod versiondata could be
-				// found check md5
-				// if(version == null &&
-				// DownloadHelper.checkHash(remoteInfo.md5, file)) {
-				// version = remoteInfo.version;
-				// }
 			}
 		} else {
 			// no local file found
@@ -157,13 +146,12 @@ public class ModInfo {
 	}
 
 	/**
-	 * returns the entry String
+	 * returns the String of the specified file contained in the ZIP-archive
 	 * 
 	 * @param file
 	 *            zip file
 	 * @param name
 	 *            name of the file inside the zip
-	 * @return
 	 */
 	@SuppressWarnings({"SameParameterValue", "WeakerAccess"})
 	public static String getVersionFileFromZip(File file, String name) {
@@ -202,7 +190,7 @@ public class ModInfo {
 	/**
 	 * if this mod has no remote representative any more it should be deleted
 	 * 
-	 * @return
+	 * @return whether this mod should be deleted
 	 */
 	public boolean shouldBeDeleted() {
 		return remoteInfo == null;
@@ -211,7 +199,7 @@ public class ModInfo {
 	/**
 	 * check versions
 	 * 
-	 * @return
+	 * @return whether this mod needs an update
 	 */
 	public boolean needUpdate() {
 		if (remoteInfo == null) {
@@ -227,7 +215,7 @@ public class ModInfo {
 	/**
 	 * version is null when no local modFile was found
 	 * 
-	 * @return
+	 * @return whether this mod is missing on the client
 	 */
 	public boolean isMissing() {
 		return version == null;
@@ -236,9 +224,9 @@ public class ModInfo {
 	/**
 	 * checks if two mods are the same
 	 * 
-	 * @param mod
-	 * @param baseDir
-	 * @return
+	 * @param mod remote mod to check against
+	 * @param baseDir Base directory (unused)
+	 * @return whether the specified remote mod is the same as this local mod
 	 */
 	public boolean equals(RepoMod mod, File baseDir) {
 		if (mod.nameType != null) {
