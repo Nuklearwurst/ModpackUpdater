@@ -1,5 +1,8 @@
 package common.nw.modpack;
 
+import argo.jdom.JdomParser;
+import argo.jdom.JsonNode;
+import argo.saj.InvalidSyntaxException;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import common.nw.utils.DownloadHelper;
@@ -10,6 +13,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -131,8 +135,24 @@ public class ModInfo {
 						hasVersionFile = true;
 					}
 				}
-			} else {
-				//TODO: read forge mods
+			} else if(fileName.endsWith(".jar")){
+				String versionFile = getVersionFileFromZip(file, "mcmod.info");
+				if (versionFile != null && !versionFile.isEmpty()) {
+					JdomParser parser = new JdomParser();
+					JsonNode versionData;
+					try {
+						versionData = parser.parse(versionFile);
+						List<JsonNode> modinfo = versionData.getElements();
+						if(!modinfo.isEmpty()) {
+							name = modinfo.get(0).getStringValue("modid");
+							version = modinfo.get(0).getStringValue("version");
+							hasName = true;
+							hasVersionFile = true;
+						}
+					} catch (InvalidSyntaxException e) {
+						NwLogger.NW_LOGGER.error("Error reading forge version file", e);
+					}
+				}
 			}
 			if (remoteInfo != null) {
 				updateVersionInformation(); // update version info according to the
