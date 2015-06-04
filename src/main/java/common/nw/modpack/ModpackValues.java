@@ -8,15 +8,22 @@ public class ModpackValues {
 	private final static String extractArchive = "extractArchive";
 	private final static String minecraft = "minecraft";
 	private final static String minecraft_inherit = "minecraft_inherit";
+	private final static String forge_inherit = "forge_inherit";
 	
 	public final static String jarDirectDownload = directDownload;
 	public final static String jarUserDownload = userDownload;
 	public final static String jarLocalFile = localFile;
-	/** specify the target minecraft version (omit the .jar extension) */
-	public final static String jarMinecraft = minecraft;
-	/** same as minecraft but does not create an own jar, instead the version.json has to be configured to inherit from the mc-jar */
+	/**
+	 * does not create an own jar, instead the version.json has to be configured to inherit from the mc-jar</br>
+	 * Can be used to inherit of custom loader mods other than mc-forge
+	 * TODO: allow auto insertion to inherit from another version
+	 */
 	public final static String jarMinecraftInherit = minecraft_inherit;
-	//TODO support inheriting from minecraft forge version files
+
+	/**
+	 * same as jarMinecraftInherit, but downloads the speified forge version
+	 */
+	public final static String jarForgeInherit = forge_inherit;
 
 	public final static String jsonDirectDownload = directDownload;
 	public final static String jsonUserDownload = userDownload;
@@ -45,4 +52,6 @@ public class ModpackValues {
 	public final static int fileTypeClient = 2; //0b10
 	public final static int fileTypeAdmin = 4; //0b100
 
+	public final static String URL_FORGE_INSTALLER = "http://files.minecraftforge.net/maven/net/minecraftforge/forge/";
+	public final static String URL_FORGE_VERSION_JSON = "http://files.minecraftforge.net/maven/net/minecraftforge/forge/json";
 }

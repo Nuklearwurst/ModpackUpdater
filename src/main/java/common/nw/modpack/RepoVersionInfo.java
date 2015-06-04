@@ -16,7 +16,7 @@ public class RepoVersionInfo {
 	 */
 	public String installInfoUrl;
 
-	/** has to change with whenever forge-version got changed */
+	/** has to change with whenever forge-version got changed or other libraries got updated */
 	public String version;
 
 	/**
@@ -38,7 +38,7 @@ public class RepoVersionInfo {
 
 	/**
 	 * which arguments should be added to the argument list<br>
-	 * TODO morph argument and library list into a Strings (a list is not
+	 * TODO morph argument list into a Strings (a list is not
 	 * necessary)
 	 */
 	public List<String> arguments;

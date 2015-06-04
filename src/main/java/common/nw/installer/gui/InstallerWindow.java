@@ -3,6 +3,7 @@ package common.nw.installer.gui;
 import common.nw.installer.Installer;
 import common.nw.installer.PrepackedInstall;
 import common.nw.modpack.RepoModpack;
+import common.nw.modpack.VersionInfo;
 import common.nw.utils.Utils;
 import common.nw.utils.log.NwLogger;
 
@@ -195,6 +196,16 @@ public class InstallerWindow {
 			}
 			modpack = Installer.downloadModpack(url);
 			if (modpack != null) {
+				if(modpack.updaterRevision <= VersionInfo.REPO_MODPACK_REVISION) {
+					if(JOptionPane.showConfirmDialog(mainFrame, "This modpack requires a newer of the installer!\nDo you want to continue anyways?\n(This may not work and might corrupt your minecraft installation)", "Newer version needed!", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE) != JOptionPane.YES_OPTION) {
+						//Error: old installer
+						installing = false;
+						cl_contentPanel.first(contentPanel);
+						currentPage = 0;
+						updatePageInfo();
+						return;
+					}
+				}
 				//success
 				installing = false;
 				String info = modpack.minecraft.installInfoUrl;

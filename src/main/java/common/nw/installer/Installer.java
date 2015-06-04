@@ -8,33 +8,51 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
+import common.nw.modpack.ModpackValues;
 import common.nw.modpack.RepoModpack;
 import common.nw.utils.DownloadHelper;
 import common.nw.utils.Utils;
 import common.nw.utils.log.NwLogHelper;
+import common.nw.utils.log.NwLogger;
 
 import javax.swing.*;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.List;
 
 public class Installer {
 
-	/** version Name */
+	/**
+	 * version Name
+	 */
 	private String name;
-	/** .minecraft Path */
+	/**
+	 * .minecraft Path
+	 */
 	private String dir;
-	/** should a profile be created? */
+	/**
+	 * should a profile be created?
+	 */
 	private boolean createProfile;
-	/** should the libs be downloaded? */
+	/**
+	 * should the libs be downloaded?
+	 */
 	private boolean downloadLib;
 
-	
 
-	/** .minecraft folder */
+	/**
+	 * .minecraft folder
+	 */
 	private File baseDir;
-	/** our VersionDirectory */
+	/**
+	 * our VersionDirectory
+	 */
 	private File ourDir;
 
 	private RepoModpack repo;
@@ -42,9 +60,8 @@ public class Installer {
 	private String data;
 
 
-	
 	public Installer(RepoModpack repo, String name, String dir,
-			boolean createProfile, boolean downloadLib) {
+	                 boolean createProfile, boolean downloadLib) {
 		this.repo = repo;
 		this.name = name;
 		this.dir = dir;
@@ -55,7 +72,7 @@ public class Installer {
 
 	/**
 	 * downloads modapck.json file
-	 * 
+	 *
 	 * @return success
 	 */
 	public static RepoModpack downloadModpack(String url) {
@@ -74,13 +91,13 @@ public class Installer {
 
 	/**
 	 * are all entries valid?
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean validateEntries() {
 		boolean notNull = name != null && !name.isEmpty() && dir != null
 				&& !dir.isEmpty();
-		if(notNull) {
+		if (notNull) {
 			baseDir = new File(dir);
 			return baseDir.exists() && baseDir.isDirectory();
 		}
@@ -89,14 +106,14 @@ public class Installer {
 
 	/**
 	 * create needed dirs
-	 * 
+	 *
 	 * @return success
 	 */
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean createDirs() {
 		File versions = new File(baseDir, "versions");
 		if (!versions.exists()) {
-			if(!versions.mkdir()) {
+			if (!versions.mkdir()) {
 				return false;
 			}
 		}
@@ -108,7 +125,7 @@ public class Installer {
 			}
 		} else {
 			//compensate wrong upper/lower case
-			if(!Utils.deleteFileOrDir(ourDir)) {
+			if (!Utils.deleteFileOrDir(ourDir)) {
 				NwLogHelper.error("Error deleting old version dir!");
 				return false;
 			}
@@ -122,7 +139,7 @@ public class Installer {
 
 	/**
 	 * downloads libraries (only nw-updater atm)
-	 * 
+	 *
 	 * @return success
 	 */
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -144,21 +161,21 @@ public class Installer {
 					}
 					File lib = new File(baseDir, "libraries");
 					if (!lib.exists()) {
-						if(!lib.mkdir()) {
+						if (!lib.mkdir()) {
 							return false;
 						}
 					}
 					File updater = new File(lib, "common" + File.separator
 							+ "nuklearwurst" + File.separator + "updater");
 					if (!updater.exists()) {
-						if(!updater.mkdirs()) {
+						if (!updater.mkdirs()) {
 							return false;
 						}
 					}
 					String version = s.substring(s.lastIndexOf(":") + 1);
 					File dir = new File(updater, version);
 					if (!dir.exists()) {
-						if(!dir.mkdirs()) {
+						if (!dir.mkdirs()) {
 							return false;
 						}
 					}
@@ -177,7 +194,7 @@ public class Installer {
 
 	/**
 	 * download json version file
-	 * 
+	 *
 	 * @return
 	 */
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -205,7 +222,7 @@ public class Installer {
 		try {
 			File file = new File(ourDir, name + ".json");
 			if (file.exists()) {
-				if(!file.delete()) {
+				if (!file.delete()) {
 					return false;
 				}
 			}
@@ -222,20 +239,87 @@ public class Installer {
 
 	/**
 	 * download version jar
-	 * 
+	 *
 	 * @return true if successful
 	 */
-	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
+	@SuppressWarnings("unchecked")
 	public boolean createJar() {
+		//delete old file
+		//FIXME: this might create errors with forge installs and maybe should be removed
 		File file = new File(ourDir, name + ".jar");
 		if (file.exists()) {
-			if(!file.delete()) {
+			if (!file.delete()) {
 				return false;
 			}
 		}
-		//noinspection SimplifiableIfStatement
-		if(repo.minecraft.versionName != null && !repo.minecraft.versionName.isEmpty()) {
-			return DownloadHelper.downloadFile(repo.minecraft.versionName, file);
+		if (repo.minecraft.versionName != null && !repo.minecraft.versionName.isEmpty()) {
+			if (repo.minecraft.jarUpdateType != null) {
+				if (repo.minecraft.jarUpdateType.equals(ModpackValues.jarForgeInherit)) {
+					NwLogger.INSTALLER_LOGGER.info("Starting Minecraft Forge Installation.");
+					try {
+						URL url;
+						if (repo.minecraft.versionName.contains("/")) {
+							//parse as direct Link
+							url = new URL(repo.minecraft.versionName);
+						} else if (repo.minecraft.versionName.contains("-")) {
+							//parse as full version name
+							url = new URL(ModpackValues.URL_FORGE_INSTALLER + repo.minecraft.versionName + "/forge-" + repo.minecraft.versionName + "-installer.jar");
+						} else {
+							//parse as build number
+							String s = DownloadHelper.getString(ModpackValues.URL_FORGE_VERSION_JSON, null);
+							JdomParser parser = new JdomParser();
+							JsonRootNode versionData = parser.parse(s);
+							JsonNode build = versionData.getNode("number", repo.minecraft.versionName);
+							int buildNumber = Integer.parseInt(build.getNumberValue("build"));
+							String branch = build.getStringValue("branch");
+							if(branch == null) {
+								branch = "";
+							} else {
+								branch = "-" + branch;
+							}
+							String mcversion = build.getStringValue("mcversion");
+							String forgeversion = build.getStringValue("version");
+							url = new URL(ModpackValues.URL_FORGE_INSTALLER + mcversion + "-" + forgeversion + branch + "/forge-" + mcversion + "-" + forgeversion + branch + "-installer.jar");
+						}
+
+						//Class loading
+						NwLogger.INSTALLER_LOGGER.fine("Loading MC-Forge Installer...");
+						URLClassLoader child = new URLClassLoader(new URL[]{url}, this.getClass().getClassLoader());
+						Class forgeClientInstall = Class.forName("net.minecraftforge.installer.ClientInstall", true, child);
+						Method runMethod = forgeClientInstall.getDeclaredMethod("run", File.class);
+						Object instance = forgeClientInstall.newInstance();
+
+						//Invoking Run Method
+						NwLogger.INSTALLER_LOGGER.fine("Starting Client Installation...");
+						Object result = runMethod.invoke(instance, baseDir);
+						if((Boolean) result) {
+							NwLogger.INSTALLER_LOGGER.info("Minecraft Forge Installation finished.");
+							return true;
+						} else {
+							NwLogger.INSTALLER_LOGGER.error("Minecraft Forge Installation has encountered an error!");
+							return false;
+						}
+					} catch (ClassNotFoundException e) {
+						NwLogger.INSTALLER_LOGGER.error("Error Loading Minecraft Forge Installer...", e);
+					} catch (MalformedURLException e) {
+						NwLogger.INSTALLER_LOGGER.error("Error parsing Minecraft Forge Installer version...", e);
+					} catch (IOException e) {
+						NwLogger.INSTALLER_LOGGER.error("Error reading Minecraft Forge Version Data", e);
+					} catch (InvalidSyntaxException e) {
+						NwLogger.INSTALLER_LOGGER.error("Error parsing Minecraft Forge Version Data", e);
+					} catch (NumberFormatException e) {
+						NwLogger.INSTALLER_LOGGER.error("Error parsing Minecraft Forge Build Number", e);
+					} catch (IllegalArgumentException e) {
+						NwLogger.INSTALLER_LOGGER.error("Error parsing Minecraft Forge Version Data", e);
+					} catch (Exception e) {
+						NwLogger.INSTALLER_LOGGER.error("Unknown Error occured!", e);
+					}
+					return false;
+				}
+			} else {
+				NwLogger.INSTALLER_LOGGER.info("Invalid Jar update type, falling back to direct download...");
+				return DownloadHelper.downloadFile(repo.minecraft.versionName, file);
+			}
 		}
 		return true;
 	}
@@ -243,63 +327,55 @@ public class Installer {
 	/**
 	 * create minecraft launcher profile <br>
 	 * code is based on the MinecraftForge-Installer
-	 * 
-	 * @see <a href=https://github.com/MinecraftForge/Installer>https://github.com/MinecraftForge/Installer</a>
+	 *
 	 * @return success of the profile creation
+	 * @see <a href=https://github.com/MinecraftForge/Installer>https://github.com/MinecraftForge/Installer</a>
 	 */
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean createProfile(String profileName, String javaOptions, String gameDirectory, int updateFrequency) {
 		if (createProfile) {
 			File launcherProfiles = new File(baseDir, "launcher_profiles.json");
-			if(!launcherProfiles.exists()) {
+			if (!launcherProfiles.exists()) {
 				JOptionPane.showMessageDialog(null, "The launcher_profiles.json file is missing!\nYou need to run the minecraft launcher at least once!", "File not found", JOptionPane.ERROR_MESSAGE);
 				return false;
 			}
 			JdomParser parser = new JdomParser();
-	        JsonRootNode jsonProfileData;
+			JsonRootNode jsonProfileData;
 
-	        try
-	        {
-	            jsonProfileData = parser.parse(Files.newReader(launcherProfiles, Charsets.UTF_8));
-	        }
-	        catch (InvalidSyntaxException e)
-	        {
-	            JOptionPane.showMessageDialog(null, "The launcher profile file is corrupted. Re-run the minecraft launcher to fix it!", "Error", JOptionPane.ERROR_MESSAGE);
-	            return false;
-	        }
-	        catch (Exception e)
-	        {
-	            throw Throwables.propagate(e);
-	        }
+			try {
+				jsonProfileData = parser.parse(Files.newReader(launcherProfiles, Charsets.UTF_8));
+			} catch (InvalidSyntaxException e) {
+				JOptionPane.showMessageDialog(null, "The launcher profile file is corrupted. Re-run the minecraft launcher to fix it!", "Error", JOptionPane.ERROR_MESSAGE);
+				return false;
+			} catch (Exception e) {
+				throw Throwables.propagate(e);
+			}
 
-	        //our Data
-	        JsonField[] fields = new JsonField[] {
-	            JsonNodeFactories.field("name", JsonNodeFactories.string(profileName)),
-	            JsonNodeFactories.field("lastVersionId", JsonNodeFactories.string(this.name)),
-	            JsonNodeFactories.field("gameDir", JsonNodeFactories.string(gameDirectory)),
-	            JsonNodeFactories.field("javaArgs", JsonNodeFactories.string(javaOptions)),
-	        };
+			//our Data
+			JsonField[] fields = new JsonField[]{
+					JsonNodeFactories.field("name", JsonNodeFactories.string(profileName)),
+					JsonNodeFactories.field("lastVersionId", JsonNodeFactories.string(this.name)),
+					JsonNodeFactories.field("gameDir", JsonNodeFactories.string(gameDirectory)),
+					JsonNodeFactories.field("javaArgs", JsonNodeFactories.string(javaOptions)),
+			};
 
-	        HashMap<JsonStringNode, JsonNode> profileCopy = Maps.newHashMap(jsonProfileData.getNode("profiles").getFields());
-	        HashMap<JsonStringNode, JsonNode> rootCopy = Maps.newHashMap(jsonProfileData.getFields());
-	        profileCopy.put(JsonNodeFactories.string(profileName), JsonNodeFactories.object(fields));
-	        JsonRootNode profileJsonCopy = JsonNodeFactories.object(profileCopy);
+			HashMap<JsonStringNode, JsonNode> profileCopy = Maps.newHashMap(jsonProfileData.getNode("profiles").getFields());
+			HashMap<JsonStringNode, JsonNode> rootCopy = Maps.newHashMap(jsonProfileData.getFields());
+			profileCopy.put(JsonNodeFactories.string(profileName), JsonNodeFactories.object(fields));
+			JsonRootNode profileJsonCopy = JsonNodeFactories.object(profileCopy);
 
-	        rootCopy.put(JsonNodeFactories.string("profiles"), profileJsonCopy);
+			rootCopy.put(JsonNodeFactories.string("profiles"), profileJsonCopy);
 
-	        jsonProfileData = JsonNodeFactories.object(rootCopy);
+			jsonProfileData = JsonNodeFactories.object(rootCopy);
 
-	        try
-	        {
-	            BufferedWriter newWriter = Files.newWriter(launcherProfiles, Charsets.UTF_8);
-	            PrettyJsonFormatter.fieldOrderPreservingPrettyJsonFormatter().format(jsonProfileData,newWriter);
-	            newWriter.close();
-	        }
-	        catch (Exception e)
-	        {
-	            JOptionPane.showMessageDialog(null, "There was a problem writing the launch profile,  is it write protected?", "Error", JOptionPane.ERROR_MESSAGE);
-	            return false;
-	        }
+			try {
+				BufferedWriter newWriter = Files.newWriter(launcherProfiles, Charsets.UTF_8);
+				PrettyJsonFormatter.fieldOrderPreservingPrettyJsonFormatter().format(jsonProfileData, newWriter);
+				newWriter.close();
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, "There was a problem writing the launch profile,  is it write protected?", "Error", JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
 			return true;
 		} else {
 			return true;
