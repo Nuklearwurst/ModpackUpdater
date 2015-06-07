@@ -20,63 +20,168 @@ repositories {
 }
 
 group = 'common.nw'
+archivesBaseName = 'updater'
 sourceCompatibility = 1.6
 
 dependencies {
-    compile 'net.sf.jopt-simple:jopt-simple:4.5'
+    compile 'com.intellij:forms_rt:7.0.3'
     compile 'net.sourceforge.argo:argo:3.7'
     compile 'com.google.guava:guava:14.0'
     compile 'com.google.code.gson:gson:2.2.4'
-    compile 'net.minecraft:launchwrapper:1.11'
-    compile 'com.intellij:forms_rt:7.0.3'
+    compile ('net.minecraft:launchwrapper:1.11') {
+        exclude group: 'org.ow2.asm'
+    }
+    compile 'net.sf.jopt-simple:jopt-simple:4.5'
 }
 
-task presetInstaller(type: Jar) {
+/**
+ * Base Jar (without libraries) (-->used as a tweaker when minecraft loads)
+ */
+jar {
+    exclude 'argo/**'
+    exclude 'com/intellij/**'
+    baseName = 'updater'
+    version = '2.1.5'
+    classifier = 'thin'
+}
+
+/**
+ * Base fat Jar
+ */
+task fatJar(type: Jar, dependsOn: jar) {
+    inputs.file jar.archivePath
+    from(configurations.compile.collect { zipTree(it) })
+}
+
+fatJar.doFirst {
+    from zipTree(jar.archivePath)
+}
+
+/**
+ * Preset Installer (fat)
+ */
+task presetInstaller(type: Jar, dependsOn: fatJar) {
     baseName = 'installer'
     version = '2.2.2'
     classifier = 'preset'
-    from sourceSets.main.output
+    from zipTree(fatJar.archivePath)
     manifest { attributes 'Main-Class': 'common.nw.installer.PrepackedInstall' }
 }
 
-task installer(type: Jar) {
+/**
+ * Installer (fat)
+ */
+task installer(type: Jar, dependsOn: fatJar) {
     baseName = 'installer'
     version = '2.2.2'
-    from sourceSets.main.output
+    from zipTree(fatJar.archivePath)
     manifest { attributes 'Main-Class': 'common.nw.installer.gui.InstallerWindow' }
 }
 
-task creator(type: Jar) {
+/**
+ * Creator (fat)
+ */
+task creator(type: Jar, dependsOn: fatJar) {
     baseName = 'creator'
-    version = '2.3.0'
-    from sourceSets.main.output
+    version = '2.4.0'
+    from zipTree(fatJar.archivePath)
     manifest { attributes 'Main-Class': 'common.nw.creator.gui.CreatorWindow' }
 }
 
-task updater(type: Jar) {
+/**
+ * Executable Updater (fat)
+ */
+task updater(type: Jar, dependsOn: fatJar) {
     baseName = 'updater'
     version = '2.1.5'
     classifier = 'executeable'
-    from sourceSets.main.output
+    from zipTree(fatJar.archivePath)
     manifest { attributes 'Main-Class': 'common.nw.updater.launch.Launch' }
 }
 
+/**
+ * Shrunk Jar (Base for artifacts)
+ */
+task shrinkJar(type: proguard.gradle.ProGuardTask, dependsOn: fatJar) {
+    inputs.file fatJar.archivePath
+    ext {
+        outDir = file("${buildDir}/proguard")
+        obfuscatedJar = "${outDir}/${jar.baseName}.jar"
+    }
+    outDir.mkdirs()
+
+    injars fatJar.archivePath
+    outjars obfuscatedJar
+    configuration 'proguard.pro'
+}
+
+/**
+ * Shrunk Creator
+ */
+task shrinkCreator(type: Jar, dependsOn: shrinkJar) {
+    baseName = 'creator'
+    version = '2.4.0'
+    classifier = 'shrunk'
+    from zipTree(shrinkJar.obfuscatedJar)
+    manifest { attributes 'Main-Class': 'common.nw.creator.gui.CreatorWindow' }
+}
+
+/**
+ * Shrunk Installer
+ */
+task shrinkInstaller(type: Jar, dependsOn: shrinkJar) {
+    baseName = 'installer'
+    version = '2.2.2'
+    classifier = 'shrunk'
+    from zipTree(shrinkJar.obfuscatedJar)
+    manifest { attributes 'Main-Class': 'common.nw.installer.gui.InstallerWindow' }
+}
+
+/**
+ * Shrunk Installer (Preset)
+ */
+task shrinkInstallerPreset(type: Jar, dependsOn: shrinkJar) {
+    baseName = 'installer'
+    version = '2.2.2'
+    classifier = 'preset-shrunk'
+    from zipTree(shrinkJar.obfuscatedJar)
+    manifest { attributes 'Main-Class': 'common.nw.installer.PrepackedInstall' }
+}
+
+/**
+ * Shrunk Updater (executable)
+ */
+task shrinkUpdater(type: Jar, dependsOn: shrinkJar) {
+    baseName = 'updater'
+    version = '2.1.5'
+    classifier = 'executable-shrunk'
+    from zipTree(shrinkJar.obfuscatedJar)
+    manifest { attributes 'Main-Class': 'common.nw.updater.launch.Launch' }
+}
+/**
+ * Source Code
+ */
 task sourcesJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
 }
 
-jar {
-    baseName = 'updater'
-    version = '2.1.5'
-}
-
 artifacts {
+    //create Fat Jars
+    archives fatJar
     archives installer
     archives presetInstaller
     archives updater
     archives creator
+
+    //create sources jar
     archives sourcesJar
+
+    //create shrunk Jars
+    archives shrinkInstaller
+    archives shrinkInstallerPreset
+    archives shrinkUpdater
+    archives shrinkCreator
 }
 
 task wrapper(type: Wrapper) {
