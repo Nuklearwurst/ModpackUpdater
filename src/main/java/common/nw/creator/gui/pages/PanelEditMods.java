@@ -27,7 +27,7 @@ import java.util.*;
 /**
  * @author Nuklearwurst
  */
-public class PanelEditMods  implements IPageHandler, IDropFileHandler, ITableHolder {
+public class PanelEditMods implements IPageHandler, IDropFileHandler, ITableHolder {
 
 	private JButton btnNew;
 	private JButton btnEdit;
@@ -64,15 +64,15 @@ public class PanelEditMods  implements IPageHandler, IDropFileHandler, ITableHol
 				if (index.length < 0) {
 					return;
 				}
-				if(index.length > 1) {
+				if (index.length > 1) {
 					if (JOptionPane.showConfirmDialog(panel_editmods,
 							"Are you sure you want to remove these files from the list?",
 							"Are you sure", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
 						return;
 					}
 				}
-				for(int i = index.length - 1; i >= 0; i--) {
-					if(i < mods.size()) {
+				for (int i = index.length - 1; i >= 0; i--) {
+					if (i < mods.size()) {
 						mods.remove(tableMods.getRowSorter().convertRowIndexToModel(index[i]));
 					}
 				}
@@ -116,8 +116,8 @@ public class PanelEditMods  implements IPageHandler, IDropFileHandler, ITableHol
 			}
 		});
 
-		tableMods.setModel(new TableModelList(new String[] { "Name", "Version",
-				"URL" }, new String[] { "name", "version", "downloadUrl" },
+		tableMods.setModel(new TableModelList(new String[]{"Name", "Version",
+				"URL"}, new String[]{"name", "version", "downloadUrl"},
 				creator.modpack.files));
 		tableMods.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
@@ -127,21 +127,21 @@ public class PanelEditMods  implements IPageHandler, IDropFileHandler, ITableHol
 	}
 
 	private void hideFiles() {
-		if(hiddenFiles == null) {
+		if (hiddenFiles == null) {
 			hiddenFiles = new ArrayList<RepoMod>();
 		}
 		//hide mods
-		if(chbxHideMods.isSelected()) {
-			for(int i = mods.size() - 1; i >= 0; i--) {
-				if((mods.get(i).fileName.startsWith("mods/") || mods.get(i).fileName.startsWith("mods" + File.separator)) && !hiddenFiles.contains(mods.get(i))) {
+		if (chbxHideMods.isSelected()) {
+			for (int i = mods.size() - 1; i >= 0; i--) {
+				if ((mods.get(i).fileName.startsWith("mods/") || mods.get(i).fileName.startsWith("mods" + File.separator)) && !hiddenFiles.contains(mods.get(i))) {
 					hiddenFiles.add(mods.get(i));
 					mods.remove(i);
 				}
 			}
 		} else {
-			for(int i = hiddenFiles.size() - 1; i >= 0 ; i--) {
-				if(hiddenFiles.get(i).fileName.startsWith("mods/") || hiddenFiles.get(i).fileName.startsWith("mods" + File.separator)) {
-					if(!mods.contains(hiddenFiles.get(i))) {
+			for (int i = hiddenFiles.size() - 1; i >= 0; i--) {
+				if (hiddenFiles.get(i).fileName.startsWith("mods/") || hiddenFiles.get(i).fileName.startsWith("mods" + File.separator)) {
+					if (!mods.contains(hiddenFiles.get(i))) {
 						mods.add(hiddenFiles.get(i));
 					}
 					hiddenFiles.remove(i);
@@ -149,17 +149,17 @@ public class PanelEditMods  implements IPageHandler, IDropFileHandler, ITableHol
 			}
 		}
 		//hids config
-		if(chbxHideConfig.isSelected()) {
-			for(int i = mods.size() - 1; i >= 0; i--) {
-				if((mods.get(i).fileName.startsWith("config/") || mods.get(i).fileName.startsWith("config" + File.separator)) && !hiddenFiles.contains(mods.get(i))) {
+		if (chbxHideConfig.isSelected()) {
+			for (int i = mods.size() - 1; i >= 0; i--) {
+				if ((mods.get(i).fileName.startsWith("config/") || mods.get(i).fileName.startsWith("config" + File.separator)) && !hiddenFiles.contains(mods.get(i))) {
 					hiddenFiles.add(mods.get(i));
 					mods.remove(i);
 				}
 			}
 		} else {
-			for(int i = hiddenFiles.size() - 1; i >= 0 ; i--) {
-				if(hiddenFiles.get(i).fileName.startsWith("config/") || hiddenFiles.get(i).fileName.startsWith("config" + File.separator)) {
-					if(!mods.contains(hiddenFiles.get(i))) {
+			for (int i = hiddenFiles.size() - 1; i >= 0; i--) {
+				if (hiddenFiles.get(i).fileName.startsWith("config/") || hiddenFiles.get(i).fileName.startsWith("config" + File.separator)) {
+					if (!mods.contains(hiddenFiles.get(i))) {
 						mods.add(hiddenFiles.get(i));
 					}
 					hiddenFiles.remove(i);
@@ -169,9 +169,7 @@ public class PanelEditMods  implements IPageHandler, IDropFileHandler, ITableHol
 	}
 
 	/**
-	 *
-	 * @param mode
-	 *            true equals new entry, false equals edit entry
+	 * @param mode true equals new entry, false equals edit entry
 	 */
 	private void showEditDialog(boolean mode) {
 		int index = mode ? mods.size() : tableMods.getRowSorter().convertRowIndexToModel(tableMods.getSelectedRow());
@@ -205,20 +203,20 @@ public class PanelEditMods  implements IPageHandler, IDropFileHandler, ITableHol
 		String baseDirToAdd = "";
 
 		//split absolutePath in two parts
-		if(mcRelativePath.contains(File.separator + "mods" + File.separator)) {
+		if (mcRelativePath.contains(File.separator + "mods" + File.separator)) {
 			int index = absolutePath.indexOf("mods" + File.separator);
 			mcRelativePath = absolutePath.substring(index);
 			baseDirPath = absolutePath.substring(0, index);
-		} else if(mcRelativePath.contains(File.separator + "config" + File.separator)) {
+		} else if (mcRelativePath.contains(File.separator + "config" + File.separator)) {
 			int index = absolutePath.indexOf("config" + File.separator);
 			mcRelativePath = absolutePath.substring(index);
 			baseDirPath = absolutePath.substring(0, index);
-		} else if(mcRelativePath.endsWith(".jar")) {
+		} else if (mcRelativePath.endsWith(".jar")) {
 			int index = absolutePath.lastIndexOf(File.separator);
 			mcRelativePath = absolutePath.substring(index);
 			baseDirPath = absolutePath.substring(0, index);
 			baseDirToAdd = File.separator + "mods";
-		} else if(mcRelativePath.endsWith(".cfg")) {
+		} else if (mcRelativePath.endsWith(".cfg")) {
 			int index = absolutePath.lastIndexOf(File.separator);
 			mcRelativePath = absolutePath.substring(index);
 			baseDirPath = absolutePath.substring(0, index);
@@ -234,7 +232,7 @@ public class PanelEditMods  implements IPageHandler, IDropFileHandler, ITableHol
 		RepoMod repo = new RepoMod();
 		repo.name = mod.name;
 		repo.version = mod.version;
-		if(repo.version == null) {
+		if (repo.version == null) {
 			repo.version = repo.name;
 		}
 		repo.downloadUrl = "EDIT_DOWNLOAD_URL_PLEASE";
@@ -249,7 +247,7 @@ public class PanelEditMods  implements IPageHandler, IDropFileHandler, ITableHol
 		}
 		if (mod.hasVersionFile) {
 			repo.versionType = ModpackValues.versionTypeZipEntry;
-		} else if(mod.fileName.startsWith("config" + File.separator)) {
+		} else if (mod.fileName.startsWith("config" + File.separator)) {
 			repo.version = DateFormat.getDateInstance().format(new Date(System.currentTimeMillis()));
 			repo.versionType = ModpackValues.versionTypeTracked;
 		} else {
@@ -288,10 +286,10 @@ public class PanelEditMods  implements IPageHandler, IDropFileHandler, ITableHol
 
 	@Override
 	public Object getProperty(String s) {
-		if(s.equals(Reference.KEY_NAME)) {
+		if (s.equals(Reference.KEY_NAME)) {
 			return "Edit Mods";
 		}
-		if(s.equals(Reference.KEY_TURNABLE)) {
+		if (s.equals(Reference.KEY_TURNABLE)) {
 			return true;
 		}
 		return null;
@@ -301,7 +299,7 @@ public class PanelEditMods  implements IPageHandler, IDropFileHandler, ITableHol
 	public void onPageOpened(PageHolder holder, boolean forward) {
 		this.mods = creator.modpack.files;
 		this.blacklist = creator.modpack.blacklist;
-		((TableModelList)this.tableMods.getModel()).setValues(creator.modpack.files);
+		((TableModelList) this.tableMods.getModel()).setValues(creator.modpack.files);
 		updateTable();
 	}
 
@@ -317,6 +315,119 @@ public class PanelEditMods  implements IPageHandler, IDropFileHandler, ITableHol
 	}
 
 	public JPanel getPanel() {
+		return panel_editmods;
+	}
+
+	{
+// GUI initializer generated by IntelliJ IDEA GUI Designer
+// >>> IMPORTANT!! <<<
+// DO NOT EDIT OR ADD ANY CODE HERE!
+		$$$setupUI$$$();
+	}
+
+	/**
+	 * Method generated by IntelliJ IDEA GUI Designer
+	 * >>> IMPORTANT!! <<<
+	 * DO NOT edit this method OR call it in your code!
+	 *
+	 * @noinspection ALL
+	 */
+	private void $$$setupUI$$$() {
+		panel_editmods = new JPanel();
+		panel_editmods.setLayout(new GridBagLayout());
+		btnNew = new JButton();
+		btnNew.setText("New");
+		GridBagConstraints gbc;
+		gbc = new GridBagConstraints();
+		gbc.gridx = 2;
+		gbc.gridy = 1;
+		gbc.gridwidth = 2;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		panel_editmods.add(btnNew, gbc);
+		final JPanel spacer1 = new JPanel();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 2;
+		gbc.gridy = 0;
+		gbc.gridwidth = 2;
+		gbc.fill = GridBagConstraints.VERTICAL;
+		panel_editmods.add(spacer1, gbc);
+		btnEdit = new JButton();
+		btnEdit.setText("Edit");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 2;
+		gbc.gridy = 2;
+		gbc.gridwidth = 2;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		panel_editmods.add(btnEdit, gbc);
+		btnRemove = new JButton();
+		btnRemove.setText("Remove");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 2;
+		gbc.gridy = 3;
+		gbc.gridwidth = 2;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		panel_editmods.add(btnRemove, gbc);
+		chbxHideMods = new JCheckBox();
+		chbxHideMods.setText("Hide mods");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 2;
+		gbc.gridy = 4;
+		gbc.gridwidth = 2;
+		gbc.anchor = GridBagConstraints.WEST;
+		panel_editmods.add(chbxHideMods, gbc);
+		chbxHideConfig = new JCheckBox();
+		chbxHideConfig.setText("Hide configs");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 2;
+		gbc.gridy = 5;
+		gbc.gridwidth = 2;
+		gbc.anchor = GridBagConstraints.WEST;
+		panel_editmods.add(chbxHideConfig, gbc);
+		final JScrollPane scrollPane1 = new JScrollPane();
+		scrollPane1.setBackground(new Color(-1));
+		scrollPane1.setVerticalScrollBarPolicy(22);
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.gridheight = 8;
+		gbc.weightx = 1.0;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		panel_editmods.add(scrollPane1, gbc);
+		tableMods = new JTable();
+		tableMods.setDropMode(DropMode.ON);
+		tableMods.setFillsViewportHeight(true);
+		tableMods.setPreferredScrollableViewportSize(new Dimension(300, 150));
+		scrollPane1.setViewportView(tableMods);
+		final JPanel spacer2 = new JPanel();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 2;
+		gbc.gridy = 6;
+		gbc.gridwidth = 2;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.VERTICAL;
+		panel_editmods.add(spacer2, gbc);
+		btnEditBlacklist = new JButton();
+		btnEditBlacklist.setText("Edit Blacklist");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 2;
+		gbc.gridy = 7;
+		gbc.gridwidth = 2;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		panel_editmods.add(btnEditBlacklist, gbc);
+		final JPanel spacer3 = new JPanel();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.gridheight = 8;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		panel_editmods.add(spacer3, gbc);
+	}
+
+	/**
+	 * @noinspection ALL
+	 */
+	public JComponent $$$getRootComponent$$$() {
 		return panel_editmods;
 	}
 }

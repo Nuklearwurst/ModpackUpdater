@@ -196,7 +196,7 @@ public class InstallerWindow {
 			}
 			modpack = Installer.downloadModpack(url);
 			if (modpack != null) {
-				if(modpack.updaterRevision <= VersionInfo.REPO_MODPACK_REVISION) {
+				if(modpack.updaterRevision > VersionInfo.REPO_MODPACK_REVISION) {
 					if(JOptionPane.showConfirmDialog(mainFrame, "This modpack requires a newer of the installer!\nDo you want to continue anyways?\n(This may not work and might corrupt your minecraft installation)", "Newer version needed!", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE) != JOptionPane.YES_OPTION) {
 						//Error: old installer
 						installing = false;

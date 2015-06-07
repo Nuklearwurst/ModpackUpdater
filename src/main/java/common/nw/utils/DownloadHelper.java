@@ -147,13 +147,13 @@ public class DownloadHelper {
 
 		if (!ignoreDuplicates) {
 			if (modFile.exists()) {
-				Updater.logger.fine("ModFile " + mod.fileName + " does already exsist, checking md5!");
+				Updater.logger.fine("ModFile " + mod.fileName + " does already exist, checking md5!");
 				String hash = getHash(modFile);
 				if (hash != null && !hash.isEmpty() && hash.equals(mod.getRemoteInfo().md5)) {
-					Updater.logger.info("Using already exsisting modFile! Aborting Download...");
+					Updater.logger.info("Using already existing modFile! Aborting Download...");
 					return UpdateResult.Good;
 				} else {
-					Updater.logger.fine("MD5 does NOT match, tring to download new mod.");
+					Updater.logger.fine("MD5 does NOT match, trying to download new mod.");
 				}
 			}
 		}
@@ -162,7 +162,7 @@ public class DownloadHelper {
 		File tempFile = new File(file + ".tmp");
 
 		Updater.logger.info("Creating HTTP client for " + mod.name + " from " + mod.getRemoteInfo().downloadUrl + ". Using temp file " + tempFile);
-		listener.setDownloadProgress("Downloding " + mod.name + " from " + mod.getRemoteInfo().downloadUrl + ".", 0);
+		listener.setDownloadProgress("Starting Download: " + mod.name + " from " + mod.getRemoteInfo().downloadUrl + ".", 0);
 		if (listener.isCancelled()) {
 			return UpdateResult.Cancelled;
 		}
@@ -195,16 +195,16 @@ public class DownloadHelper {
 			//working?
 			File oldModFile = mod.file;
 			if ((oldModFile != null) && (oldModFile.exists())) {
-				listener.setDownloadProgress("Deleting old mod file...", 90, 100);
+				listener.setDownloadProgress("Deleting old mod file...");
 				if (!oldModFile.delete()) {
 					Updater.logger.warning("Deleting legacy file failed.");
 				}
 			}
 
-			listener.setDownloadProgress("Renaming downloaded file...", 95, 100);
+			listener.setDownloadProgress("Renaming downloaded file...");
 			if (tempFile.renameTo(modFile)) {
-				listener.setDownloadProgress("Renamed " + modFile.getName()
-						+ " successfully!", 100);
+				listener.setDownloadProgress("Download of " + modFile.getName()
+						+ " complete!");
 				return UpdateResult.Good;
 			}
 
@@ -278,6 +278,9 @@ public class DownloadHelper {
 
 			httpInputStream = http.getInputStream();
 			progressMax = http.getContentLength();
+			if(progressMax < 1) {
+				progressMax = 100;
+			}
 			int contentLength = http.getContentLength();
 
 			if (listener.isCancelled()) {
