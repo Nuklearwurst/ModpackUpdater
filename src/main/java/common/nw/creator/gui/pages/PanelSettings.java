@@ -1,0 +1,355 @@
+package common.nw.creator.gui.pages;
+
+import common.nw.creator.Creator;
+import common.nw.creator.gui.CreatorWindow;
+import common.nw.creator.gui.Reference;
+import common.nw.creator.properties.CreatorProperties;
+import common.nw.gui.IPageHandler;
+import common.nw.gui.PageHolder;
+import common.nw.utils.Utils;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+
+/**
+ * @author Nuklearwurst
+ */
+public class PanelSettings implements IPageHandler {
+	private JPanel panel_settings;
+	private JTextField txtName;
+	private JTextField txtOutput;
+	private JButton btnOpenOutput;
+	private JCheckBox chbxRead;
+	private JTextField txtUrl;
+	private JTextField txtFiles;
+	private JButton btnOpenFiles;
+	private JLabel lblName;
+	private JLabel lblOutput;
+	private JLabel lblUrl;
+	private JLabel lblFiles;
+
+	private Creator creator;
+
+	/**
+	 * Create the panel.
+	 */
+	public PanelSettings(Creator creator) {
+
+		this.creator = creator;
+
+		chbxRead.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (chbxRead.isSelected()) {
+					btnOpenFiles.setEnabled(true);
+					txtFiles.setEnabled(true);
+					txtUrl.setEnabled(true);
+				} else {
+					btnOpenFiles.setEnabled(false);
+					txtFiles.setEnabled(false);
+					txtUrl.setEnabled(false);
+				}
+			}
+		});
+		chbxRead.setActionCommand("readStructure");
+		chbxRead.setToolTipText("Do you want do read the mods from an existing folder structure?");
+
+		lblName.setToolTipText("The name of the Modpack");
+
+		lblOutput.setToolTipText("The generated .json file. \r\nThis is the file needed for the modpack updater.");
+
+		lblUrl.setToolTipText("The url of the repo directory. \r\nUsed to generate the mods urls.");
+
+		lblFiles.setToolTipText("The directory that contains all the files that should be part of this modpack");
+
+		txtFiles.setEnabled(false);
+		txtFiles.setText(CreatorProperties.LAST_INPUT_DIRECTORY);
+
+		txtUrl.setEnabled(false);
+
+		btnOpenOutput.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String file = Utils.openFileOrDirectoryWithDefaultFileName(
+						panel_settings, null, "modpack.json");
+				if (file != null) {
+					txtOutput.setText(file);
+				}
+			}
+		});
+		btnOpenOutput.setActionCommand("Output");
+
+		btnOpenFiles.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String file = Utils.openFolder(panel_settings, null);
+				if (file != null) {
+					txtFiles.setText(file);
+				}
+			}
+		});
+		btnOpenFiles.setEnabled(false);
+		btnOpenFiles.setActionCommand("Input");
+	}
+
+	@Override
+	public Object getProperty(String s) {
+		if (s.equals(Reference.KEY_NAME)) {
+			return "Settings";
+		}
+		if (s.equals(Reference.KEY_TURNABLE)) {
+			return true;
+		}
+		return null;
+	}
+
+	@Override
+	public void onPageOpened(PageHolder holder, boolean forward) {
+		if (forward) {
+			//import data
+			this.txtName.setText(creator.modpack.modpackName);
+			this.txtUrl.setText(creator.modpack.modpackRepo);
+
+			this.txtOutput.setText(creator.outputLoc);
+			this.txtFiles.setText(creator.fileLoc);
+		} else {
+			//don't read a second time
+			this.chbxRead.setSelected(false);
+			btnOpenFiles.setEnabled(false);
+			txtFiles.setEnabled(false);
+			txtUrl.setEnabled(false);
+		}
+	}
+
+	@SuppressWarnings("PointlessBooleanExpression")
+	@Override
+	public boolean onPageClosed(PageHolder holder, boolean forward) {
+		//save properties
+		if (txtFiles.getText() != null && !txtFiles.getText().isEmpty()) {
+			CreatorProperties.LAST_INPUT_DIRECTORY = txtFiles.getText();
+		}
+		// validating entries
+		if (forward) {
+			boolean b = true;
+			if (txtName.getText() == null || txtName.getText().isEmpty()
+					|| txtOutput.getText() == null
+					|| txtOutput.getText().isEmpty()) {
+				b = false;
+			} else if (!new File(txtOutput.getText()).exists()) {
+				b = false;
+			}
+			if (chbxRead.isSelected()) {
+				if (txtFiles.getText() == null || txtFiles.getText().isEmpty()
+						|| txtUrl.getText() == null
+						|| txtUrl.getText().isEmpty()) {
+					b = false;
+				} else if (!new File(txtFiles.getText()).exists()) {
+					b = false;
+				}
+			}
+			if (!b) {
+				if (!CreatorWindow.DEBUG) {
+					JOptionPane.showMessageDialog(panel_settings,
+							"Not all requiered fields are filled in!", "Error",
+							JOptionPane.ERROR_MESSAGE);
+					return false;
+				}
+			}
+		}
+
+
+		//set new values
+		creator.fileLoc = this.txtFiles.getText();
+		creator.outputLoc = this.txtOutput.getText();
+		creator.modpack.modpackName = this.txtName.getText();
+		creator.modpack.modpackRepo = this.txtUrl.getText();
+		creator.shouldReadFiles = chbxRead.isSelected();
+
+		return true;
+	}
+
+	public JPanel getPanel() {
+		return panel_settings;
+	}
+
+	public void setBorder(Border border) {
+		panel_settings.setBorder(border);
+	}
+
+	{
+// GUI initializer generated by IntelliJ IDEA GUI Designer
+// >>> IMPORTANT!! <<<
+// DO NOT EDIT OR ADD ANY CODE HERE!
+		$$$setupUI$$$();
+	}
+
+	/**
+	 * Method generated by IntelliJ IDEA GUI Designer
+	 * >>> IMPORTANT!! <<<
+	 * DO NOT edit this method OR call it in your code!
+	 *
+	 * @noinspection ALL
+	 */
+	private void $$$setupUI$$$() {
+		panel_settings = new JPanel();
+		panel_settings.setLayout(new GridBagLayout());
+		lblName = new JLabel();
+		lblName.setText("Modpack Name:");
+		GridBagConstraints gbc;
+		gbc = new GridBagConstraints();
+		gbc.gridx = 1;
+		gbc.gridy = 1;
+		gbc.gridwidth = 3;
+		gbc.anchor = GridBagConstraints.WEST;
+		panel_settings.add(lblName, gbc);
+		final JPanel spacer1 = new JPanel();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		panel_settings.add(spacer1, gbc);
+		final JPanel spacer2 = new JPanel();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.gridwidth = 2;
+		gbc.fill = GridBagConstraints.VERTICAL;
+		panel_settings.add(spacer2, gbc);
+		txtName = new JTextField();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 4;
+		gbc.gridy = 1;
+		gbc.weightx = 1.0;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(2, 0, 2, 0);
+		panel_settings.add(txtName, gbc);
+		final JPanel spacer3 = new JPanel();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 7;
+		gbc.gridy = 1;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		panel_settings.add(spacer3, gbc);
+		lblOutput = new JLabel();
+		lblOutput.setText("Output file:");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 1;
+		gbc.gridy = 2;
+		gbc.gridwidth = 3;
+		gbc.anchor = GridBagConstraints.WEST;
+		panel_settings.add(lblOutput, gbc);
+		txtOutput = new JTextField();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 4;
+		gbc.gridy = 2;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(2, 0, 2, 0);
+		panel_settings.add(txtOutput, gbc);
+		btnOpenOutput = new JButton();
+		btnOpenOutput.setText("Open");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 6;
+		gbc.gridy = 2;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		panel_settings.add(btnOpenOutput, gbc);
+		chbxRead = new JCheckBox();
+		chbxRead.setText("Read mods-structure from folder");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 1;
+		gbc.gridy = 4;
+		gbc.gridwidth = 4;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.insets = new Insets(0, 10, 0, 0);
+		panel_settings.add(chbxRead, gbc);
+		final JPanel spacer4 = new JPanel();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 1;
+		gbc.gridy = 3;
+		gbc.gridwidth = 2;
+		gbc.fill = GridBagConstraints.VERTICAL;
+		panel_settings.add(spacer4, gbc);
+		final JPanel spacer5 = new JPanel();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 1;
+		gbc.gridy = 5;
+		gbc.gridheight = 3;
+		gbc.weightx = 0.1;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		panel_settings.add(spacer5, gbc);
+		final JPanel spacer6 = new JPanel();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 5;
+		gbc.gridheight = 3;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.VERTICAL;
+		panel_settings.add(spacer6, gbc);
+		lblUrl = new JLabel();
+		lblUrl.setText("Base-URL:");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 2;
+		gbc.gridy = 5;
+		gbc.anchor = GridBagConstraints.WEST;
+		panel_settings.add(lblUrl, gbc);
+		final JPanel spacer7 = new JPanel();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 2;
+		gbc.gridy = 7;
+		gbc.fill = GridBagConstraints.VERTICAL;
+		panel_settings.add(spacer7, gbc);
+		lblFiles = new JLabel();
+		lblFiles.setText("Modpack files:");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 2;
+		gbc.gridy = 6;
+		gbc.anchor = GridBagConstraints.WEST;
+		panel_settings.add(lblFiles, gbc);
+		txtUrl = new JTextField();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 4;
+		gbc.gridy = 5;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(2, 0, 2, 0);
+		panel_settings.add(txtUrl, gbc);
+		txtFiles = new JTextField();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 4;
+		gbc.gridy = 6;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(2, 0, 2, 0);
+		panel_settings.add(txtFiles, gbc);
+		btnOpenFiles = new JButton();
+		btnOpenFiles.setText("Open");
+		gbc = new GridBagConstraints();
+		gbc.gridx = 6;
+		gbc.gridy = 6;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		panel_settings.add(btnOpenFiles, gbc);
+		final JPanel spacer8 = new JPanel();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 3;
+		gbc.gridy = 6;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		panel_settings.add(spacer8, gbc);
+		final JPanel spacer9 = new JPanel();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 5;
+		gbc.gridy = 6;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		panel_settings.add(spacer9, gbc);
+	}
+
+	/**
+	 * @noinspection ALL
+	 */
+	public JComponent $$$getRootComponent$$$() {
+		return panel_settings;
+	}
+}

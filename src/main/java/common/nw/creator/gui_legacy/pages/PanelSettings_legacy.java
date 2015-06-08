@@ -15,7 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-public class PanelSettings extends JPanel implements IPageHandler {
+public class PanelSettings_legacy extends JPanel implements IPageHandler {
 	/**
 	 * 
 	 */
@@ -31,7 +31,7 @@ public class PanelSettings extends JPanel implements IPageHandler {
 	/**
 	 * Create the panel.
 	 */
-	public PanelSettings(Creator creator) {
+	public PanelSettings_legacy(Creator creator) {
 
 		this.creator = creator;
 
@@ -86,7 +86,7 @@ public class PanelSettings extends JPanel implements IPageHandler {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String file = Utils.openFileOrDirectoryWithDefaultFileName(
-						PanelSettings.this, null, "modpack.json");
+						PanelSettings_legacy.this, null, "modpack.json");
 				if (file != null) {
 					txtOutput.setText(file);
 				}
@@ -98,7 +98,7 @@ public class PanelSettings extends JPanel implements IPageHandler {
 		btnOpenFiles.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String file = Utils.openFolder(PanelSettings.this, null);
+				String file = Utils.openFolder(PanelSettings_legacy.this, null);
 				if (file != null) {
 					txtFiles.setText(file);
 				}

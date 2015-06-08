@@ -3,7 +3,10 @@ package common.nw.creator.gui;
 import common.nw.creator.Creator;
 import common.nw.creator.gui.pages.PanelEditMods;
 import common.nw.creator.gui.pages.PanelInit;
-import common.nw.creator.gui_legacy.pages.*;
+import common.nw.creator.gui.pages.PanelMinecraftSettings;
+import common.nw.creator.gui.pages.PanelSettings;
+import common.nw.creator.gui_legacy.pages.PanelFinish;
+import common.nw.creator.gui_legacy.pages.PanelLoading;
 import common.nw.creator.properties.CreatorProperties;
 import common.nw.gui.PageHolder;
 import common.nw.utils.Utils;
@@ -97,10 +100,10 @@ public class CreatorWindow {
 
 		page1 = new PanelSettings(creator);
 		page1.setBorder(new LineBorder(new Color(0, 0, 0)));
-		pageHolder.addPage(page1, (String) page1.getProperty(Reference.KEY_NAME));
+		pageHolder.addPage(page1.getPanel(), page1, (String) page1.getProperty(Reference.KEY_NAME));
 
 		page2 = new PanelMinecraftSettings(creator, window);
-		pageHolder.addPage(page2, (String) page2.getProperty(Reference.KEY_NAME));
+		pageHolder.addPage(page2.getPanel(), page2, (String) page2.getProperty(Reference.KEY_NAME));
 
 		page3 = new PanelLoading(creator);
 		GridBagLayout gbl_page3 = (GridBagLayout) page3.getLayout();

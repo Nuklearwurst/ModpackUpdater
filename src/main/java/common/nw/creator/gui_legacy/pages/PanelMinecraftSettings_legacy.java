@@ -15,7 +15,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class PanelMinecraftSettings extends JPanel implements IPageHandler {
+public class PanelMinecraftSettings_legacy extends JPanel implements IPageHandler {
 	/**
 	 * 
 	 */
@@ -39,7 +39,7 @@ public class PanelMinecraftSettings extends JPanel implements IPageHandler {
 	/**
 	 * Create the panel.
 	 */
-	public PanelMinecraftSettings(Creator creator, JFrame frame) {
+	public PanelMinecraftSettings_legacy(Creator creator, JFrame frame) {
 
 		this.creator = creator;
 		this.frame = frame;

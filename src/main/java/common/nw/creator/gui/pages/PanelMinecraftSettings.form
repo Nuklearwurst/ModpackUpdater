@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="common.nw.creator.gui.pages.PanelMinecraftSettings">
+  <grid id="27dc6" binding="panel_minecraft_settings" layout-manager="GridLayoutManager" row-count="8" column-count="7" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="530" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <component id="96873" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Version:"/>
+          <toolTipText value="The version.  Can be anything."/>
+        </properties>
+      </component>
+      <vspacer id="f6136">
+        <constraints>
+          <grid row="7" column="0" row-span="1" col-span="6" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </vspacer>
+      <component id="9da7" class="javax.swing.JTextField" binding="txtVersion">
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="6" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="65f31" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="MC-jar type:"/>
+        </properties>
+      </component>
+      <component id="4d63a" class="javax.swing.JRadioButton" binding="rdbtnDownloadJar">
+        <constraints>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <selected value="true"/>
+          <text value="Download"/>
+        </properties>
+      </component>
+      <hspacer id="8805e">
+        <constraints>
+          <grid row="1" column="5" row-span="1" col-span="2" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </hspacer>
+      <component id="8502c" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="MC-json type:"/>
+        </properties>
+      </component>
+      <component id="6b4c9" class="javax.swing.JRadioButton" binding="rdbtnDownloadJson">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <enabled value="false"/>
+          <selected value="true"/>
+          <text value="Download"/>
+        </properties>
+      </component>
+      <component id="2c16" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="MC-jar location:"/>
+          <toolTipText value="The location of the minecraft-json file.   Url or relative path.  Depends on the choice made in MC-json type."/>
+        </properties>
+      </component>
+      <component id="6f307" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="MC-json location:"/>
+          <toolTipText value="The location of the minecraft-jar file.   Url or relative path.  Depends on the choice made in MC-jar type."/>
+        </properties>
+      </component>
+      <component id="2ef3b" class="javax.swing.JTextField" binding="txtJar">
+        <constraints>
+          <grid row="3" column="1" row-span="1" col-span="6" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="db39c" class="javax.swing.JTextField" binding="txtJson">
+        <constraints>
+          <grid row="4" column="1" row-span="1" col-span="6" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="2cce7" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Modpack Info:"/>
+          <toolTipText value="URL pointing to a website displayed during installation. Leave empty for none."/>
+        </properties>
+      </component>
+      <component id="ff1f4" class="javax.swing.JTextField" binding="txtInstallInfo">
+        <constraints>
+          <grid row="5" column="1" row-span="1" col-span="5" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties>
+          <toolTipText value="URL pointing to a website displayed during installation. Leave empty for none."/>
+        </properties>
+      </component>
+      <component id="887b7" class="javax.swing.JButton" binding="btnEditInstallInfo">
+        <constraints>
+          <grid row="5" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Edit"/>
+        </properties>
+      </component>
+      <component id="3c2f9" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Other:"/>
+        </properties>
+      </component>
+      <component id="e1d3f" class="javax.swing.JButton" binding="btnEditArguments">
+        <constraints>
+          <grid row="6" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Edit Arguments"/>
+        </properties>
+      </component>
+      <component id="9e32" class="javax.swing.JButton" binding="btnEditLibraries">
+        <constraints>
+          <grid row="6" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Edit Libraries"/>
+        </properties>
+      </component>
+      <component id="43752" class="javax.swing.JRadioButton" binding="rdbtnForgeJar">
+        <constraints>
+          <grid row="1" column="2" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Forge"/>
+        </properties>
+      </component>
+      <component id="861a1" class="javax.swing.JRadioButton" binding="WIPRadioButton" default-binding="true">
+        <constraints>
+          <grid row="2" column="2" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <enabled value="false"/>
+          <text value="WIP"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+  <buttonGroups>
+    <group name="btnGroupJar" bound="true">
+      <member id="4d63a"/>
+      <member id="43752"/>
+    </group>
+    <group name="btnGroupJson" bound="true">
+      <member id="6b4c9"/>
+      <member id="861a1"/>
+    </group>
+  </buttonGroups>
+</form>

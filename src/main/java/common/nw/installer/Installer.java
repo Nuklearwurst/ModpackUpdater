@@ -202,7 +202,7 @@ public class Installer {
 		try {
 			data = DownloadHelper.getString(repo.minecraft.jsonName, null);
 		} catch (Exception e) {
-			e.printStackTrace();
+			NwLogger.INSTALLER_LOGGER.error("Error downloading version.json", e);
 			return false;
 		}
 		JdomParser parser = new JdomParser();
@@ -214,10 +214,52 @@ public class Installer {
 			e.printStackTrace();
 			return false;
 		}
-		HashMap<JsonStringNode, JsonNode> dataCopy = Maps
-				.newHashMap(versionData.getFields());
-		dataCopy.put(JsonNodeFactories.string("id"),
-				JsonNodeFactories.string(name));
+		HashMap<JsonStringNode, JsonNode> dataCopy = Maps.newHashMap(versionData.getFields());
+		//Add inheritance if needed
+		if(repo.minecraft.jarUpdateType.equals(ModpackValues.jarForgeInherit)) {
+			String forgeVersion = null;
+			try {
+				if (repo.minecraft.versionName.contains("/")) {
+					//this seems to be direct link, we don't know which version
+				} else if (repo.minecraft.versionName.contains("-")) {
+					//parse as full version name
+					forgeVersion = repo.minecraft.versionName;
+				} else {
+					//parse as build number
+					String s = DownloadHelper.getString(ModpackValues.URL_FORGE_VERSION_JSON, null);
+					JdomParser forgeParser = new JdomParser();
+					JsonRootNode forgeVersionData = forgeParser.parse(s);
+					JsonNode build = forgeVersionData.getNode("number", repo.minecraft.versionName);
+					int buildNumber = Integer.parseInt(build.getNumberValue("build"));
+					String branch = build.getStringValue("branch");
+					if (branch == null) {
+						branch = "";
+					} else {
+						branch = "-" + branch;
+					}
+					String mcversion = build.getStringValue("mcversion");
+					String forgeversion = build.getStringValue("version");
+					forgeVersion =  mcversion + "-Forge" + forgeversion + branch;
+				}
+			} catch (MalformedURLException e) {
+				NwLogger.INSTALLER_LOGGER.error("Error parsing Minecraft Forge Installer version...", e);
+			} catch (IOException e) {
+				NwLogger.INSTALLER_LOGGER.error("Error reading Minecraft Forge Version Data", e);
+			} catch (InvalidSyntaxException e) {
+				NwLogger.INSTALLER_LOGGER.error("Error parsing Minecraft Forge Version Data", e);
+			} catch (NumberFormatException e) {
+				NwLogger.INSTALLER_LOGGER.error("Error parsing Minecraft Forge Build Number", e);
+			} catch (IllegalArgumentException e) {
+				NwLogger.INSTALLER_LOGGER.error("Error parsing Minecraft Forge Version Data", e);
+			} catch (Exception e) {
+				NwLogger.INSTALLER_LOGGER.error("Unknown Error occurred!", e);
+			}
+			if(forgeVersion != null) {
+				dataCopy.put(JsonNodeFactories.string("inheritsFrom"), JsonNodeFactories.string(forgeVersion));
+			}
+		}
+		//Add Version Id
+		dataCopy.put(JsonNodeFactories.string("id"), JsonNodeFactories.string(name));
 		versionData = JsonNodeFactories.object(dataCopy);
 		try {
 			File file = new File(ourDir, name + ".json");
@@ -227,8 +269,7 @@ public class Installer {
 				}
 			}
 			BufferedWriter newWriter = Files.newWriter(file, Charsets.UTF_8);
-			PrettyJsonFormatter.fieldOrderPreservingPrettyJsonFormatter()
-					.format(versionData, newWriter);
+			PrettyJsonFormatter.fieldOrderPreservingPrettyJsonFormatter().format(versionData, newWriter);
 			newWriter.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -272,7 +313,7 @@ public class Installer {
 							JsonNode build = versionData.getNode("number", repo.minecraft.versionName);
 							int buildNumber = Integer.parseInt(build.getNumberValue("build"));
 							String branch = build.getStringValue("branch");
-							if(branch == null) {
+							if (branch == null) {
 								branch = "";
 							} else {
 								branch = "-" + branch;
@@ -292,7 +333,7 @@ public class Installer {
 						//Invoking Run Method
 						NwLogger.INSTALLER_LOGGER.fine("Starting Client Installation...");
 						Object result = runMethod.invoke(instance, baseDir);
-						if((Boolean) result) {
+						if ((Boolean) result) {
 							NwLogger.INSTALLER_LOGGER.info("Minecraft Forge Installation finished.");
 							return true;
 						} else {
@@ -312,7 +353,7 @@ public class Installer {
 					} catch (IllegalArgumentException e) {
 						NwLogger.INSTALLER_LOGGER.error("Error parsing Minecraft Forge Version Data", e);
 					} catch (Exception e) {
-						NwLogger.INSTALLER_LOGGER.error("Unknown Error occured!", e);
+						NwLogger.INSTALLER_LOGGER.error("Unknown Error occurred!", e);
 					}
 					return false;
 				}
