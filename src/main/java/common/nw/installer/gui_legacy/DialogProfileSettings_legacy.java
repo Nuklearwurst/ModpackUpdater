@@ -1,4 +1,4 @@
-package common.nw.installer.gui;
+package common.nw.installer.gui_legacy;
 
 import argo.jdom.JdomParser;
 import argo.jdom.JsonNode;
@@ -10,6 +10,7 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
+import common.nw.installer.gui_legacy.InstallerWindow;
 import common.nw.modpack.LocalModpack;
 import common.nw.utils.Utils;
 import common.nw.utils.log.NwLogger;

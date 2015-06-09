@@ -1,6 +1,6 @@
 package common.nw.installer;
 
-import common.nw.installer.gui.InstallerWindow;
+import common.nw.installer.gui_legacy.InstallerWindow;
 import common.nw.utils.log.NwLogger;
 
 import javax.swing.*;
