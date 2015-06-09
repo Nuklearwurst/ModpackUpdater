@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import common.nw.installer.gui_legacy.InstallerWindow;
 import common.nw.modpack.LocalModpack;
 import common.nw.utils.Utils;
 import common.nw.utils.log.NwLogger;
