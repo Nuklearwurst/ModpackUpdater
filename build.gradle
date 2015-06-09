@@ -23,6 +23,12 @@ group = 'common.nw'
 archivesBaseName = 'updater'
 sourceCompatibility = 1.6
 
+ext {
+    updaterVersion = '2.1.6'
+    installerVersion = '2.2.2'
+    creatorVersion = '2.4.0'
+}
+
 dependencies {
     compile 'com.intellij:forms_rt:7.0.3'
     compile 'net.sourceforge.argo:argo:3.7'
@@ -41,7 +47,7 @@ jar {
     exclude 'argo/**'
     exclude 'com/intellij/**'
     baseName = 'updater'
-    version = '2.1.5'
+    version = updaterVersion
     classifier = 'thin'
 }
 
@@ -62,7 +68,7 @@ fatJar.doFirst {
  */
 task presetInstaller(type: Jar, dependsOn: fatJar) {
     baseName = 'installer'
-    version = '2.2.2'
+    version = installerVersion
     classifier = 'preset'
     from zipTree(fatJar.archivePath)
     manifest { attributes 'Main-Class': 'common.nw.installer.PrepackedInstall' }
@@ -73,9 +79,9 @@ task presetInstaller(type: Jar, dependsOn: fatJar) {
  */
 task installer(type: Jar, dependsOn: fatJar) {
     baseName = 'installer'
-    version = '2.2.2'
+    version = installerVersion
     from zipTree(fatJar.archivePath)
-    manifest { attributes 'Main-Class': 'common.nw.installer.gui.InstallerWindow' }
+    manifest { attributes 'Main-Class': 'common.nw.installer.gui_legacy.InstallerWindow' }
 }
 
 /**
@@ -83,9 +89,9 @@ task installer(type: Jar, dependsOn: fatJar) {
  */
 task creator(type: Jar, dependsOn: fatJar) {
     baseName = 'creator'
-    version = '2.4.0'
+    version = creatorVersion
     from zipTree(fatJar.archivePath)
-    manifest { attributes 'Main-Class': 'common.nw.creator.gui.CreatorWindow' }
+    manifest { attributes 'Main-Class': 'common.nw.creator.gui_legacy.CreatorWindow' }
 }
 
 /**
@@ -93,7 +99,7 @@ task creator(type: Jar, dependsOn: fatJar) {
  */
 task updater(type: Jar, dependsOn: fatJar) {
     baseName = 'updater'
-    version = '2.1.5'
+    version = updaterVersion
     classifier = 'executeable'
     from zipTree(fatJar.archivePath)
     manifest { attributes 'Main-Class': 'common.nw.updater.launch.Launch' }
@@ -120,10 +126,10 @@ task shrinkJar(type: proguard.gradle.ProGuardTask, dependsOn: fatJar) {
  */
 task shrinkCreator(type: Jar, dependsOn: shrinkJar) {
     baseName = 'creator'
-    version = '2.4.0'
+    version = creatorVersion
     classifier = 'shrunk'
     from zipTree(shrinkJar.obfuscatedJar)
-    manifest { attributes 'Main-Class': 'common.nw.creator.gui.CreatorWindow' }
+    manifest { attributes 'Main-Class': 'common.nw.creator.gui_legacy.CreatorWindow' }
 }
 
 /**
@@ -131,10 +137,10 @@ task shrinkCreator(type: Jar, dependsOn: shrinkJar) {
  */
 task shrinkInstaller(type: Jar, dependsOn: shrinkJar) {
     baseName = 'installer'
-    version = '2.2.2'
+    version = installerVersion
     classifier = 'shrunk'
     from zipTree(shrinkJar.obfuscatedJar)
-    manifest { attributes 'Main-Class': 'common.nw.installer.gui.InstallerWindow' }
+    manifest { attributes 'Main-Class': 'common.nw.installer.gui_legacy.InstallerWindow' }
 }
 
 /**
@@ -142,7 +148,7 @@ task shrinkInstaller(type: Jar, dependsOn: shrinkJar) {
  */
 task shrinkInstallerPreset(type: Jar, dependsOn: shrinkJar) {
     baseName = 'installer'
-    version = '2.2.2'
+    version = installerVersion
     classifier = 'preset-shrunk'
     from zipTree(shrinkJar.obfuscatedJar)
     manifest { attributes 'Main-Class': 'common.nw.installer.PrepackedInstall' }
@@ -153,7 +159,7 @@ task shrinkInstallerPreset(type: Jar, dependsOn: shrinkJar) {
  */
 task shrinkUpdater(type: Jar, dependsOn: shrinkJar) {
     baseName = 'updater'
-    version = '2.1.5'
+    version = updaterVersion
     classifier = 'executable-shrunk'
     from zipTree(shrinkJar.obfuscatedJar)
     manifest { attributes 'Main-Class': 'common.nw.updater.launch.Launch' }
