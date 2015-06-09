@@ -115,7 +115,7 @@ public class UpdateWindow implements IProgressWatcher, WindowListener {
 
 	@Override
 	public void setDownloadProgress(String msg) {
-		Updater.logger.info("Secondary Progress: " + msg);
+		Updater.logger.info("Download Progress: " + msg);
 		lblDownloadProgress.setText(msg);
 	}
 
@@ -143,7 +143,7 @@ public class UpdateWindow implements IProgressWatcher, WindowListener {
 
 	@Override
 	public void setOverallProgress(String msg, int progress) {
-		Updater.logger.info("Primary Progress: " + msg + ": " + progress);
+		Updater.logger.info("Overall Progress: " + msg + ", @" + progress + "%");
 		lblOverallProgress.setText(msg);
 		setOverallProgress(progress);
 	}
@@ -193,29 +193,70 @@ public class UpdateWindow implements IProgressWatcher, WindowListener {
 	 */
 	private void $$$setupUI$$$() {
 		contentPanel = new JPanel();
-		contentPanel.setLayout(new GridLayoutManager(7, 1, new Insets(0, 0, 0, 0), -1, -1));
+		contentPanel.setLayout(new GridBagLayout());
+		contentPanel.setMaximumSize(new Dimension(370, 2147483647));
 		contentPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null));
 		lblOverallProgress = new JLabel();
 		lblOverallProgress.setText("Initializing...");
-		contentPanel.add(lblOverallProgress, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 20), null, null, 0, false));
+		GridBagConstraints gbc;
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.weightx = 1.0;
+		contentPanel.add(lblOverallProgress, gbc);
 		btnCancel = new JButton();
 		btnCancel.setText("Cancel");
-		contentPanel.add(btnCancel, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 7;
+		gbc.weightx = 1.0;
+		contentPanel.add(btnCancel, gbc);
 		lblDownloadProgress = new JLabel();
 		lblDownloadProgress.setText("Loading...");
-		contentPanel.add(lblDownloadProgress, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 20), null, null, 0, false));
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 4;
+		gbc.weightx = 1.0;
+		contentPanel.add(lblDownloadProgress, gbc);
 		pbOverall = new JProgressBar();
 		pbOverall.setStringPainted(true);
 		pbOverall.setToolTipText("Overall Progress");
-		contentPanel.add(pbOverall, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 20), null, null, 0, false));
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		gbc.weightx = 1.0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		contentPanel.add(pbOverall, gbc);
 		pbDownload = new JProgressBar();
 		pbDownload.setStringPainted(true);
 		pbDownload.setToolTipText("Download Progress");
-		contentPanel.add(pbDownload, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 20), null, null, 0, false));
-		final Spacer spacer1 = new Spacer();
-		contentPanel.add(spacer1, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-		final Spacer spacer2 = new Spacer();
-		contentPanel.add(spacer2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 5;
+		gbc.weightx = 1.0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		contentPanel.add(pbDownload, gbc);
+		final JPanel spacer1 = new JPanel();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 6;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.VERTICAL;
+		contentPanel.add(spacer1, gbc);
+		final JPanel spacer2 = new JPanel();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.VERTICAL;
+		contentPanel.add(spacer2, gbc);
+		final JPanel spacer3 = new JPanel();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 3;
+		gbc.weighty = 0.1;
+		gbc.fill = GridBagConstraints.VERTICAL;
+		contentPanel.add(spacer3, gbc);
 	}
 
 	/**
