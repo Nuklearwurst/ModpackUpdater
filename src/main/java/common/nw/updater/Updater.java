@@ -25,38 +25,62 @@ import java.util.List;
 
 public class Updater {
 
-	/** arguments */
+	/**
+	 * arguments
+	 */
 	private List<String> args;
-	/** the minecraft profile name TODO support stuff with profiles */
+	/**
+	 * the minecraft profile name TODO support stuff with profiles
+	 */
 	private String profileName;
-	/** the minecraft game directory to update into */
+	/**
+	 * the minecraft game directory to update into
+	 */
 	private File gameDir;
 
-	/** should we quit to launcher (--> error) */
+	/**
+	 * should we quit to launcher (--> error)
+	 */
 	private boolean quitToLauncher = false;
-	/** is the update finished */
+	/**
+	 * is the update finished
+	 */
 	private boolean finished = false;
-	/** retry the whole update? */
+	/**
+	 * retry the whole update?
+	 */
 	private boolean retry = false;
 
-	/** progress listener */
+	/**
+	 * progress listener
+	 */
 	private IProgressWatcher listener;
 
-	/** error message, if not empty error gets displayed to the user */
+	/**
+	 * error message, if not empty error gets displayed to the user
+	 */
 	private String warningMessage = "";
 	private boolean errored = false;
 
-	/** ModpackUpdater Logger */
+	/**
+	 * ModpackUpdater Logger
+	 */
 	public static final NwLogger logger = NwLogger.UPDATER_LOGGER;
 
-	/** local modpack data */
+	/**
+	 * local modpack data
+	 */
 	private LocalModpack local;
-	/** remote modpack data */
+	/**
+	 * remote modpack data
+	 */
 	private RepoModpack remote;
 
-	/** mod list --> all*/
+	/**
+	 * mod list --> all
+	 */
 	private List<ModInfo> mods;
-	
+
 	private UpdateThread updateThread = null;
 
 	public Updater(List<String> args, File gameDir, String profile) {
@@ -65,13 +89,16 @@ public class Updater {
 		this.profileName = profile;
 	}
 
-	/** do we need to exit minecraft */
+	/**
+	 * do we need to exit minecraft
+	 */
 	public boolean quitToLauncher() {
 		return quitToLauncher || listener.quitToLauncher();
 	}
 
 	/**
 	 * is the update finished?
+	 *
 	 * @return
 	 */
 	public boolean isFinished() {
@@ -88,6 +115,7 @@ public class Updater {
 
 	/**
 	 * sets the update listener
+	 *
 	 * @param listener
 	 */
 	public void setListener(IProgressWatcher listener) {
@@ -96,8 +124,8 @@ public class Updater {
 
 	/**
 	 * thread to run the update
-	 * @author Nukelarwurst
 	 *
+	 * @author Nukelarwurst
 	 */
 	private class UpdateThread extends Thread {
 
@@ -142,12 +170,12 @@ public class Updater {
 			warningMessage = warningMessage + "\nError: no modpack found!";
 			return;
 		}
-		
+
 		waitForUi();
-		
+
 		// should update
 		listener.setOverallProgress(1);
-		if (!shouldCheckUpdate()) { 
+		if (!shouldCheckUpdate()) {
 			return;
 		}
 
@@ -179,8 +207,9 @@ public class Updater {
 		}
 
 		// update mc
+		//FIXME when using updater on server version cannot be updated
 		listener.setOverallProgress("Checking for minecraft update", 6);
-		if (checkUpdate()) { 
+		if (checkUpdate()) {
 			waitForUi();
 			if (listener.isCancelled()) {
 				return;
@@ -272,7 +301,7 @@ public class Updater {
 	/**
 	 * creates a modpack from commandline parameters (used when no modpack.json
 	 * file is found)
-	 * 
+	 *
 	 * @return
 	 */
 	private LocalModpack parseCommandLineModpack() {
@@ -311,7 +340,7 @@ public class Updater {
 	/**
 	 * read the local modpack.json, if it is not available parse modpack from
 	 * commandline
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean readLocalModpack() {
@@ -336,11 +365,11 @@ public class Updater {
 				if (commandLine.name != null && !commandLine.name.isEmpty() && !commandLine.name.equals(local.name)) {
 					// error
 					int ans = listener.showConfirmDialog(
-									"A name was set in the program-arguments, but it is different from the local file!\nDo you want to overwrite saved data?\nArgument: "
-											+ commandLine.name
-											+ "\nSaved data: " + local.name,
-									"Waring", JOptionPane.YES_NO_OPTION,
-									JOptionPane.WARNING_MESSAGE);
+							"A name was set in the program-arguments, but it is different from the local file!\nDo you want to overwrite saved data?\nArgument: "
+									+ commandLine.name
+									+ "\nSaved data: " + local.name,
+							"Waring", JOptionPane.YES_NO_OPTION,
+							JOptionPane.WARNING_MESSAGE);
 					if (ans == JOptionPane.YES_OPTION) {
 						local.name = commandLine.name;
 					}
@@ -348,11 +377,11 @@ public class Updater {
 				if (commandLine.version != null && !commandLine.version.isEmpty() && !commandLine.version.equals(local.version)) {
 					// error
 					int ans = listener.showConfirmDialog(
-									"A version was set in the program-arguments, but it is different from the local file!\nDo you want to overwrite saved data?\nArgument: "
-											+ commandLine.version
-											+ "\nSaved data: " + local.version,
-									"Waring", JOptionPane.YES_NO_OPTION,
-									JOptionPane.WARNING_MESSAGE);
+							"A version was set in the program-arguments, but it is different from the local file!\nDo you want to overwrite saved data?\nArgument: "
+									+ commandLine.version
+									+ "\nSaved data: " + local.version,
+							"Waring", JOptionPane.YES_NO_OPTION,
+							JOptionPane.WARNING_MESSAGE);
 					if (ans == JOptionPane.YES_OPTION) {
 						local.version = commandLine.version;
 					}
@@ -378,7 +407,7 @@ public class Updater {
 
 	/**
 	 * is it time to check for new updates?
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean shouldCheckUpdate() {
@@ -394,7 +423,7 @@ public class Updater {
 
 	/**
 	 * reads data of the local mods from filesystem
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean readLocalData() {
@@ -414,7 +443,7 @@ public class Updater {
 				ModInfo info = new ModInfo(local.files.get(i));
 				info.loadInfo(gameDir); // load info
 				//update tracked version information
-				if(info.version != null && local.trackedFileVersions != null && local.trackedFileVersions.containsKey(info.fileName)) {
+				if (info.version != null && local.trackedFileVersions != null && local.trackedFileVersions.containsKey(info.fileName)) {
 					info.version = local.trackedFileVersions.get(info.fileName);
 				}
 				mods.add(info);
@@ -429,7 +458,7 @@ public class Updater {
 
 	/**
 	 * downloads remote modpack.json information
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean readRemoteData() {
@@ -449,9 +478,9 @@ public class Updater {
 			if (local.name != null && remote.modpackName != null
 					&& !local.name.equals(remote.modpackName)) {
 				int ans = listener.showConfirmDialog(
-								"Local name is different from remote!\nShould it be set to remote?",
-								"Warning!", JOptionPane.YES_NO_OPTION,
-								JOptionPane.WARNING_MESSAGE);
+						"Local name is different from remote!\nShould it be set to remote?",
+						"Warning!", JOptionPane.YES_NO_OPTION,
+						JOptionPane.WARNING_MESSAGE);
 				if (ans == JOptionPane.YES_OPTION) {
 					local.name = remote.modpackName;
 				}
@@ -467,7 +496,7 @@ public class Updater {
 
 	/**
 	 * checks for minecraft or library update
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean checkUpdate() {
@@ -485,7 +514,7 @@ public class Updater {
 	/**
 	 * adds remote information to existing mods, used to check which mods need
 	 * an update
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean addRemoteInformation() {
@@ -502,7 +531,7 @@ public class Updater {
 			// adding missing entries
 			if (missing) {
 				ModInfo info = new ModInfo(remoteMod);
-				info.loadInfo(gameDir);
+//				info.loadInfo(gameDir);
 				mods.add(info);
 			}
 		}
@@ -511,19 +540,18 @@ public class Updater {
 
 	/**
 	 * updates minecraft or library version
-	 * 
+	 *
 	 * @return true when the updater should continue, false when not
 	 */
 	private boolean updateVersion() {
 		//update jar and json
 
-		String[] options = { "Install", "Continue without installing",
-				"Quit to launcher" };
-		int ans = listener
-				.showOptionDialog(
-						"A new Modpack version is available. Do you want to install it?",
-						"Update", JOptionPane.YES_NO_CANCEL_OPTION,
-						JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+		String[] options = {"Install", "Continue without installing",
+				"Quit to launcher"};
+		int ans = listener.showOptionDialog(
+				"A new Modpack version is available. Do you want to install it?",
+				"Update", JOptionPane.YES_NO_CANCEL_OPTION,
+				JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 		//install the new version
 		if (ans == JOptionPane.YES_OPTION) {
 			listener.setDownloadProgress("Installing new Version", 0);
@@ -583,13 +611,13 @@ public class Updater {
 			local.version = remote.minecraft.version;
 			listener.setDownloadProgress("Installation Complete!", 100);
 
-			if(!save()) {
+			if (!save()) {
 				warningMessage += "error during saving modpack.json!";
 				return false;
 			}
-			
+
 			if (listener.showConfirmDialog(
-							"You have to select the new Version in the Minecraft Launcher!\nDo you want to continue without updating?", "Question", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+					"You have to select the new Version in the Minecraft Launcher!\nDo you want to continue without updating?", "Question", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 				return false;
 			} else {
 				quitToLauncher = true;
@@ -609,7 +637,7 @@ public class Updater {
 	/**
 	 * deletes mods that aro no longer allowed (doesn't apply to mods not
 	 * downloaded by the updater and not being on the blacklist )
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean deleteOldMods() {
@@ -634,7 +662,7 @@ public class Updater {
 		if (modsToDelete.size() > 0) {
 			for (ModInfo mod : modsToDelete) {
 				File fileToDelete = new File(gameDir, mod.fileName);
-				if(fileToDelete.exists()) {
+				if (fileToDelete.exists()) {
 					if (!fileToDelete.delete()) {
 						success = false;
 						logger.severe("Mod " + mod.fileName
@@ -648,7 +676,7 @@ public class Updater {
 
 	/**
 	 * downloads all mods that need an update
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean updateMods() {
@@ -660,7 +688,7 @@ public class Updater {
 			}
 		}
 		logger.info("Found " + modsToUpdate.size() + " files to Update!");
-		
+
 		if (modsToUpdate.size() < 1) {
 			listener.setOverallProgress("All mods up to date", 100);
 			listener.setDownloadProgress("", 2, 2);
@@ -671,12 +699,12 @@ public class Updater {
 		float modValue = 90.0F / modsToUpdate.size(); // progress bar
 
 		for (ModInfo mod : modsToUpdate) {
-			
+
 			waitForUi();
-			if(listener.isCancelled()) {
+			if (listener.isCancelled()) {
 				return true;
 			}
-			
+
 			String updateReason = mod.isMissing() ? "MISSING" : "OUTDATED";
 
 			logger.info(String
@@ -686,26 +714,26 @@ public class Updater {
 							mod.getRemoteInfo().downloadUrl));
 
 			modNumber++;
-			if(mod.getRemoteInfo().downloadType == null || mod.getRemoteInfo().downloadType.equals(ModpackValues.modDirectDownload)) {
-				if(!performDirectModDownload(mod, modNumber, modValue)) {
-					return false;
-				}				
-			} else if(mod.getRemoteInfo().downloadType.equals(ModpackValues.modExtractDownload)) {
-				if(!performDirectModDownload(mod, modNumber, modValue)) {
+			if (mod.getRemoteInfo().downloadType == null || mod.getRemoteInfo().downloadType.equals(ModpackValues.modDirectDownload)) {
+				if (!performDirectModDownload(mod, modNumber, modValue)) {
 					return false;
 				}
-				if(!DownloadHelper.extractArchive(mod.file, mod.file.getParentFile())) {
+			} else if (mod.getRemoteInfo().downloadType.equals(ModpackValues.modExtractDownload)) {
+				if (!performDirectModDownload(mod, modNumber, modValue)) {
+					return false;
+				}
+				if (!DownloadHelper.extractArchive(mod.file, mod.file.getParentFile())) {
 					return false;
 				}
 				//keep file for versioning
-			} else if(mod.getRemoteInfo().downloadType.equals(ModpackValues.modUserDownload)) {
+			} else if (mod.getRemoteInfo().downloadType.equals(ModpackValues.modUserDownload)) {
 				warningMessage += "\nUnsupported downloadType: " + mod.getRemoteInfo().downloadType + " \nConsider updating your updater.jar to the newest version!";
 				errored = true;
 				return false;
 			} else {
 				//TODO default to user Download
 				warningMessage += "\nUnsupported downloadType: " + mod.getRemoteInfo().downloadType + " \nDefaulting to " + ModpackValues.modDirectDownload + "\nConsider updating your updater.jar to the newest version!";
-				if(!performDirectModDownload(mod, modNumber, modValue)) {
+				if (!performDirectModDownload(mod, modNumber, modValue)) {
 					errored = true;
 					return false;
 				}
@@ -713,7 +741,7 @@ public class Updater {
 		}
 		return true;
 	}
-	
+
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	private boolean performDirectModDownload(ModInfo mod, int modNumber, float modValue) {
 		int attempts = 0;
@@ -726,16 +754,16 @@ public class Updater {
 				attempts++;
 			}
 			retry = attempts < 4;
-			
+
 			waitForUi();
-			if(listener.isCancelled()) {
+			if (listener.isCancelled()) {
 				logger.severe("User cancelled update!");
 				return true;
 			}
 
 			if ((result != UpdateResult.Good) && (!retry)) {
 				int r = listener.showConfirmDialog("Downloading mod \"" + mod.name + "\" version: \"" + mod.version + "\" failed!\nDo you want to retry?", "Retry?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-				if(r != JOptionPane.YES_OPTION) {
+				if (r != JOptionPane.YES_OPTION) {
 					warningMessage = "Failed updating mod: " + mod.fileName + "\nError when downloading: " + result;
 					errored = true;
 					logger.severe(warningMessage);
@@ -756,7 +784,7 @@ public class Updater {
 
 	/**
 	 * saves data to modpack.json file
-	 * 
+	 *
 	 * @return
 	 */
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -770,7 +798,7 @@ public class Updater {
 		for (ModInfo mod : mods) {
 			if (!mod.shouldBeDeleted()) {
 				local.files.add(mod.fileName);
-				if(mod.getRemoteInfo() != null && mod.getRemoteInfo().versionType != null && mod.getRemoteInfo().versionType.equals(ModpackValues.versionTypeTracked)) {
+				if (mod.getRemoteInfo() != null && mod.getRemoteInfo().versionType != null && mod.getRemoteInfo().versionType.equals(ModpackValues.versionTypeTracked)) {
 					//save local tracked versions to disk 
 					local.trackedFileVersions.put(mod.fileName, mod.version); //TODO check wether this use is correct
 				}
@@ -789,11 +817,11 @@ public class Updater {
 		}
 		return true;
 	}
-	
+
 	private void waitForUi() {
 		//noinspection SynchronizeOnNonFinalField
 		synchronized (updateThread) {
-			while(listener.isPaused()) {
+			while (listener.isPaused()) {
 				try {
 					updateThread.wait(100);
 				} catch (InterruptedException e) {

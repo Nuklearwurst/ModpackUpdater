@@ -161,7 +161,7 @@ public class DownloadHelper {
 		//tmp file
 		File tempFile = new File(file + ".tmp");
 
-		Updater.logger.info("Creating HTTP client for " + mod.name + " from " + mod.getRemoteInfo().downloadUrl + ". Using temp file " + tempFile);
+		Updater.logger.fine("Creating HTTP client for " + mod.name + " from " + mod.getRemoteInfo().downloadUrl + ". Using temp file " + tempFile);
 		listener.setDownloadProgress("Starting Download: " + mod.name + " from " + mod.getRemoteInfo().downloadUrl + ".", 0);
 		if (listener.isCancelled()) {
 			return UpdateResult.Cancelled;
@@ -169,7 +169,7 @@ public class DownloadHelper {
 		//download the mod
 		UpdateResult result = downloadMod(tempFile, mod, listener);
 		if (result == UpdateResult.Good) {
-			Updater.logger.info("HTTP fetch request for " + mod.name + " completed with success!");
+			Updater.logger.fine("HTTP fetch request for " + mod.name + " completed with success!");
 
 			if (!checkHash(mod.getRemoteInfo().md5, tempFile)) {
 				NwLogHelper.severe("Downloading mod: " + mod.name + " failed!");

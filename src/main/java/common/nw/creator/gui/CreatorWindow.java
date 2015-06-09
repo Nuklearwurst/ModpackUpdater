@@ -110,8 +110,6 @@ public class CreatorWindow {
 		gbl_page3.rowHeights = new int[] { 64, 0, 0, 0 };
 		pageHolder.addPage(page3, (String) page3.getProperty(Reference.KEY_NAME));
 
-//		page4 = new PanelEditMods_legacy(creator, window);
-//		pageHolder.addPage(page4, (String) page4.getProperty(Reference.KEY_NAME));
 		page4 = new PanelEditMods(creator, window);
 		pageHolder.addPage(page4.getPanel(), page4, (String) page4.getProperty(Reference.KEY_NAME));
 

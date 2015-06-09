@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -136,7 +137,7 @@ public class ModInfo {
 					}
 				}
 			} else if(fileName.endsWith(".jar")){
-				String versionFile = getVersionFileFromZip(file, "mcmod.info");
+				String versionFile = getVersionFileFromZip(file, "*mod.info");
 				if (versionFile != null && !versionFile.isEmpty()) {
 					JdomParser parser = new JdomParser();
 					JsonNode versionData;
@@ -178,7 +179,20 @@ public class ModInfo {
 		try {
 			String out = null;
 			ZipFile modZip = new ZipFile(file);
-			ZipEntry entry = modZip.getEntry(name);
+			ZipEntry entry = null;
+			if(name.startsWith("*")) {
+				name = name.substring(1);
+				Enumeration<? extends ZipEntry> enumeration = modZip.entries();
+				while(enumeration.hasMoreElements()) {
+					ZipEntry zipEntry = enumeration.nextElement();
+					if(zipEntry.getName().endsWith(name)) {
+						entry = zipEntry;
+						break;
+					}
+				}
+			} else {
+				entry = modZip.getEntry(name);
+			}
 
 			if (entry != null) {
 				BufferedReader reader = null;
@@ -191,6 +205,7 @@ public class ModInfo {
 						outBuilder.append(versionFileLine);
 					}
 					out = outBuilder.toString();
+					inStream.close();
 				} catch (Exception e) {
 					NwLogger.NW_LOGGER.error("Error reading Version from zip!", e);
 				} finally {
@@ -202,7 +217,7 @@ public class ModInfo {
 			modZip.close();
 			return out;
 		} catch (Exception e) {
-			e.printStackTrace();
+			NwLogger.NW_LOGGER.error("Error reading Version from zip!", e);
 		}
 		return null;
 	}
@@ -251,12 +266,21 @@ public class ModInfo {
 	public boolean equals(RepoMod mod, File baseDir) {
 		if (mod.nameType != null) {
 			if (mod.nameType.equals(ModpackValues.nameTypeFileName) && this.hasName) {
-				return this.fileName.equals(mod.name.replace(File.separator,
-						"/"));
+				return this.fileName.equals(mod.name.replace("/",
+						File.separator));
 			} else if (mod.nameType.equals(ModpackValues.nameTypeZipEntry) && !this.hasName) {
 				return false;
 			}
 		}
+		// work around incase an zip version is readable but not specified on the server-modpack
+		if(hasName) {
+			return this.fileName.replace(File.separator, "/").equals(mod.name.replace(File.separator, "/"));
+		}
 		return this.name.equals(mod.name.replace(File.separator, "/"));
+	}
+
+	@Override
+	public String toString() {
+		return name;
 	}
 }

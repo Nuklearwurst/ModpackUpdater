@@ -5,6 +5,9 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Card Layout Handler
+ */
 public class PageHolder {
 	
 	private int page;
