@@ -139,7 +139,12 @@ public class DialogEditMod extends JDialog {
 		}
 		//TODO: validate URL
 		int index = ans.lastIndexOf("/");
-		DialogDownload d = new DialogDownload(this, new File("" + File.separator + (index > 0 ? ans.substring(index) : ans)), new DialogDownload.DownloadFileHandler() {
+		if (index >= 0 && index < ans.length() - 1) {
+			index++;
+		} else {
+			index = 0;
+		}
+		DialogDownload d = new DialogDownload(this, new File("" + File.separator + ans.substring(index)), new DialogDownload.DownloadFileHandler() {
 			@Override
 			public void onDownloadFinished(File file, UpdateResult result) {
 				if (result == UpdateResult.Good) {

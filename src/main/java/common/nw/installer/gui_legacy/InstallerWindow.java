@@ -3,6 +3,7 @@ package common.nw.installer.gui_legacy;
 import common.nw.installer.Installer;
 import common.nw.installer.PrepackedInstall;
 import common.nw.installer.gui.DialogProfileSettings;
+import common.nw.modpack.ModpackValues;
 import common.nw.modpack.RepoModpack;
 import common.nw.modpack.VersionInfo;
 import common.nw.utils.Utils;
@@ -270,13 +271,13 @@ public class InstallerWindow {
 				return;
 			}
 
-			setProgress("Creating dirs...", 10);
+			setProgress("Preparing Minecraft directories", 10);
 			if (!installer.createDirs()) {
 				errorMessage += "\nAn error occured while creating directories! \nPlease check if you have permission!";
 				installFinish();
 				return;
 			}
-			setProgress("Creating version.json...", 20);
+			setProgress("Downloading Minecraft Version file", 20);
 			if (!installer.createJson()) {
 				if (JOptionPane
 						.showConfirmDialog(
@@ -295,21 +296,21 @@ public class InstallerWindow {
 					return;
 				}
 			}
-			setProgress("Creating jar...", 40);
+			setProgress(modpack.minecraft.jarUpdateType.equals(ModpackValues.jarForgeInherit) ? "Downloading and executing MinecraftForge, this may take a while..." : "Downloading Minecraft Jar", 40);
 			if (!installer.createJar()) {
 				if (JOptionPane.showConfirmDialog(mainFrame,
 						"Failed creating version.jar file! "
 								+ "\nDo you want to try again?", "Error",
 						JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION) {
 					if (!installer.createJar()) {
-						errorMessage += "\nAn error occured while creating version.jar file! "
+						errorMessage += "\nAn error occurred while creating version.jar file! "
 								+ "\nPlease check if you have permission! "
 								+ "\nPlease  check your internet connection!";
 						installFinish();
 						return;
 					}
 				} else {
-					errorMessage += "\nAn error occured while creating version.jar file! "
+					errorMessage += "\nAn error occurred while creating version.jar file! "
 							+ "\nPlease check if you have permission! "
 							+ "\nPlease  check your internet connection!";
 					installFinish();
@@ -323,7 +324,7 @@ public class InstallerWindow {
 								+ "\nDo you want to try again?", "Error",
 						JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION) {
 					if (!installer.downloadLibraries()) {
-						errorMessage += "\nAn error occured while downloading libraries! "
+						errorMessage += "\nAn error occurred while downloading libraries! "
 								+ "\nPlease check if you have permission! "
 								+ "\nPlease  check your internet connection!";
 						if (JOptionPane.showConfirmDialog(mainFrame,
@@ -336,7 +337,7 @@ public class InstallerWindow {
 						}
 					}
 				} else {
-					errorMessage += "\nAn error occured while downloading libraries! \nPlease check if you have permission! \nPlease  check your internet connection!";
+					errorMessage += "\nAn error occurred while downloading libraries! \nPlease check if you have permission! \nPlease  check your internet connection!";
 					installFinish();
 					return;
 				}

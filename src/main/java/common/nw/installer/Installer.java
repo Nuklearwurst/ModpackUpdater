@@ -325,7 +325,7 @@ public class Installer {
 
 						//Class loading
 						NwLogger.INSTALLER_LOGGER.fine("Loading MC-Forge Installer...");
-						URLClassLoader child = new URLClassLoader(new URL[]{url}, this.getClass().getClassLoader());
+						URLClassLoader child = new URLClassLoader(new URL[]{url}, Installer.class.getClassLoader().getParent());
 						Class forgeClientInstall = Class.forName("net.minecraftforge.installer.ClientInstall", true, child);
 						Method runMethod = forgeClientInstall.getDeclaredMethod("run", File.class);
 						Object instance = forgeClientInstall.newInstance();

@@ -25,8 +25,8 @@ sourceCompatibility = 1.6
 
 ext {
     updaterVersion = '2.1.6'
-    installerVersion = '2.2.2'
-    creatorVersion = '2.4.0'
+    installerVersion = '2.2.3'
+    creatorVersion = '2.4.1'
 }
 
 dependencies {
@@ -91,7 +91,7 @@ task creator(type: Jar, dependsOn: fatJar) {
     baseName = 'creator'
     version = creatorVersion
     from zipTree(fatJar.archivePath)
-    manifest { attributes 'Main-Class': 'common.nw.creator.gui_legacy.CreatorWindow' }
+    manifest { attributes 'Main-Class': 'common.nw.creator.gui.CreatorWindow' }
 }
 
 /**
@@ -129,7 +129,7 @@ task shrinkCreator(type: Jar, dependsOn: shrinkJar) {
     version = creatorVersion
     classifier = 'shrunk'
     from zipTree(shrinkJar.obfuscatedJar)
-    manifest { attributes 'Main-Class': 'common.nw.creator.gui_legacy.CreatorWindow' }
+    manifest { attributes 'Main-Class': 'common.nw.creator.gui.CreatorWindow' }
 }
 
 /**
