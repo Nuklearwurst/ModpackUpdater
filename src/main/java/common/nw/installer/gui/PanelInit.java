@@ -1,6 +1,6 @@
 package common.nw.installer.gui;
 
-import common.nw.gui.IPageHandler;
+import common.nw.gui.IExtendedPageHandler;
 import common.nw.gui.PageHolder;
 
 import javax.swing.*;
@@ -9,10 +9,10 @@ import java.awt.*;
 /**
  * @author Nuklearwurst
  */
-public class PanelInit implements IPageHandler {
+public class PanelInit implements IExtendedPageHandler {
 	private JTextPane txtInit;
-	private JTextField textField1;
-	private JCheckBox chbxDonwloadLibraries;
+	protected JTextField txtUrl;
+	protected JCheckBox chbxDownloadLibraries;
 	private JPanel panel_init;
 
 	public PanelInit() {
@@ -31,7 +31,12 @@ public class PanelInit implements IPageHandler {
 
 	@Override
 	public boolean onPageClosed(PageHolder holder, boolean forward) {
-		return false;
+		return true;
+	}
+
+	@Override
+	public JPanel getPanel() {
+		return panel_init;
 	}
 
 	{
@@ -66,18 +71,12 @@ public class PanelInit implements IPageHandler {
 		panel_init.add(txtInit, gbc);
 		final JPanel spacer1 = new JPanel();
 		gbc = new GridBagConstraints();
-		gbc.gridx = 2;
-		gbc.gridy = 0;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		panel_init.add(spacer1, gbc);
-		final JPanel spacer2 = new JPanel();
-		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 3;
 		gbc.gridwidth = 2;
 		gbc.weighty = 1.0;
 		gbc.fill = GridBagConstraints.VERTICAL;
-		panel_init.add(spacer2, gbc);
+		panel_init.add(spacer1, gbc);
 		final JLabel label1 = new JLabel();
 		label1.setText("Modpack Url:");
 		gbc = new GridBagConstraints();
@@ -86,23 +85,23 @@ public class PanelInit implements IPageHandler {
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(0, 0, 0, 4);
 		panel_init.add(label1, gbc);
-		textField1 = new JTextField();
+		txtUrl = new JTextField();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		panel_init.add(textField1, gbc);
-		chbxDonwloadLibraries = new JCheckBox();
-		chbxDonwloadLibraries.setSelected(true);
-		chbxDonwloadLibraries.setText("Download supported Libraries (recommended)");
-		chbxDonwloadLibraries.setToolTipText("You should download supported libraries using the installer. Otherwise you have to do it manually.");
+		panel_init.add(txtUrl, gbc);
+		chbxDownloadLibraries = new JCheckBox();
+		chbxDownloadLibraries.setSelected(true);
+		chbxDownloadLibraries.setText("Download supported Libraries (recommended)");
+		chbxDownloadLibraries.setToolTipText("You should download supported libraries using the installer. Otherwise you have to do it manually.");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 2;
 		gbc.gridwidth = 2;
 		gbc.anchor = GridBagConstraints.WEST;
-		panel_init.add(chbxDonwloadLibraries, gbc);
+		panel_init.add(chbxDownloadLibraries, gbc);
 	}
 
 	/**

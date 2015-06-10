@@ -21,12 +21,6 @@
           <text value="&lt;html&gt;&#13;&#10;  &lt;head&gt;&#13;&#10;    &#13;&#10;  &lt;/head&gt;&#13;&#10;  &lt;body&gt;&#13;&#10;    &lt;p style=&quot;margin-top: 0&quot;&gt;&#13;&#10;      &lt;b&gt;Welcome to The Modpack Installer&lt;br&gt;This installer will guide you &#13;&#10;      through the modpack installation process.&lt;br&gt;&lt;br&gt;Now insert the modpack &#13;&#10;      Url: &lt;/b&gt;&#13;&#10;    &lt;/p&gt;&#13;&#10;  &lt;/body&gt;&#13;&#10;&lt;/html&gt;&#13;&#10;"/>
         </properties>
       </component>
-      <hspacer id="8983d">
-        <constraints>
-          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-      </hspacer>
       <vspacer id="1a2ad">
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
@@ -42,7 +36,7 @@
           <text value="Modpack Url:"/>
         </properties>
       </component>
-      <component id="e28c6" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+      <component id="e28c6" class="javax.swing.JTextField" binding="txtUrl">
         <constraints>
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -51,7 +45,7 @@
         </constraints>
         <properties/>
       </component>
-      <component id="d0cc" class="javax.swing.JCheckBox" binding="chbxDonwloadLibraries">
+      <component id="d0cc" class="javax.swing.JCheckBox" binding="chbxDownloadLibraries">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>

@@ -1,5 +1,7 @@
 package common.nw.gui;
 
+import common.nw.creator.gui.Reference;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -78,6 +80,26 @@ public class PageHolder {
 	private IPageHandler getPageHandler(int page) {
 		return handler.get(page);
 	}
+
+	public void addPageWithName(IExtendedPageHandler p) {
+		addPage(p.getPanel(), p, (String) p.getProperty(Reference.KEY_NAME));
+	}
+
+	public void addPageWithName(JPanel p, IPageHandler h) {
+		addPage(p, h, (String) h.getProperty(Reference.KEY_NAME));
+	}
+
+	public void addPageWithName(IPanel p, IPageHandler h) {
+		addPage(p.getPanel(), h, (String) h.getProperty(Reference.KEY_NAME));
+	}
+
+	public void addPage(IExtendedPageHandler p) {
+		addPage(p.getPanel(), p);
+	}
+
+	public void addPage(IExtendedPageHandler p, String s) {
+		addPage(p.getPanel(), p, s);
+	}
 	
 	public void addPage(JPanel p) {
 		mainPanel.add(p);
@@ -100,6 +122,14 @@ public class PageHolder {
 	public void addPage(JPanel p, IPageHandler handler) {
 		mainPanel.add(p);
 		this.handler.add(handler);
+	}
+
+	public void addPage(IPanel p, IPageHandler handler) {
+		addPage(p.getPanel(), handler);
+	}
+
+	public void addPage(IPanel p, IPageHandler handler, String s) {
+		addPage(p.getPanel(), handler, s);
 	}
 	
 	public void addPage(JPanel p, IPageHandler handler, String s) {

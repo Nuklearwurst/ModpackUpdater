@@ -13,7 +13,6 @@ import com.google.gson.Gson;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import common.nw.installer.gui_legacy.InstallerWindow;
 import common.nw.modpack.LocalModpack;
 import common.nw.utils.Utils;
 import common.nw.utils.log.NwLogger;
@@ -150,7 +149,7 @@ public class DialogProfileSettings extends JDialog {
 
 	private void chooseExistingProfile() {
 		//open profileFile
-		File launcherProfiles = new File(installer.txtMinecraft.getText() + File.separator + "launcher_profiles.json");
+		File launcherProfiles = new File(installer.page2.txtMinecraft.getText() + File.separator + "launcher_profiles.json");
 		if (!launcherProfiles.exists()) {
 			JOptionPane.showMessageDialog(null, "The launcher_profiles.json file is missing!\nYou need to run the minecraft launcher at least once!", "File not found", JOptionPane.ERROR_MESSAGE);
 			return;
@@ -212,7 +211,7 @@ public class DialogProfileSettings extends JDialog {
 	}
 
 	private void resetName() {
-		txtName.setText(installer.txtProfile.getText());
+		txtName.setText(installer.page2.txtProfile.getText());
 	}
 
 	private void updateRadioButtons() {
@@ -231,7 +230,7 @@ public class DialogProfileSettings extends JDialog {
 		installer.profile_gameDirectory = txtDirectory.getText();
 		installer.profile_javaOptions = txtJavaOptions.getText();
 		installer.profile_updateFrequency = getUpdateFrequency();
-		installer.txtProfile.setText(txtName.getText());
+		installer.page2.txtProfile.setText(txtName.getText());
 		this.dispose();
 	}
 
@@ -268,7 +267,7 @@ public class DialogProfileSettings extends JDialog {
 	 * read values
 	 */
 	private void init() {
-		txtName.setText(installer.txtProfile.getText());
+		txtName.setText(installer.page2.txtProfile.getText());
 		txtDirectory.setText(installer.profile_gameDirectory);
 		txtJavaOptions.setText(installer.profile_javaOptions);
 		txtFreq.setText("" + installer.profile_updateFrequency);

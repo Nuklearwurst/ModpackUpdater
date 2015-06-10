@@ -414,9 +414,8 @@ public class InstallerWindow {
 	 * open a dialog to configure profile settings
 	 */
 	private void openProfileSettingsDialog() {
-		DialogProfileSettings dialog = new DialogProfileSettings(mainFrame,
-				true, this);
-		dialog.setVisible(true);
+//		DialogProfileSettings dialog = new DialogProfileSettings(mainFrame, true, this);
+//		dialog.setVisible(true);
 	}
 
 	/**
