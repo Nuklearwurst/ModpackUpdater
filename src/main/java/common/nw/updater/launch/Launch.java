@@ -144,7 +144,7 @@ public class Launch implements ITweaker {
 		try {
 			OptionParser optionParser = new OptionParser();
 			ArgumentAcceptingOptionSpec<Boolean> noGuiOption = optionParser
-					.accepts("nogui").withOptionalArg().ofType(Boolean.class).defaultsTo(false);
+					.accepts("nogui").withOptionalArg().ofType(Boolean.class).defaultsTo(true);
 			ArgumentAcceptingOptionSpec<String> gamedirOption = optionParser
 					.accepts("gamedir")
 					.withRequiredArg().ofType(String.class).defaultsTo("user.dir");
@@ -170,15 +170,13 @@ public class Launch implements ITweaker {
 				profileName = profileNameOption.value(options);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			Updater.logger.severe("Error parsing commandline!");
+			Updater.logger.severe("Error parsing commandline!", e);
 		}
 
 		Launch launch = new Launch(useGui);
 		launch.getLaunchArguments(); // testing
 		/** 
 		 * launch updater using the working directory as gameFolder
-		 * TODO support choosing directory via program arguments 
 		 */
 		launch.acceptOptions(Arrays.asList(args),
 				new File(gameDir),

@@ -194,4 +194,14 @@ public class Utils {
 		}
 		return null;
 	}
+
+	/**
+	 * checks whether these two integers share one bit (flag), or the parentFlag is zero
+	 * @param parentFlag the flag to check against, true is returned if this parameter is zero
+	 * @param combineFlag the flag to check
+	 * @return whether combineFlag contains elements of parentFlag
+	 */
+	public static boolean doFlagCombine(int parentFlag, int combineFlag) {
+		return parentFlag == 0 || (parentFlag &  combineFlag) > 0;
+	}
 }

@@ -24,7 +24,7 @@ archivesBaseName = 'updater'
 sourceCompatibility = 1.6
 
 ext {
-    updaterVersion = '2.1.6'
+    updaterVersion = '2.1.8'
     installerVersion = '2.3.0'
     creatorVersion = '2.4.1'
 }
@@ -46,6 +46,11 @@ dependencies {
 jar {
     exclude 'argo/**'
     exclude 'com/intellij/**'
+    baseName = 'classes'
+}
+
+task thinUpdater(type: Jar) {
+    from sourceSets.main.output
     baseName = 'updater'
     version = updaterVersion
     classifier = 'thin'
@@ -55,6 +60,7 @@ jar {
  * Base fat Jar
  */
 task fatJar(type: Jar, dependsOn: jar) {
+    classifier = 'fat'
     inputs.file jar.archivePath
     from(configurations.compile.collect { zipTree(it) })
 }
