@@ -24,7 +24,11 @@ public class RepoMod {
 	/** contains dir and name in minecraft folder */
 	public String fileName;
 
-	/** Filetype info, eg.: admin/client/server - only WIP, uses flags */
+	/**
+	 * Filetype info, eg.: admin/client/server - only WIP, uses flags
+	 * no flag means: mod allowed on every configuration
+	 * other flags mean: mod is allowed on any of these configurations
+	 */
 	public int fileType; // currently not supported
 
 }

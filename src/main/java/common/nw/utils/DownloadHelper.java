@@ -55,7 +55,7 @@ public class DownloadHelper {
 			reader.close();
 			result = readString.toString();
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			NwLogger.NW_LOGGER.error("Error downloading String: " + strUrl, ex);
 		}
 		return result;
 	}
@@ -150,7 +150,7 @@ public class DownloadHelper {
 				Updater.logger.fine("ModFile " + mod.fileName + " does already exist, checking md5!");
 				String hash = getHash(modFile);
 				if (hash != null && !hash.isEmpty() && hash.equals(mod.getRemoteInfo().md5)) {
-					Updater.logger.info("Using already existing modFile! Aborting Download...");
+					Updater.logger.info("Using already existing modFile! Skipping Download...");
 					return UpdateResult.Good;
 				} else {
 					Updater.logger.fine("MD5 does NOT match, trying to download new mod.");
@@ -278,7 +278,7 @@ public class DownloadHelper {
 
 			httpInputStream = http.getInputStream();
 			progressMax = http.getContentLength();
-			if(progressMax < 1) {
+			if (progressMax < 1) {
 				progressMax = 100;
 			}
 			int contentLength = http.getContentLength();
@@ -361,7 +361,7 @@ public class DownloadHelper {
 		} else if (!outputDir.isDirectory()) {
 			return false;
 		}
-		if(!archive.getName().endsWith(".zip")) {
+		if (!archive.getName().endsWith(".zip")) {
 			NwLogger.NW_LOGGER.warn("Trying to decompress non .zip file!");
 		}
 		NwLogger.NW_LOGGER.info("Unzipping archive: " + archive.getName());
@@ -405,5 +405,38 @@ public class DownloadHelper {
 			NwLogger.NW_LOGGER.error("Error reading archive!", ex);
 		}
 		return false;
+	}
+
+	public static String getStringFromFile(String strUrl, IProgressWatcher watcher) throws IOException {
+		String result = "";
+		File file = new File(strUrl);
+		if (!file.exists() || file.isDirectory()) {
+			NwLogger.NW_LOGGER.info("File not found: " + strUrl);
+			return null;
+		}
+
+		InputStream httpStream = new FileInputStream(file);
+		int max = httpStream.available();
+		if (watcher != null) {
+			watcher.setDownloadProgress("Parsing...", 0, max);
+		}
+		try {
+			StringBuilder readString = new StringBuilder();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					httpStream));
+			String readLine;
+			while ((readLine = reader.readLine()) != null) {
+				if (watcher != null) {
+					watcher.setDownloadProgress(max - httpStream.available());
+				}
+				readString.append(readLine).append("\n");
+			}
+
+			reader.close();
+			result = readString.toString();
+		} catch (IOException ex) {
+			NwLogger.NW_LOGGER.error("Error reading file: " + strUrl, ex);
+		}
+		return result;
 	}
 }

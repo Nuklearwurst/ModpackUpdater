@@ -63,12 +63,12 @@ public class ConsoleListener implements IProgressWatcher {
 	@Override
 	public int showConfirmDialog(String message, String title, int optionType,
 			int messageType) {
-		System.out.println("[" + getStringForMessageType(messageType) + " - confirm] " + title);
-		System.out.println(message);
+		NwLogger.UPDATER_LOGGER.info("[" + getStringForMessageType(messageType) + " - confirm] " + title);
+		NwLogger.UPDATER_LOGGER.info(message);
 		if(optionType == JOptionPane.YES_NO_OPTION) {
-			System.out.println("######   y / n   ######");			
+			NwLogger.UPDATER_LOGGER.info("######   y / n   ######");
 		} else {
-			System.out.println("######   y / n / c  ######");
+			NwLogger.UPDATER_LOGGER.info("######   y / n / c  ######");
 		}
 		String s = readLine();
 		if(s != null && s.toLowerCase().equals("y")) {
@@ -82,25 +82,25 @@ public class ConsoleListener implements IProgressWatcher {
 
 	@Override
 	public String showInputDialog(String message) {
-		System.out.println("[Message - input] " + message);
+		NwLogger.UPDATER_LOGGER.info("[Message - input] " + message);
 		return readLine();
 	}
 
 	@Override
 	public int showOptionDialog(String message, String title, int optionType,
 			int messageType, Icon icon, String[] options, String defaultOption) {
-		System.out.println("[" + getStringForMessageType(messageType) + " - confirm] " + title);
-		System.out.println(message);
+		NwLogger.UPDATER_LOGGER.info("[" + getStringForMessageType(messageType) + " - confirm] " + title);
+		NwLogger.UPDATER_LOGGER.info(message);
 
 		//try 3 times
 		for(int t = 0; t < 3; t++) {
 
 			//print options
-			System.out.println();
+			NwLogger.UPDATER_LOGGER.info("-------------------------------------------------");
 			for(int i = 0; i < options.length; i++) {
-				System.out.println("[" + i + "] " + options[i] + " ");
+				NwLogger.UPDATER_LOGGER.info("[" + i + "] " + options[i] + " ");
 			}
-			System.out.println();
+			NwLogger.UPDATER_LOGGER.info("-------------------------------------------------");
 
 			//read input
 			String input_str = readLine();
@@ -108,12 +108,6 @@ public class ConsoleListener implements IProgressWatcher {
 				continue;
 			}
 
-			for(int i = 0; i < options.length; i++) {
-				String o = options[i];
-				if(o != null && o.equals(input_str)) {
-					return i;
-				}
-			}
 			//read number
 			//noinspection EmptyCatchBlock
 			try {
@@ -122,8 +116,15 @@ public class ConsoleListener implements IProgressWatcher {
 					return input_int;
 				}
 			} catch(NumberFormatException e) {}
-			NwLogger.NW_LOGGER.error("Invalid input!");
 
+			//read options text
+			for(int i = 0; i < options.length; i++) {
+				String o = options[i];
+				if(o != null && o.equals(input_str)) {
+					return i;
+				}
+			}
+			NwLogger.UPDATER_LOGGER.error("Invalid input!");
 		}
 		//error handling (after 3 trys no result)
 		if(defaultOption != null) {

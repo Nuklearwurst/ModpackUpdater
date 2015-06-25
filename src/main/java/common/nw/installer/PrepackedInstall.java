@@ -1,6 +1,6 @@
 package common.nw.installer;
 
-import common.nw.installer.gui_legacy.InstallerWindow;
+import common.nw.installer.gui.InstallerWindow;
 import common.nw.utils.log.NwLogger;
 
 import javax.swing.*;
@@ -29,6 +29,7 @@ public final class PrepackedInstall {
 				}
 				try {
 					InstallerWindow window = new InstallerWindow(true);
+					window.mainFrame.pack();
 					window.mainFrame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

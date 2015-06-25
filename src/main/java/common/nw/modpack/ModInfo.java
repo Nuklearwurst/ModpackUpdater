@@ -265,18 +265,24 @@ public class ModInfo {
 	 */
 	public boolean equals(RepoMod mod, File baseDir) {
 		if (mod.nameType != null) {
+			//mod nameType conflict resolution
 			if (mod.nameType.equals(ModpackValues.nameTypeFileName) && this.hasName) {
-				return this.fileName.equals(mod.name.replace("/",
-						File.separator));
-			} else if (mod.nameType.equals(ModpackValues.nameTypeZipEntry) && !this.hasName) {
-				return false;
+				//local version was read from zip-version file but remote is managed by filename
+				return this.fileName.replace(File.separator, "/").equals(mod.name.replace(File.separator, "/"));
+			} else if (mod.nameType.equals(ModpackValues.nameTypeZipEntry)) {
+				if(!this.hasName) {
+					//We could not read a zip name, this is a different mod1
+					return false;
+				}
+			} else {
+				// default to filename if nameType could not be parsed and we have read the name from zip
+				if (hasName) {
+					return this.fileName.replace(File.separator, "/").equals(mod.name.replace(File.separator, "/"));
+				}
 			}
 		}
-		// work around incase an zip version is readable but not specified on the server-modpack
-		if(hasName) {
-			return this.fileName.replace(File.separator, "/").equals(mod.name.replace(File.separator, "/"));
-		}
-		return this.name.equals(mod.name.replace(File.separator, "/"));
+		//compare names
+		return this.name.replace(File.separator, "/").equals(mod.name.replace(File.separator, "/"));
 	}
 
 	@Override
