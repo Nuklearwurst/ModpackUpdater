@@ -233,7 +233,7 @@ public class InstallerWindow {
 	/**
 	 * Main Window
 	 */
-	protected JFrame mainFrame;
+	public JFrame mainFrame;
 	/////////////////////////////////////////
 	// Button Panel and other gui elements //
 	/////////////////////////////////////////
@@ -335,7 +335,8 @@ public class InstallerWindow {
 		updatePage();
 
 		if (url != null) {
-			pageHolder.nextPage();
+			page0.txtUrl.setText(url);
+			nextPage();
 		}
 	}
 
@@ -397,33 +398,6 @@ public class InstallerWindow {
 		btnNext.setEnabled(!installing);
 		btnCancel.setEnabled(!pageHolder.isLastPage());
 		btnNext.setText(btnNextText[pageHolder.getCurrentPageIndex()]);
-
-
-//		Object o = pageHolder.getCurrentPageProperty(Reference.KEY_TURNABLE);
-//		if(o != null && o instanceof Boolean) {
-//			if (!(Boolean)o) {
-//				btnNext.setEnabled(false);
-//				btnBack.setEnabled(false);
-//			} else {
-//				btnNext.setEnabled(true);
-//				if (pageHolder.isLastPage() || pageHolder.getCurrentPageIndex() == 4) { // last pages
-//					btnNext.setText("Finish");
-//				} else {
-//					btnNext.setText("Next");
-//				}
-//				if (pageHolder.isFirstPage()) {
-//					btnBack.setEnabled(false);
-//				} else {
-//					btnBack.setEnabled(true);
-//				}
-//			}
-//		}
-//
-//		String s = "Step " + (pageHolder.getCurrentPageIndex() + 1) + " of " + (pageHolder.getLastPageIndex() + 1) + ".";
-//		if (DEBUG) {
-//			s += "\n..." + pageHolder.getCurrentPageProperty(Reference.KEY_NAME);
-//		}
-//		lblHeader.setText(s);
 	}
 
 	private void nextPage() {

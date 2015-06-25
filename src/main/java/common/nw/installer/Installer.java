@@ -77,14 +77,22 @@ public class Installer {
 	 */
 	public static RepoModpack downloadModpack(String url) {
 		try {
-			String json = DownloadHelper.getString(url, null);
+			String json = null;
+			if(!url.startsWith("http:") && !url.startsWith("www.") || !url.contains("/")) {
+				//try and read local file
+				NwLogger.INSTALLER_LOGGER.info("Modpack URL does not seem to be an internet url! Trying to get local File");
+				json = DownloadHelper.getStringFromFile(url, null);
+			}
+			if (json == null || json.isEmpty()) {
+				json = DownloadHelper.getString(url, null);
+			}
 			if (json == null || json.isEmpty()) {
 				return null;
 			}
 			Gson gson = new Gson();
 			return gson.fromJson(json, RepoModpack.class);
 		} catch (Exception e) {
-			e.printStackTrace();
+			NwLogger.INSTALLER_LOGGER.error("Error downloading Modpack.json", e);
 		}
 		return null;
 	}
