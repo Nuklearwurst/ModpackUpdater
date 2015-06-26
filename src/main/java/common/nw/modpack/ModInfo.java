@@ -45,8 +45,8 @@ public class ModInfo {
 	 * loadInfo, remoteData is added by setRemoteInfo
 	 */
 	public ModInfo(String fileName) {
-		name = version = fileName.replace(File.separator, "/");
-		this.fileName = fileName.replace("/", File.separator);
+		this.setFileName(fileName);
+		name = version = getFileName();
 	}
 
 	/**
@@ -54,10 +54,22 @@ public class ModInfo {
 	 * for local files, but it might not exist)
 	 */
 	public ModInfo(RepoMod remoteMod) {
-		this.fileName = remoteMod.fileName.replace("/", File.separator);
+		this.setFileName(remoteMod.fileName);
 		this.name = remoteMod.name;
 		this.version = null;
 		this.remoteInfo = remoteMod;
+	}
+
+	public String getFileNameSystem() {
+		return fileName.replace("/", File.separator);
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName.replace(File.separator, "/");
 	}
 
 	/**
@@ -90,7 +102,7 @@ public class ModInfo {
 					version = DownloadHelper.getHash(file);
 				} else if (remoteInfo.versionType.equals(ModpackValues.versionTypeFileName)
 						&& this.hasVersionFile) {
-					version = fileName;
+					version = getFileName();
 				}
 			}
 		}
@@ -103,7 +115,7 @@ public class ModInfo {
 	 */
 	@SuppressWarnings("unchecked")
 	public void loadInfo(File baseDir) {
-		loadInfoFromFile(new File(baseDir, fileName));
+		loadInfoFromFile(new File(baseDir, getFileNameSystem()));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -117,7 +129,7 @@ public class ModInfo {
 			// TODO read forge version
 
 			// read .litemod version file
-			if (fileName.endsWith(".litemod")) {
+			if (getFileName().endsWith(".litemod")) {
 				String versionFile = getVersionFileFromZip(file, "litemod.json");
 				if (versionFile != null && !versionFile.isEmpty()) {
 					if (versionFile.trim().startsWith("{")) {
@@ -136,7 +148,7 @@ public class ModInfo {
 						hasVersionFile = true;
 					}
 				}
-			} else if(fileName.endsWith(".jar")){
+			} else if(getFileName().endsWith(".jar")){
 				String versionFile = getVersionFileFromZip(file, "*mod.info");
 				if (versionFile != null && !versionFile.isEmpty()) {
 					JdomParser parser = new JdomParser();
@@ -268,7 +280,7 @@ public class ModInfo {
 			//mod nameType conflict resolution
 			if (mod.nameType.equals(ModpackValues.nameTypeFileName) && this.hasName) {
 				//local version was read from zip-version file but remote is managed by filename
-				return this.fileName.replace(File.separator, "/").equals(mod.name.replace(File.separator, "/"));
+				return this.getFileName().equals(mod.name);
 			} else if (mod.nameType.equals(ModpackValues.nameTypeZipEntry)) {
 				if(!this.hasName) {
 					//We could not read a zip name, this is a different mod1
@@ -277,12 +289,12 @@ public class ModInfo {
 			} else {
 				// default to filename if nameType could not be parsed and we have read the name from zip
 				if (hasName) {
-					return this.fileName.replace(File.separator, "/").equals(mod.name.replace(File.separator, "/"));
+					return this.getFileName().equals(mod.name);
 				}
 			}
 		}
 		//compare names
-		return this.name.replace(File.separator, "/").equals(mod.name.replace(File.separator, "/"));
+		return this.name.equals(mod.name);
 	}
 
 	@Override

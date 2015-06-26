@@ -226,8 +226,8 @@ public class PanelEditMods implements IPageHandler, IDropFileHandler, ITableHold
 		ModInfo mod = new ModInfo(mcRelativePath);
 		mod.loadInfo(new File(baseDirPath));
 		//insert default folders if needed after info loaded
-		mod.fileName = baseDirToAdd + mod.fileName;
-		mod.name = mod.version = mod.fileName.replace(File.separator, "/");
+		mod.setFileName(baseDirToAdd + mod.fileName);
+		mod.name = mod.version = mod.getFileName();
 
 		RepoMod repo = new RepoMod();
 		repo.name = mod.name;
@@ -237,7 +237,7 @@ public class PanelEditMods implements IPageHandler, IDropFileHandler, ITableHold
 		}
 		repo.downloadUrl = "EDIT_DOWNLOAD_URL_PLEASE";
 		repo.downloadType = "PLEASE_EDIT";
-		repo.fileName = mod.fileName;
+		repo.fileName = mod.getFileName();
 		repo.md5 = DownloadHelper.getHash(file);
 
 		if (mod.hasName) {
@@ -247,7 +247,7 @@ public class PanelEditMods implements IPageHandler, IDropFileHandler, ITableHold
 		}
 		if (mod.hasVersionFile) {
 			repo.versionType = ModpackValues.versionTypeZipEntry;
-		} else if (mod.fileName.startsWith("config" + File.separator)) {
+		} else if (mod.getFileNameSystem().startsWith("config" + File.separator)) {
 			repo.version = DateFormat.getDateInstance().format(new Date(System.currentTimeMillis()));
 			repo.versionType = ModpackValues.versionTypeTracked;
 		} else {

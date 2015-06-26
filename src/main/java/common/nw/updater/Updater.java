@@ -467,8 +467,8 @@ public class Updater {
 				ModInfo info = new ModInfo(local.files.get(i));
 				info.loadInfo(gameDir); // load info
 				//update tracked version information
-				if (info.version != null && local.trackedFileVersions != null && local.trackedFileVersions.containsKey(info.fileName)) {
-					info.version = local.trackedFileVersions.get(info.fileName);
+				if (info.version != null && local.trackedFileVersions != null && local.trackedFileVersions.containsKey(info.getFileNameSystem())) {
+					info.version = local.trackedFileVersions.get(info.getFileNameSystem());
 				}
 				mods.add(info);
 			}
@@ -689,11 +689,11 @@ public class Updater {
 		// delete old or blacklisted mods
 		if (modsToDelete.size() > 0) {
 			for (ModInfo mod : modsToDelete) {
-				File fileToDelete = new File(gameDir, mod.fileName);
+				File fileToDelete = new File(gameDir, mod.getFileNameSystem());
 				if (fileToDelete.exists()) {
 					if (!fileToDelete.delete()) {
 						success = false;
-						logger.severe("Mod " + mod.fileName
+						logger.severe("Mod " + mod.getFileNameSystem()
 								+ "could not be deleted!");
 					}
 				}
@@ -796,7 +796,7 @@ public class Updater {
 			if ((result != UpdateResult.Good) && (!retry)) {
 				int r = listener.showConfirmDialog("Downloading mod \"" + mod.name + "\" version: \"" + mod.version + "\" failed!\nDo you want to retry?", "Retry?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				if (r != JOptionPane.YES_OPTION) {
-					warningMessage += "\nFailed updating mod: " + mod.fileName + "\nError when downloading: " + result;
+					warningMessage += "\nFailed updating mod: " + mod.getFileNameSystem() + "\nError when downloading: " + result;
 					errored = true;
 					logger.severe(warningMessage);
 					return false;
@@ -829,10 +829,10 @@ public class Updater {
 
 		for (ModInfo mod : mods) {
 			if (!mod.shouldBeDeleted()) {
-				local.files.add(mod.fileName);
+				local.files.add(mod.getFileNameSystem());
 				if (mod.getRemoteInfo() != null && mod.getRemoteInfo().versionType != null && mod.getRemoteInfo().versionType.equals(ModpackValues.versionTypeTracked)) {
 					//save local tracked versions to disk 
-					local.trackedFileVersions.put(mod.fileName, mod.version); //TODO check wether this use is correct
+					local.trackedFileVersions.put(mod.getFileNameSystem(), mod.version);
 				}
 			}
 		}

@@ -131,7 +131,7 @@ public class DownloadHelper {
 	                                  int modNumber, float modValue, File baseDir, boolean ignoreDuplicates) {
 
 		/** mod file */
-		String file = baseDir + File.separator + mod.fileName;
+		String file = baseDir + File.separator + mod.getFileNameSystem();
 
 		// create dirs
 		if (file.lastIndexOf(File.separator) != -1) {
@@ -147,7 +147,7 @@ public class DownloadHelper {
 
 		if (!ignoreDuplicates) {
 			if (modFile.exists()) {
-				Updater.logger.fine("ModFile " + mod.fileName + " does already exist, checking md5!");
+				Updater.logger.fine("ModFile " + mod.getFileNameSystem() + " does already exist, checking md5!");
 				String hash = getHash(modFile);
 				if (hash != null && !hash.isEmpty() && hash.equals(mod.getRemoteInfo().md5)) {
 					Updater.logger.info("Using already existing modFile! Skipping Download...");
@@ -318,12 +318,12 @@ public class DownloadHelper {
 			return UpdateResult.Good;
 
 		} catch (MalformedURLException e) {
-			listener.setDownloadProgress("Error during download of " + mod.fileName + ": " + e.getMessage());
-			Updater.logger.severe("Failed downloading " + mod.fileName.replace(File.separator, "/") + "!", e);
+			listener.setDownloadProgress("Error during download of " + mod.getFileNameSystem() + ": " + e.getMessage());
+			Updater.logger.severe("Failed downloading " + mod.getFileNameSystem().replace(File.separator, "/") + "!", e);
 			return UpdateResult.INVALID_URL;
 		} catch (IOException e) {
-			listener.setDownloadProgress("Error during download of " + mod.fileName + ": " + e.getMessage());
-			Updater.logger.severe("Failed downloading " + mod.fileName.replace(File.separator, "/") + "!", e);
+			listener.setDownloadProgress("Error during download of " + mod.getFileNameSystem() + ": " + e.getMessage());
+			Updater.logger.severe("Failed downloading " + mod.getFileNameSystem().replace(File.separator, "/") + "!", e);
 		} finally {
 			try {
 				if (httpInputStream != null) {

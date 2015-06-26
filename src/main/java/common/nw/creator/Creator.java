@@ -128,6 +128,7 @@ public class Creator {
 
 		mod.fileName = base.isEmpty() ? file.getName() : base + "/"
 				+ file.getName();
+		mod.fileName = mod.fileName.replace(File.separator, "/");
 		mod.version = mod.fileName;
 		mod.name = mod.fileName;
 		

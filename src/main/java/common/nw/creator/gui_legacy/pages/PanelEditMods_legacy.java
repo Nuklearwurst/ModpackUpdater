@@ -308,8 +308,8 @@ public class PanelEditMods_legacy extends JPanel implements IPageHandler, IDropF
 		ModInfo mod = new ModInfo(mcRelativePath);
 		mod.loadInfo(new File(baseDirPath));
 		//insert default folders if needed after info loaded
-		mod.fileName = baseDirToAdd + mod.fileName;
-		mod.name = mod.version = mod.fileName.replace(File.separator, "/");
+		mod.setFileName(baseDirToAdd + mod.getFileName());
+		mod.name = mod.version = mod.getFileName();
 
 		RepoMod repo = new RepoMod();
 		repo.name = mod.name;

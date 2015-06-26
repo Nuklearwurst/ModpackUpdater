@@ -172,7 +172,7 @@ public class DialogEditMod extends JDialog {
 		ModInfo mod = CreatorUtils.createModInfoFromFile(filePath);
 		txtName.setText(mod.name);
 		txtVersion.setText(mod.version);
-		txtFile.setText(mod.fileName);
+		txtFile.setText(mod.getFileNameSystem());
 		txtMD5.setText(DownloadHelper.getHash(mod.file));
 
 		if (mod.hasName) {
@@ -183,7 +183,7 @@ public class DialogEditMod extends JDialog {
 
 		if (mod.hasVersionFile) {
 			rdbtnVersionZip.setSelected(true);
-		} else if (mod.fileName.startsWith("config/")) {
+		} else if (mod.getFileNameSystem().startsWith("config" + File.separator)) {
 			txtVersion.setText(DateFormat.getDateInstance().format(new Date(System.currentTimeMillis())));
 			rdbtnVersionTracked.setSelected(true);
 		} else {
