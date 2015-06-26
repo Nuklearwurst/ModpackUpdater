@@ -287,7 +287,7 @@ public class EditModDialog_legacy extends JDialog {
 			ModInfo mod = CreatorUtils.createModInfoFromFile(new File(filePath));
 			txtName.setText(mod.name);
 			txtVersion.setText(mod.version);
-			txtFilename.setText(mod.fileName);
+			txtFilename.setText(mod.getFileNameSystem());
 			txtMD5.setText(DownloadHelper.getHash(mod.file));
 
 			if (mod.hasName) {
@@ -298,7 +298,7 @@ public class EditModDialog_legacy extends JDialog {
 
 			if (mod.hasVersionFile) {
 				rdbtnVerisionZip.setSelected(true);
-			} else if(mod.fileName.startsWith("config/")) {
+			} else if(mod.getFileName().startsWith("config/")) {
 				txtVersion.setText(DateFormat.getDateInstance().format(new Date(System.currentTimeMillis())));
 				rdbtnVersionTracked.setSelected(true);
 			} else {
@@ -315,9 +315,9 @@ public class EditModDialog_legacy extends JDialog {
 		mod.name = txtName.getText();
 		mod.version = txtVersion.getText();
 		mod.downloadUrl = txtURL.getText();
-		mod.fileName = txtFilename.getText();
-		if(mod.fileName == null || mod.fileName.isEmpty()) {
-			mod.fileName = mod.name;
+		mod.setFileName(txtFilename.getText());
+		if(mod.getFileName() == null || mod.getFileName().isEmpty()) {
+			mod.setFileName(mod.name);
 		}
 		mod.md5 = txtMD5.getText();
 		mod.downloadType = btnGroupDownloadType.getSelection()
@@ -372,7 +372,7 @@ public class EditModDialog_legacy extends JDialog {
 			txtName.setText(mod.name);
 			txtVersion.setText(mod.version);
 			txtURL.setText(mod.downloadUrl);
-			txtFilename.setText(mod.fileName);
+			txtFilename.setText(mod.getFileNameSystem());
 			txtMD5.setText(mod.md5);
 
 			// modNameType
