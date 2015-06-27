@@ -27,7 +27,7 @@ public class ModInfo {
 	public String version;
 
 	/** location of the modFile */
-	public String fileName;
+	private String fileName;
 
 	/** local mod File */
 	public File file;
@@ -54,7 +54,7 @@ public class ModInfo {
 	 * for local files, but it might not exist)
 	 */
 	public ModInfo(RepoMod remoteMod) {
-		this.setFileName(remoteMod.fileName);
+		this.setFileName(remoteMod.getFileName());
 		this.name = remoteMod.name;
 		this.version = null;
 		this.remoteInfo = remoteMod;

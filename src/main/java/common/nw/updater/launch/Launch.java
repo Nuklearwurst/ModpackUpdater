@@ -174,8 +174,7 @@ public class Launch implements ITweaker {
 		}
 
 		Launch launch = new Launch(useGui);
-		launch.getLaunchArguments(); // testing
-		/** 
+		/**
 		 * launch updater using the working directory as gameFolder
 		 */
 		launch.acceptOptions(Arrays.asList(args),

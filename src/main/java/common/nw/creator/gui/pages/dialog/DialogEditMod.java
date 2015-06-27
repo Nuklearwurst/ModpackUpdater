@@ -199,9 +199,9 @@ public class DialogEditMod extends JDialog {
 		mod.name = txtName.getText();
 		mod.version = txtVersion.getText();
 		mod.downloadUrl = txtUrl.getText();
-		mod.fileName = txtFile.getText();
-		if (mod.fileName == null || mod.fileName.isEmpty()) {
-			mod.fileName = mod.name;
+		mod.setFileName(txtFile.getText());
+		if (mod.getFileName() == null || mod.getFileName().isEmpty()) {
+			mod.setFileName(mod.name);
 		}
 		mod.md5 = txtMD5.getText();
 		mod.downloadType = btnGroupDownloadType.getSelection()
@@ -258,7 +258,7 @@ public class DialogEditMod extends JDialog {
 			txtName.setText(mod.name);
 			txtVersion.setText(mod.version);
 			txtUrl.setText(mod.downloadUrl);
-			txtFile.setText(mod.fileName);
+			txtFile.setText(mod.getFileNameSystem());
 			txtMD5.setText(mod.md5);
 
 			// modNameType

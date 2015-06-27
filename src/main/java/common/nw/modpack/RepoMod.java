@@ -1,5 +1,7 @@
 package common.nw.modpack;
 
+import java.io.File;
+
 public class RepoMod {
 
 	public String name;
@@ -22,7 +24,7 @@ public class RepoMod {
 	public String md5;
 	
 	/** contains dir and name in minecraft folder */
-	public String fileName;
+	private String fileName;
 
 	/**
 	 * Filetype info, eg.: admin/client/server - only WIP, uses flags
@@ -30,5 +32,17 @@ public class RepoMod {
 	 * other flags mean: mod is allowed on any of these configurations
 	 */
 	public int fileType; // currently not supported
+
+	public String getFileNameSystem() {
+		return fileName.replace("/", File.separator);
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName.replace(File.separator, "/");
+	}
 
 }

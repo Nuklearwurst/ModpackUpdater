@@ -213,14 +213,14 @@ public class PanelEditMods_legacy extends JPanel implements IPageHandler, IDropF
 		//hide mods
 		if(chckbxHideMods.isSelected()) {
 			for(int i = mods.size() - 1; i >= 0; i--) {
-				if((mods.get(i).fileName.startsWith("mods/") || mods.get(i).fileName.startsWith("mods" + File.separator)) && !hiddenFiles.contains(mods.get(i))) {
+				if((mods.get(i).getFileName().startsWith("mods/")) && !hiddenFiles.contains(mods.get(i))) {
 					hiddenFiles.add(mods.get(i));
 					mods.remove(i);
 				}
 			}
 		} else {
 			for(int i = hiddenFiles.size() - 1; i >= 0 ; i--) {
-				if(hiddenFiles.get(i).fileName.startsWith("mods/") || hiddenFiles.get(i).fileName.startsWith("mods" + File.separator)) {
+				if(hiddenFiles.get(i).getFileName().startsWith("mods/")) {
 					if(!mods.contains(hiddenFiles.get(i))) {
 						mods.add(hiddenFiles.get(i));
 					}
@@ -231,14 +231,14 @@ public class PanelEditMods_legacy extends JPanel implements IPageHandler, IDropF
 		//hids config
 		if(chckbxHideConfig.isSelected()) {
 			for(int i = mods.size() - 1; i >= 0; i--) {
-				if((mods.get(i).fileName.startsWith("config/") || mods.get(i).fileName.startsWith("config" + File.separator)) && !hiddenFiles.contains(mods.get(i))) {
+				if((mods.get(i).getFileName().startsWith("config/")) && !hiddenFiles.contains(mods.get(i))) {
 					hiddenFiles.add(mods.get(i));
 					mods.remove(i);
 				}
 			}
 		} else {
 			for(int i = hiddenFiles.size() - 1; i >= 0 ; i--) {
-				if(hiddenFiles.get(i).fileName.startsWith("config/") || hiddenFiles.get(i).fileName.startsWith("config" + File.separator)) {
+				if(hiddenFiles.get(i).getFileName().startsWith("config/")) {
 					if(!mods.contains(hiddenFiles.get(i))) {
 						mods.add(hiddenFiles.get(i));
 					}
@@ -319,7 +319,7 @@ public class PanelEditMods_legacy extends JPanel implements IPageHandler, IDropF
 		}
 		repo.downloadUrl = "EDIT_DOWNLOAD_URL_PLEASE";
 		repo.downloadType = "PLEASE_EDIT";
-		repo.fileName = mod.fileName;
+		repo.setFileName(mod.getFileName());
 		repo.md5 = DownloadHelper.getHash(file);
 
 		if (mod.hasName) {
@@ -329,7 +329,7 @@ public class PanelEditMods_legacy extends JPanel implements IPageHandler, IDropF
 		}
 		if (mod.hasVersionFile) {
 			repo.versionType = ModpackValues.versionTypeZipEntry;
-		} else if(mod.fileName.startsWith("config" + File.separator)) {
+		} else if(mod.getFileName().startsWith("config" + File.separator)) {
 			repo.version = DateFormat.getDateInstance().format(new Date(System.currentTimeMillis()));
 			repo.versionType = ModpackValues.versionTypeTracked;
 		} else {

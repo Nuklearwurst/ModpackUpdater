@@ -126,18 +126,17 @@ public class Creator {
 
 		// handle files in base dir
 
-		mod.fileName = base.isEmpty() ? file.getName() : base + "/"
-				+ file.getName();
-		mod.fileName = mod.fileName.replace(File.separator, "/");
-		mod.version = mod.fileName;
-		mod.name = mod.fileName;
+		mod.setFileName(base.isEmpty() ? file.getName() : base + "/"
+				+ file.getName());
+		mod.version = mod.getFileName();
+		mod.name = mod.getFileName();
 		
 		//update types
 		mod.versionType = ModpackValues.versionTypeFileName;
 		mod.nameType = ModpackValues.nameTypeFileName;
 		
 		//handle config
-		if(mod.fileName.startsWith("config/")) {
+		if(mod.getFileName().startsWith("config/")) {
 			mod.versionType = ModpackValues.versionTypeTracked;
 			mod.version = DateFormat.getDateInstance().format(new Date(System.currentTimeMillis()));
 		}
@@ -156,10 +155,10 @@ public class Creator {
 
 		mod.md5 = DownloadHelper.getHash(file);
 
-		if (mod.fileName.endsWith(".litemod")) {
+		if (mod.getFileName().endsWith(".litemod")) {
 			// handle Litemod
-		} else if (mod.fileName.endsWith(".zip")
-				|| mod.fileName.endsWith(".jar")) {
+		} else if (mod.getFileName().endsWith(".zip")
+				|| mod.getFileName().endsWith(".jar")) {
 			// handle forgemods
 		}
 

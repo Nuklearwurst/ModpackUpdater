@@ -133,14 +133,14 @@ public class PanelEditMods implements IPageHandler, IDropFileHandler, ITableHold
 		//hide mods
 		if (chbxHideMods.isSelected()) {
 			for (int i = mods.size() - 1; i >= 0; i--) {
-				if ((mods.get(i).fileName.startsWith("mods/") || mods.get(i).fileName.startsWith("mods" + File.separator)) && !hiddenFiles.contains(mods.get(i))) {
+				if (mods.get(i).getFileName().startsWith("mods/") && !hiddenFiles.contains(mods.get(i))) {
 					hiddenFiles.add(mods.get(i));
 					mods.remove(i);
 				}
 			}
 		} else {
 			for (int i = hiddenFiles.size() - 1; i >= 0; i--) {
-				if (hiddenFiles.get(i).fileName.startsWith("mods/") || hiddenFiles.get(i).fileName.startsWith("mods" + File.separator)) {
+				if (hiddenFiles.get(i).getFileName().startsWith("mods/")) {
 					if (!mods.contains(hiddenFiles.get(i))) {
 						mods.add(hiddenFiles.get(i));
 					}
@@ -151,14 +151,14 @@ public class PanelEditMods implements IPageHandler, IDropFileHandler, ITableHold
 		//hids config
 		if (chbxHideConfig.isSelected()) {
 			for (int i = mods.size() - 1; i >= 0; i--) {
-				if ((mods.get(i).fileName.startsWith("config/") || mods.get(i).fileName.startsWith("config" + File.separator)) && !hiddenFiles.contains(mods.get(i))) {
+				if ((mods.get(i).getFileName().startsWith("config/")) && !hiddenFiles.contains(mods.get(i))) {
 					hiddenFiles.add(mods.get(i));
 					mods.remove(i);
 				}
 			}
 		} else {
 			for (int i = hiddenFiles.size() - 1; i >= 0; i--) {
-				if (hiddenFiles.get(i).fileName.startsWith("config/") || hiddenFiles.get(i).fileName.startsWith("config" + File.separator)) {
+				if (hiddenFiles.get(i).getFileName().startsWith("config/")) {
 					if (!mods.contains(hiddenFiles.get(i))) {
 						mods.add(hiddenFiles.get(i));
 					}
@@ -226,7 +226,7 @@ public class PanelEditMods implements IPageHandler, IDropFileHandler, ITableHold
 		ModInfo mod = new ModInfo(mcRelativePath);
 		mod.loadInfo(new File(baseDirPath));
 		//insert default folders if needed after info loaded
-		mod.setFileName(baseDirToAdd + mod.fileName);
+		mod.setFileName(baseDirToAdd + mod.getFileName());
 		mod.name = mod.version = mod.getFileName();
 
 		RepoMod repo = new RepoMod();
@@ -237,7 +237,7 @@ public class PanelEditMods implements IPageHandler, IDropFileHandler, ITableHold
 		}
 		repo.downloadUrl = "EDIT_DOWNLOAD_URL_PLEASE";
 		repo.downloadType = "PLEASE_EDIT";
-		repo.fileName = mod.getFileName();
+		repo.setFileName(mod.getFileName());
 		repo.md5 = DownloadHelper.getHash(file);
 
 		if (mod.hasName) {
