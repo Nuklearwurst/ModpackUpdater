@@ -13,7 +13,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <text value="New"/>
+          <text value="&amp;New"/>
         </properties>
       </component>
       <vspacer id="ccba4">
@@ -28,7 +28,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <text value="Edit"/>
+          <text value="&amp;Edit"/>
         </properties>
       </component>
       <component id="a40d3" class="javax.swing.JButton" binding="btnRemove">
@@ -37,7 +37,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <text value="Remove"/>
+          <text value="&amp;Remove"/>
         </properties>
       </component>
       <component id="4e1af" class="javax.swing.JCheckBox" binding="chbxHideMods">
@@ -46,7 +46,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <text value="Hide mods"/>
+          <text value="Hide &amp;mods"/>
         </properties>
       </component>
       <component id="d5035" class="javax.swing.JCheckBox" binding="chbxHideConfig">
@@ -55,7 +55,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <text value="Hide configs"/>
+          <text value="Hide &amp;configs"/>
         </properties>
       </component>
       <scrollpane id="7ecc2">
@@ -91,7 +91,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <text value="Edit Blacklist"/>
+          <text value="Edit &amp;Blacklist"/>
         </properties>
       </component>
       <hspacer id="572d3">

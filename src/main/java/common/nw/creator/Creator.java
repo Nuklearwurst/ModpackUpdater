@@ -39,46 +39,7 @@ public class Creator {
 	}
 
 	/**
-	 * checks wether all fields are valid (not null)
-	 * @return
-	 */
-	@Deprecated
-	public boolean validateEntries() {
-		boolean noFieldNull = modpack.modpackName != null
-				&& !modpack.modpackName.isEmpty()
-				&& modpack.modpackRepo != null
-				&& !modpack.modpackRepo.isEmpty()
-				&& modpack.minecraft.version != null
-				&& !modpack.minecraft.version.isEmpty()
-				&& modpack.minecraft.jarUpdateType != null
-				&& !modpack.minecraft.jarUpdateType.isEmpty()
-				&& modpack.minecraft.versionName != null
-				&& !modpack.minecraft.versionName.isEmpty()
-				&& modpack.minecraft.jsonUpdateType != null
-				&& !modpack.minecraft.jsonUpdateType.isEmpty()
-				&& modpack.minecraft.jsonName != null
-				&& !modpack.minecraft.jsonName.isEmpty()
-				&& modpack.minecraft.arguments != null
-				&& modpack.minecraft.libraries != null && fileLoc != null
-				&& !fileLoc.isEmpty();
-		if (!noFieldNull) {
-			return false;
-		}
-
-		workingDir = new File(fileLoc);
-		return !modpack.modpackRepo.contains(" ")
-				&& (modpack.minecraft.jarUpdateType.equals(ModpackValues.jarDirectDownload)
-						|| modpack.minecraft.jarUpdateType.equals(ModpackValues.jarLocalFile)
-						|| modpack.minecraft.jarUpdateType.equals(ModpackValues.jarUserDownload))
-				&& (modpack.minecraft.jsonUpdateType.equals(ModpackValues.jsonDirectDownload)
-						|| modpack.minecraft.jsonUpdateType.equals(ModpackValues.jsonLocalFile)
-						|| modpack.minecraft.jsonUpdateType.equals(ModpackValues.jsonUserDownload))
-				&& workingDir.exists();
-	}
-
-	/**
 	 * reads folder structure
-	 * @return
 	 */
 	public boolean readFiles() {
 		if(modpack.files == null) {
@@ -96,8 +57,6 @@ public class Creator {
 
 	/**
 	 * searches a folder for files
-	 * @param files
-	 * @param base
 	 */
 	private void findFiles(File[] files, String base) {
 		System.out.println(base);
@@ -117,9 +76,9 @@ public class Creator {
 
 	/**
 	 * adds a modFile to the list
-	 * @param file
-	 * @param base
+	 * FIXME: this should be combined with add mod dialog
 	 */
+	@Deprecated
 	private void addMod(File file, String base) {
 		System.out.println(base + "  Filename: " + file.getName());
 		RepoMod mod = new RepoMod();
@@ -156,10 +115,10 @@ public class Creator {
 		mod.md5 = DownloadHelper.getHash(file);
 
 		if (mod.getFileName().endsWith(".litemod")) {
-			// handle Litemod
+			// TODO: handle Litemod
 		} else if (mod.getFileName().endsWith(".zip")
 				|| mod.getFileName().endsWith(".jar")) {
-			// handle forgemods
+			// TODO: handle forgemods
 		}
 
 		modpack.files.add(mod);
@@ -167,8 +126,6 @@ public class Creator {
 
 	/**
 	 * creates the output file (modpack.json)
-	 * @param c
-	 * @return
 	 */
 	@SuppressWarnings("UnusedReturnValue")
 	public boolean createOutputFile(Component c) {

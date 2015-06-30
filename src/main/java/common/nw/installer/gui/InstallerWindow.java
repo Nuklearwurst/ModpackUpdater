@@ -430,9 +430,6 @@ public class InstallerWindow {
 
 	/**
 	 * sets the progress of the progressbar/progressLabel (page3)
-	 *
-	 * @param s
-	 * @param i
 	 */
 	private void setProgress(String s, int i) {
 		NwLogger.INSTALLER_LOGGER.info(s + "  Progress: " + i);

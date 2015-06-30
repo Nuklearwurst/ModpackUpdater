@@ -8,10 +8,6 @@ import java.util.List;
 
 public class TableModelList extends AbstractTableModel {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private Object[] heads;
 	private String[] fields;
 	private List<?> list;
@@ -92,7 +88,6 @@ public class TableModelList extends AbstractTableModel {
 	/**
 	 * use updateData and setValues
 	 * this will reset when calling updateData
-	 * @param o
 	 */
 	@Deprecated
 	public void addRow(Object[] o) {
@@ -140,10 +135,6 @@ public class TableModelList extends AbstractTableModel {
 		values = new Object[getColumnCount()][0];
 	}
 
-	/**
-	 * 
-	 * @param list
-	 */
 	public void setValues(List<?> list) {
 		this.list = list;
 		updateData();

@@ -186,7 +186,7 @@ public class DownloadHelper {
 			listener.setOverallProgress((int) (10.0F + modNumber * modValue));
 
 			if (modFile.exists()) {
-				Updater.logger.fine("Modfile " + modFile.getAbsolutePath().replace(File.separator, "/") + "already exsists. Deleting...");
+				Updater.logger.fine("Modfile " + modFile.getAbsolutePath().replace(File.separator, "/") + "already exists. Deleting...");
 				if (!modFile.delete()) {
 					Updater.logger.warning("Modfile " + modFile.getAbsolutePath().replace(File.separator, "/") + "could not be deleted!");
 				}
@@ -218,10 +218,6 @@ public class DownloadHelper {
 
 	/**
 	 * compares the given hash with the file
-	 *
-	 * @param md5
-	 * @param tempFile
-	 * @return
 	 */
 	public static boolean checkHash(String md5, File tempFile) {
 		String localMD5 = getHash(tempFile);
@@ -232,9 +228,6 @@ public class DownloadHelper {
 
 	/**
 	 * creates an md5 of the given file
-	 *
-	 * @param file
-	 * @return
 	 */
 	public static String getHash(File file) {
 		DigestInputStream is = null;
@@ -242,6 +235,7 @@ public class DownloadHelper {
 			is = new DigestInputStream(new FileInputStream(file),
 					MessageDigest.getInstance("MD5"));
 			byte[] ignored = new byte[65536];
+			//noinspection StatementWithEmptyBody
 			for (int readBytes = is.read(ignored); readBytes >= 1; readBytes = is.read(ignored)) ;
 			return String.format("%1$032x", new BigInteger(1, is
 					.getMessageDigest().digest()));

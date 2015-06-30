@@ -28,9 +28,6 @@ public class Utils {
 
 	/**
 	 * calculate the time passed since the given date(in Days)
-	 *
-	 * @param date
-	 * @return
 	 */
 	public static int getDaysSimceUpdate(Date date) {
 		long time = System.currentTimeMillis() - date.getTime();
@@ -40,8 +37,6 @@ public class Utils {
 
 	/**
 	 * get the default minecraft directory for different operating systems
-	 *
-	 * @return
 	 */
 	public static String getMinecraftDir() {
 		String osType = System.getProperty("os.name").toLowerCase(
@@ -62,8 +57,7 @@ public class Utils {
 	/**
 	 * opens a FileChooser to select a file
 	 *
-	 * @param c                 parent
-	 * @param currrentDirectory
+	 * @param c parent
 	 * @return null if nothing is selected, otherwise the absolutePath
 	 */
 	@SuppressWarnings("SameParameterValue")
@@ -79,8 +73,7 @@ public class Utils {
 	/**
 	 * opens a FileChooser to select a folder
 	 *
-	 * @param c                 parent
-	 * @param currrentDirectory
+	 * @param c parent
 	 * @return null if nothing is selected, otherwise the absolutePath
 	 */
 	public static String openFolder(Component c, File currrentDirectory) {
@@ -96,9 +89,8 @@ public class Utils {
 	 * opens a FileChooser to select a file or folder if a folder is selected a
 	 * default filename is appended
 	 *
-	 * @param c                parent
-	 * @param currentDirectory
-	 * @param fileName         default file name (in case a folder is selected)
+	 * @param c        parent
+	 * @param fileName default file name (in case a folder is selected)
 	 * @return null if nothing got selected, otherwise the absolute path
 	 */
 	@SuppressWarnings("SameParameterValue")
@@ -124,7 +116,6 @@ public class Utils {
 	 * opens a file using a JFileChooser
 	 *
 	 * @param c                parent
-	 * @param currentDirectory
 	 * @param mode             selection Mode {@link JFileChooser}
 	 * @param buttonText       buttonText, uses "Open" when null ({@link JFileChooser})
 	 * @return File
@@ -180,13 +171,14 @@ public class Utils {
 
 	/**
 	 * Gets System Text Clipboard if available
+	 *
 	 * @return found value
 	 */
 	public static String getStringClipboard() {
 		try {
 			Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 			Transferable transferData = systemClipboard.getContents(null);
-			return  (String) transferData.getTransferData(DataFlavor.stringFlavor);
+			return (String) transferData.getTransferData(DataFlavor.stringFlavor);
 		} catch (IOException e) {
 			NwLogger.NW_LOGGER.error("Error getting system clipboard", e);
 		} catch (UnsupportedFlavorException e) {
@@ -197,11 +189,12 @@ public class Utils {
 
 	/**
 	 * checks whether these two integers share one bit (flag), or the parentFlag is zero
-	 * @param parentFlag the flag to check against, true is returned if this parameter is zero
+	 *
+	 * @param parentFlag  the flag to check against, true is returned if this parameter is zero
 	 * @param combineFlag the flag to check
 	 * @return whether combineFlag contains elements of parentFlag
 	 */
 	public static boolean doFlagCombine(int parentFlag, int combineFlag) {
-		return parentFlag == 0 || (parentFlag &  combineFlag) > 0;
+		return parentFlag == 0 || (parentFlag & combineFlag) > 0;
 	}
 }

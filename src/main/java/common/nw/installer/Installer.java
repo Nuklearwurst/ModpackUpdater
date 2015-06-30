@@ -100,8 +100,6 @@ public class Installer {
 
 	/**
 	 * are all entries valid?
-	 *
-	 * @return
 	 */
 	public boolean validateEntries() {
 		boolean notNull = name != null && !name.isEmpty() && dir != null
@@ -203,8 +201,6 @@ public class Installer {
 
 	/**
 	 * download json version file
-	 *
-	 * @return
 	 */
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean createJson() {
@@ -228,6 +224,7 @@ public class Installer {
 		if(repo.minecraft.jarUpdateType.equals(ModpackValues.jarForgeInherit)) {
 			String forgeVersion = null;
 			try {
+				//noinspection StatementWithEmptyBody
 				if (repo.minecraft.versionName.contains("/")) {
 					//this seems to be direct link, we don't know which version
 				} else if (repo.minecraft.versionName.contains("-")) {
@@ -239,7 +236,6 @@ public class Installer {
 					JdomParser forgeParser = new JdomParser();
 					JsonRootNode forgeVersionData = forgeParser.parse(s);
 					JsonNode build = forgeVersionData.getNode("number", repo.minecraft.versionName);
-					int buildNumber = Integer.parseInt(build.getNumberValue("build"));
 					String branch = build.getStringValue("branch");
 					if (branch == null) {
 						branch = "";
@@ -320,7 +316,6 @@ public class Installer {
 							JdomParser parser = new JdomParser();
 							JsonRootNode versionData = parser.parse(s);
 							JsonNode build = versionData.getNode("number", repo.minecraft.versionName);
-							int buildNumber = Integer.parseInt(build.getNumberValue("build"));
 							String branch = build.getStringValue("branch");
 							if (branch == null) {
 								branch = "";

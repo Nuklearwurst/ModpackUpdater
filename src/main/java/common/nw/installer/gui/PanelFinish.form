@@ -7,19 +7,6 @@
     <properties/>
     <border type="none"/>
     <children>
-      <component id="3d57f" class="javax.swing.JTextPane" binding="txtpnFinish">
-        <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="50"/>
-          </grid>
-          <gridbag weightx="1.0" weighty="1.0"/>
-        </constraints>
-        <properties>
-          <editable value="false"/>
-          <font name="Arial" size="12" style="3"/>
-          <text value="Installation Finished!"/>
-        </properties>
-      </component>
       <component id="7a1d8" class="javax.swing.JTextPane" binding="txtpnInstructions">
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
@@ -54,6 +41,24 @@
           <text value="-Xmx2G -XX:PermSize=256m -XX:MaxPermSize=512m"/>
         </properties>
       </component>
+      <scrollpane id="9119c">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="1.0"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="3d57f" class="javax.swing.JTextPane" binding="txtpnFinish">
+            <constraints/>
+            <properties>
+              <editable value="false"/>
+              <font name="Arial" size="12" style="3"/>
+              <text value="Installation Finished!"/>
+            </properties>
+          </component>
+        </children>
+      </scrollpane>
     </children>
   </grid>
 </form>

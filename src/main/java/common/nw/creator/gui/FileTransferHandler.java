@@ -8,15 +8,10 @@ import java.util.List;
 
 public class FileTransferHandler extends TransferHandler {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	private IDropFileHandler target;
 
-	public FileTransferHandler(IDropFileHandler droptarget) {
-		this.target = droptarget;
+	public FileTransferHandler(IDropFileHandler dropTarget) {
+		this.target = dropTarget;
 	}
 
 	/**

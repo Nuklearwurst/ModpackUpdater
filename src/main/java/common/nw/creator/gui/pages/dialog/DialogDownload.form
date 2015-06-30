@@ -18,7 +18,7 @@
           <component id="5723f" class="javax.swing.JButton" binding="buttonCancel">
             <constraints/>
             <properties>
-              <text value="Cancel"/>
+              <text value="&amp;Cancel"/>
             </properties>
           </component>
         </children>

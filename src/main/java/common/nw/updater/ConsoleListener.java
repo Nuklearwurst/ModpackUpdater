@@ -137,7 +137,7 @@ public class ConsoleListener implements IProgressWatcher {
 			}
 			NwLogger.UPDATER_LOGGER.error("Invalid input!");
 		}
-		//error handling (after 3 trys no result)
+		//error handling (after 3 tries no result)
 		if(defaultOption != null) {
 			for(int i = 0; i < options.length; i++) {
 				String s = options[i];

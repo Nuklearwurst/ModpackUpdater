@@ -11,7 +11,7 @@ import java.util.logging.Level;
  */
 public class CreatorProperties {
 
-	public static final String PROPERTIES_FILE = "." + File.separator + "creator.properties";
+	private static final String PROPERTIES_FILE = "." + File.separator + "creator.properties";
 
 
 	public static final class Keys {
@@ -36,7 +36,7 @@ public class CreatorProperties {
 				LAST_OPENED_MOD_DIRECTORY = prop.getProperty(Keys.LAST_OPENED_MOD_DIRECTORY);
 				LAST_OPENED_MODPACK = prop.getProperty(Keys.LAST_OPENED_MODPACK);
 				LAST_INPUT_DIRECTORY = prop.getProperty(Keys.LAST_INPUT_DIRECTORY);
-				Boolean load = (Boolean) Boolean.valueOf(prop.getProperty(Keys.LOAD));
+				Boolean load = Boolean.valueOf(prop.getProperty(Keys.LOAD));
 				if (load != null) {
 					LOAD = load;
 				}
@@ -80,7 +80,7 @@ public class CreatorProperties {
 			try {
 				propFile.close();
 			} catch (IOException ignored) {
-				NwLogger.CREATOR_LOGGER.log(Level.FINE, "Error closing properties file ouitputstream!", ignored);
+				NwLogger.CREATOR_LOGGER.log(Level.FINE, "Error closing properties file outputstream!", ignored);
 			}
 		} catch (FileNotFoundException e) {
 			NwLogger.CREATOR_LOGGER.error("Error when trying to open properties file for writing!", e);

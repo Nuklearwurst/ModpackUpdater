@@ -15,19 +15,19 @@
           <component id="c344a" class="javax.swing.JButton" binding="btnBack">
             <constraints/>
             <properties>
-              <text value="Back"/>
+              <text value="&amp;Back"/>
             </properties>
           </component>
           <component id="3c005" class="javax.swing.JButton" binding="btnNext">
             <constraints/>
             <properties>
-              <text value="Next"/>
+              <text value="&amp;Next"/>
             </properties>
           </component>
           <component id="83aa2" class="javax.swing.JButton" binding="btnCancel">
             <constraints/>
             <properties>
-              <text value="Cancel"/>
+              <text value="&amp;Cancel"/>
             </properties>
           </component>
         </children>

@@ -21,6 +21,7 @@
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
+              <labelFor value="c9f63"/>
               <text value="Name:"/>
             </properties>
           </component>
@@ -74,6 +75,7 @@
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
+              <labelFor value="1dda2"/>
               <text value="Version:"/>
             </properties>
           </component>
@@ -92,6 +94,7 @@
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
+              <labelFor value="2ee39"/>
               <text value="Download URL:"/>
             </properties>
           </component>
@@ -110,6 +113,7 @@
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
+              <labelFor value="8ba90"/>
               <text value="Mod Filename:"/>
             </properties>
           </component>
@@ -119,6 +123,7 @@
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
+              <labelFor value="8abee"/>
               <text value="MD5:"/>
             </properties>
           </component>

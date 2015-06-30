@@ -74,7 +74,7 @@ public class DialogDownload extends JDialog implements IProgressWatcher {
 	}
 
 	public interface DownloadFileHandler {
-		public void onDownloadFinished(File file, UpdateResult result);
+		void onDownloadFinished(File file, UpdateResult result);
 	}
 
 	private class DownloadThread extends Thread {
@@ -167,7 +167,7 @@ public class DialogDownload extends JDialog implements IProgressWatcher {
 	}
 
 
-	public void onFinished(UpdateResult result) {
+	private void onFinished(UpdateResult result) {
 		isRunning = false;
 		if (isCancelled()) {
 			//noinspection ResultOfMethodCallIgnored

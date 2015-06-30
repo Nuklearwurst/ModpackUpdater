@@ -106,8 +106,6 @@ public class Updater {
 
 	/**
 	 * is the update finished?
-	 *
-	 * @return
 	 */
 	public boolean isFinished() {
 		return finished || listener.isCancelled();
@@ -123,17 +121,17 @@ public class Updater {
 
 	/**
 	 * sets the update listener
-	 *
-	 * @param listener
 	 */
 	public void setListener(IProgressWatcher listener) {
 		this.listener = listener;
 	}
 
+	public boolean shouldRetry() {
+		return retry;
+	}
+
 	/**
 	 * thread to run the update
-	 *
-	 * @author Nukelarwurst
 	 */
 	private class UpdateThread extends Thread {
 
@@ -313,8 +311,6 @@ public class Updater {
 	/**
 	 * creates a modpack from commandline parameters (used when no modpack.json
 	 * file is found)
-	 *
-	 * @return
 	 */
 	private LocalModpack parseCommandLineModpack() {
 		try {
@@ -365,8 +361,6 @@ public class Updater {
 	/**
 	 * read the local modpack.json, if it is not available parse modpack from
 	 * commandline
-	 *
-	 * @return
 	 */
 	private boolean readLocalModpack() {
 		File modpackJson = new File(gameDir, "modpack.json");
@@ -431,8 +425,6 @@ public class Updater {
 
 	/**
 	 * is it time to check for new updates?
-	 *
-	 * @return
 	 */
 	private boolean shouldCheckUpdate() {
 		if (local.updateFrequency < 0) {
@@ -447,8 +439,6 @@ public class Updater {
 
 	/**
 	 * reads data of the local mods from filesystem
-	 *
-	 * @return
 	 */
 	private boolean readLocalData() {
 		if (mods == null) {
@@ -482,8 +472,6 @@ public class Updater {
 
 	/**
 	 * downloads remote modpack.json information
-	 *
-	 * @return
 	 */
 	private boolean readRemoteData() {
 		try {
@@ -520,8 +508,6 @@ public class Updater {
 
 	/**
 	 * checks for minecraft or library update
-	 *
-	 * @return
 	 */
 	private boolean checkUpdate() {
 		if ((local.version != null && local.version
@@ -538,15 +524,13 @@ public class Updater {
 	/**
 	 * adds remote information to existing mods, used to check which mods need
 	 * an update
-	 *
-	 * @return
 	 */
 	private boolean addRemoteInformation() {
 		for (RepoMod remoteMod : remote.files) {
 			// updating entries
 			boolean missing = true;
 			for (ModInfo mod : mods) {
-				if (mod.equals(remoteMod, gameDir)) {
+				if (mod.equals(remoteMod)) {
 					mod.setRemoteInfo(remoteMod);
 					missing = false;
 					break;
@@ -665,8 +649,6 @@ public class Updater {
 	/**
 	 * deletes mods that aro no longer allowed (doesn't apply to mods not
 	 * downloaded by the updater and not being on the blacklist )
-	 *
-	 * @return
 	 */
 	private boolean deleteOldMods() {
 		List<ModInfo> modsToDelete = new ArrayList<ModInfo>();
@@ -704,8 +686,6 @@ public class Updater {
 
 	/**
 	 * downloads all mods that need an update
-	 *
-	 * @return
 	 */
 	private boolean updateMods() {
 		List<ModInfo> modsToUpdate = new ArrayList<ModInfo>();
@@ -816,8 +796,6 @@ public class Updater {
 
 	/**
 	 * saves data to modpack.json file
-	 *
-	 * @return
 	 */
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	private boolean save() {

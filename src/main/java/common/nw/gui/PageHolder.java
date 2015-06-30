@@ -52,7 +52,6 @@ public class PageHolder {
 	
 	/**
 	 * returns the current page Handler, if there is none return the global one if wanted
-	 * @return
 	 */
 	private IPageHandler getCurrentPageHandler() {
 		return getCurrentPageHandler(true, false);
@@ -143,7 +142,6 @@ public class PageHolder {
 	
 	/**
 	 * returns the number of pages
-	 * @return
 	 */
 	private int getPageCount() {
 		return mainPanel.getComponentCount();
@@ -211,7 +209,6 @@ public class PageHolder {
 	
 	/**
 	 * returns the index of the last page
-	 * @return
 	 */
 	public int getLastPageIndex() {
 		return getPageCount() - 1;
@@ -219,7 +216,6 @@ public class PageHolder {
 	
 	/**
 	 * is there a page after this one
-	 * @return
 	 */
 	private boolean hasNextPage() {
 		return page < getLastPageIndex();
@@ -227,7 +223,6 @@ public class PageHolder {
 	
 	/**
 	 * is there a page before this one
-	 * @return
 	 */
 	private boolean hasPreviousPage() {
 		return page > 0;

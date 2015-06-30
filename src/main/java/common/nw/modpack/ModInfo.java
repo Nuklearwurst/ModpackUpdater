@@ -270,12 +270,11 @@ public class ModInfo {
 
 	/**
 	 * checks if two mods are the same
-	 * 
+	 *
 	 * @param mod remote mod to check against
-	 * @param baseDir Base directory (unused)
 	 * @return whether the specified remote mod is the same as this local mod
 	 */
-	public boolean equals(RepoMod mod, File baseDir) {
+	public boolean equals(RepoMod mod) {
 		if (mod.nameType != null) {
 			//mod nameType conflict resolution
 			if (mod.nameType.equals(ModpackValues.nameTypeFileName) && this.hasName) {

@@ -9,11 +9,6 @@ import javax.swing.*;
 
 public class PanelFinish extends JPanel implements IPageHandler {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	private Creator creator;
 	/**
 	 * Create the panel.

@@ -1,29 +1,16 @@
 package common.nw.creator.gui_legacy.pages;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.io.File;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.SwingConstants;
-
 import common.nw.creator.Creator;
 import common.nw.creator.IProgressListener;
 import common.nw.creator.gui.Reference;
 import common.nw.gui.IPageHandler;
 import common.nw.gui.PageHolder;
 
-public class PanelLoading extends JPanel implements IPageHandler, IProgressListener {
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class PanelLoading extends JPanel implements IPageHandler, IProgressListener {
 
 	private JProgressBar progressBar;
 	private JLabel label;
@@ -63,13 +50,7 @@ public class PanelLoading extends JPanel implements IPageHandler, IProgressListe
 
 	}
 
-	@Override
-	public void setProgress(String s) {
-		label.setText(s);
-	}
-
-	@Override
-	public void setProgress(int i) {
+	private void setProgress(int i) {
 		progressBar.setValue(i);
 	}
 

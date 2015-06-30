@@ -11,8 +11,7 @@ public class CreatorUtils {
 
 	public static ModInfo createModInfoFromFile(File file) {
 		if (file != null && file.exists()) {
-			String pathToFile = file.getAbsolutePath();
-			String fileName = pathToFile;
+			String fileName = file.getAbsolutePath();
 			if (fileName.contains(File.separator + "mods" + File.separator)) {
 				int index = fileName.indexOf("mods" + File.separator);
 				fileName = fileName.substring(index);

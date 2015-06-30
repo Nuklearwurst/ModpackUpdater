@@ -7,20 +7,6 @@
     <properties/>
     <border type="none"/>
     <children>
-      <component id="74a8d" class="javax.swing.JTextPane" binding="txtInit">
-        <constraints>
-          <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="50"/>
-          </grid>
-          <gridbag weightx="1.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <contentType value="text/html"/>
-          <editable value="false"/>
-          <font style="1"/>
-          <text value="&lt;html&gt;&#13;&#10;  &lt;head&gt;&#13;&#10;    &#13;&#10;  &lt;/head&gt;&#13;&#10;  &lt;body&gt;&#13;&#10;    &lt;p style=&quot;margin-top: 0&quot;&gt;&#13;&#10;      &lt;b&gt;Welcome to The Modpack Installer&lt;br&gt;This installer will guide you &#13;&#10;      through the modpack installation process.&lt;br&gt;&lt;br&gt;Now insert the modpack &#13;&#10;      Url: &lt;/b&gt;&#13;&#10;    &lt;/p&gt;&#13;&#10;  &lt;/body&gt;&#13;&#10;&lt;/html&gt;&#13;&#10;"/>
-        </properties>
-      </component>
       <vspacer id="1a2ad">
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
@@ -56,6 +42,25 @@
           <toolTipText value="You should download supported libraries using the installer. Otherwise you have to do it manually."/>
         </properties>
       </component>
+      <scrollpane id="298e7">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="0.0"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="74a8d" class="javax.swing.JTextPane" binding="txtInit">
+            <constraints/>
+            <properties>
+              <contentType value="text/html"/>
+              <editable value="false"/>
+              <font style="1"/>
+              <text value="&lt;html&gt;&#13;&#10;  &lt;head&gt;&#13;&#10;&#13;&#10;  &lt;/head&gt;&#13;&#10;  &lt;body&gt;&#13;&#10;    &lt;p style=&quot;margin-top: 0&quot;&gt;&#13;&#10;      &#13;&#10;    &lt;/p&gt;&#13;&#10;  &lt;/body&gt;&#13;&#10;&lt;/html&gt;&#13;&#10;"/>
+            </properties>
+          </component>
+        </children>
+      </scrollpane>
     </children>
   </grid>
 </form>

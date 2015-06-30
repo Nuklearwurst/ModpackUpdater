@@ -4,6 +4,7 @@ import common.nw.updater.ConsoleListener;
 import common.nw.updater.Updater;
 import common.nw.updater.gui.UpdateWindow;
 import common.nw.utils.Utils;
+import common.nw.utils.log.NwLogger;
 import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -59,14 +60,16 @@ public class Launch implements ITweaker {
 			updater.setListener(new ConsoleListener());
 		}
 		try {
-			// begin update
-			updater.beginUpdate();
-			// wait until update is finished
-			while (!updater.isFinished()) {
-				Thread.sleep(100L);
-			}
+			do {
+				// begin update
+				updater.beginUpdate();
+				// wait until update is finished
+				while (!updater.isFinished()) {
+					Thread.sleep(100L);
+				}
+			} while (updater.shouldRetry());
 		} catch (Exception e) {
-			e.printStackTrace();
+			NwLogger.UPDATER_LOGGER.error("Unknown error occurred!", e);
 		}
 		
 		Updater.logger.info("Update finished!");

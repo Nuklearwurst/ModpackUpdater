@@ -4,16 +4,12 @@ public enum UpdateResult {
 
 	Good,
 
-	NoRemote,
-
 	Cancelled,
 
 	Failed,
 
 	BadDownload,
 
-	QuitToLauncher,
-	
 	FailedCreatingDirs,
 
 	FailedDeletingFile,

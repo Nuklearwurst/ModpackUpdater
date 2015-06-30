@@ -15,10 +15,6 @@ import java.util.List;
 
 public class EditBlackListDialog extends JDialog implements ITableHolder {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private JTable table;
 	
 	private List<RepoMod> blacklist;
