@@ -1,25 +1,17 @@
 package common.nw.creator.gui_legacy.pages.dialog;
 
-import java.awt.Frame;
-import java.util.List;
-
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-
 import common.nw.creator.gui.TableModelList;
+import common.nw.creator.gui.pages.dialog.DialogEditMod;
+import common.nw.creator.gui.pages.dialog.ITableHolder;
 import common.nw.modpack.RepoMod;
 
-import javax.swing.JButton;
+import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
-
-import java.awt.event.ActionListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.Dimension;
+import java.awt.event.ActionListener;
+import java.util.List;
 
 public class EditBlackListDialog extends JDialog implements ITableHolder {
 
@@ -31,13 +23,13 @@ public class EditBlackListDialog extends JDialog implements ITableHolder {
 	
 	private List<RepoMod> blacklist;
 	
-	private Frame parent;
+	private JFrame parent;
 	
 	/**
 	 * Create the dialog.
 	 */
 	@SuppressWarnings("SameParameterValue")
-	public EditBlackListDialog(Frame parent, boolean modal, List<RepoMod> blacklist) {
+	public EditBlackListDialog(JFrame parent, boolean modal, List<RepoMod> blacklist) {
 		super(parent, modal);
 		setPreferredSize(new Dimension(300, 200));
 		setTitle("Edit blacklist");
@@ -145,7 +137,7 @@ public class EditBlackListDialog extends JDialog implements ITableHolder {
 		if (index == -1) {
 			return;
 		}
-		EditModDialog_legacy dialog = new EditModDialog_legacy(parent, true, create, index, this);
+		DialogEditMod dialog = new DialogEditMod(parent, create, index, this);
 		dialog.setVisible(true);
 	}
 	

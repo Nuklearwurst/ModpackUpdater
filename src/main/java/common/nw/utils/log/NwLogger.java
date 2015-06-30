@@ -9,9 +9,9 @@ import java.util.logging.Logger;
 public class NwLogger {
 	
 	public static final NwLogger NW_LOGGER = new NwLogger("NwLogger");
-	public static final NwLogger UPDATER_LOGGER = new NwLogger("Modpack Updater");
-	public static final NwLogger INSTALLER_LOGGER = new NwLogger("Modpack Installer");
-	public static NwLogger CREATOR_LOGGER = new NwLogger("Modpack Creator");
+	public static final NwLogger UPDATER_LOGGER = new NwLogger("ModpackUpdater");
+	public static final NwLogger INSTALLER_LOGGER = new NwLogger("ModpackInstaller");
+	public static NwLogger CREATOR_LOGGER = new NwLogger("ModpackCreator");
 
 	private final Logger logger;
 	

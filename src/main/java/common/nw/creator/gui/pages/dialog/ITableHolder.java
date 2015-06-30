@@ -1,4 +1,4 @@
-package common.nw.creator.gui_legacy.pages.dialog;
+package common.nw.creator.gui.pages.dialog;
 
 public interface ITableHolder {
 

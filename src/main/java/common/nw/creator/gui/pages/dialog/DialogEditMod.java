@@ -3,7 +3,6 @@ package common.nw.creator.gui.pages.dialog;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import common.nw.creator.gui_legacy.pages.dialog.ITableHolder;
 import common.nw.creator.properties.CreatorProperties;
 import common.nw.creator.util.CreatorUtils;
 import common.nw.modpack.ModInfo;

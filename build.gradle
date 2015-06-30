@@ -87,7 +87,7 @@ task installer(type: Jar, dependsOn: fatJar) {
     baseName = 'installer'
     version = installerVersion
     from zipTree(fatJar.archivePath)
-    manifest { attributes 'Main-Class': 'common.nw.installer.gui_legacy.InstallerWindow' }
+    manifest { attributes 'Main-Class': 'common.nw.installer.gui.InstallerWindow' }
 }
 
 /**
@@ -146,7 +146,7 @@ task shrinkInstaller(type: Jar, dependsOn: shrinkJar) {
     version = installerVersion
     classifier = 'shrunk'
     from zipTree(shrinkJar.obfuscatedJar)
-    manifest { attributes 'Main-Class': 'common.nw.installer.gui_legacy.InstallerWindow' }
+    manifest { attributes 'Main-Class': 'common.nw.installer.gui.InstallerWindow' }
 }
 
 /**

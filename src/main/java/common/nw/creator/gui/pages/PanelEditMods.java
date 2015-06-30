@@ -7,7 +7,7 @@ import common.nw.creator.gui.Reference;
 import common.nw.creator.gui.TableModelList;
 import common.nw.creator.gui.pages.dialog.DialogEditMod;
 import common.nw.creator.gui_legacy.pages.dialog.EditBlackListDialog;
-import common.nw.creator.gui_legacy.pages.dialog.ITableHolder;
+import common.nw.creator.gui.pages.dialog.ITableHolder;
 import common.nw.gui.IPageHandler;
 import common.nw.gui.PageHolder;
 import common.nw.modpack.ModInfo;

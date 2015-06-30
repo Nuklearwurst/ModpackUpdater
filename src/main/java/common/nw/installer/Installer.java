@@ -331,13 +331,16 @@ public class Installer {
 							String forgeversion = build.getStringValue("version");
 
 							if(allowGui) {
-								String forgeDir = String.format("%s-Forge%s-%s", mcversion, forgeversion, branch);
+								String forgeDir = String.format("%s-Forge%s%s", mcversion, forgeversion, branch);
 								File forgeVersionDir = new File(minecraftDirectory, "versions/" + forgeDir);
 								NwLogger.INSTALLER_LOGGER.fine("Searching for minecraftforge Installation at: " + forgeVersionDir.getAbsolutePath());
 								if (forgeVersionDir.exists() && forgeVersionDir.isDirectory()) {
 									File forgeVersionJson = new File(forgeVersionDir, forgeDir + ".json");
 									if (forgeVersionJson.exists()) {
-										JOptionPane.showConfirmDialog(parentWindow, "A MinecraftForge Installation was found!\nDo you want to skip MinecraftForge Installation?", "MinecraftForge detected!", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+										int result = JOptionPane.showConfirmDialog(parentWindow, "A MinecraftForge Installation was found!\nDo you want to skip MinecraftForge Installation?", "MinecraftForge detected!", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+										if(result == JOptionPane.YES_OPTION) {
+											return true;
+										}
 									}
 								}
 							}
