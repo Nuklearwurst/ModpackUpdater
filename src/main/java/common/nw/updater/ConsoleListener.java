@@ -4,6 +4,7 @@ import common.nw.updater.gui.IProgressWatcher;
 import common.nw.utils.log.NwLogger;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -47,6 +48,16 @@ public class ConsoleListener implements IProgressWatcher {
 	@Override
 	public void setOverallProgress(String msg, int progress) {
 		Updater.logger.info("Overall Progress: " + msg);
+	}
+
+	@Override
+	public boolean hasGui() {
+		return false;
+	}
+
+	@Override
+	public Component getGui() {
+		return null;
 	}
 
 	@Override

@@ -226,4 +226,14 @@ public class DialogDownload extends JDialog implements IProgressWatcher {
 	public void setOverallProgress(String msg, int progress) {
 
 	}
+
+	@Override
+	public boolean hasGui() {
+		return true;
+	}
+
+	@Override
+	public Component getGui() {
+		return this;
+	}
 }

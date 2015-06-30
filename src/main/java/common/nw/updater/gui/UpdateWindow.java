@@ -1,8 +1,5 @@
 package common.nw.updater.gui;
 
-import com.intellij.uiDesigner.core.GridConstraints;
-import com.intellij.uiDesigner.core.GridLayoutManager;
-import com.intellij.uiDesigner.core.Spacer;
 import common.nw.updater.Updater;
 
 import javax.swing.*;
@@ -146,6 +143,16 @@ public class UpdateWindow implements IProgressWatcher, WindowListener {
 		Updater.logger.info("Overall Progress: " + msg + ", @" + progress + "%");
 		lblOverallProgress.setText(msg);
 		setOverallProgress(progress);
+	}
+
+	@Override
+	public boolean hasGui() {
+		return true;
+	}
+
+	@Override
+	public Component getGui() {
+		return contentPanel;
 	}
 
 	@Override

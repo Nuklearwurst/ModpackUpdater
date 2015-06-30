@@ -1,6 +1,7 @@
 package common.nw.updater.gui;
 
 import javax.swing.Icon;
+import java.awt.*;
 
 public interface IProgressWatcher {
 
@@ -37,4 +38,14 @@ public interface IProgressWatcher {
 	void setOverallProgress(int progress);
 
 	void setOverallProgress(String msg, int progress);
+
+	/**
+	 * gets called to determine whether the Watcher has a gui that can be used
+	 */
+	boolean hasGui();
+
+	/**
+	 * gets called to get the current gui, return null if watcher has no gui
+	 */
+	Component getGui();
 }

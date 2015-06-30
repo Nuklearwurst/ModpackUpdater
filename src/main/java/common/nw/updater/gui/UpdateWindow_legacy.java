@@ -168,7 +168,17 @@ public class UpdateWindow_legacy implements IProgressWatcher, WindowListener {
 		lblOverallProgress.setText(msg);
 		setOverallProgress(progress);
 	}
-	
+
+	@Override
+	public boolean hasGui() {
+		return true;
+	}
+
+	@Override
+	public Component getGui() {
+		return frmUpdater;
+	}
+
 	public int showErrorDialog(String title, String message) {
 		String[] options = { "Retry", "Quit To Launcher",
 		"Continue without updating" };

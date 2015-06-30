@@ -606,7 +606,7 @@ public class Updater {
 				return false;
 			}
 			listener.setDownloadProgress("Creating jar...", 50);
-			if (!installer.createJar()) {
+			if (!installer.createJar(listener.hasGui(), listener.getGui())) {
 				warningMessage = warningMessage
 						+ "\nError when creating version.jar file.";
 				errored = true;

@@ -297,12 +297,12 @@ public class InstallerWindow {
 				}
 			}
 			setProgress(modpack.minecraft.jarUpdateType.equals(ModpackValues.jarForgeInherit) ? "Downloading and executing MinecraftForge, this may take a while..." : "Downloading Minecraft Jar", 40);
-			if (!installer.createJar()) {
+			if (!installer.createJar(true, contentPanel)) {
 				if (JOptionPane.showConfirmDialog(mainFrame,
 						"Failed creating version.jar file! "
 								+ "\nDo you want to try again?", "Error",
 						JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION) {
-					if (!installer.createJar()) {
+					if (!installer.createJar(true, contentPanel)) {
 						errorMessage += "\nAn error occurred while creating version.jar file! "
 								+ "\nPlease check if you have permission! "
 								+ "\nPlease  check your internet connection!";

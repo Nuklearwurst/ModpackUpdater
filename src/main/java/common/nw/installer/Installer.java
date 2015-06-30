@@ -16,6 +16,7 @@ import common.nw.utils.log.NwLogHelper;
 import common.nw.utils.log.NwLogger;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +50,7 @@ public class Installer {
 	/**
 	 * .minecraft folder
 	 */
-	private File baseDir;
+	private File minecraftDirectory;
 	/**
 	 * our VersionDirectory
 	 */
@@ -66,7 +67,7 @@ public class Installer {
 		this.name = name;
 		this.dir = dir;
 		this.createProfile = createProfile;
-		baseDir = new File(dir);
+		minecraftDirectory = new File(dir);
 		this.downloadLib = downloadLib;
 	}
 
@@ -106,8 +107,8 @@ public class Installer {
 		boolean notNull = name != null && !name.isEmpty() && dir != null
 				&& !dir.isEmpty();
 		if (notNull) {
-			baseDir = new File(dir);
-			return baseDir.exists() && baseDir.isDirectory();
+			minecraftDirectory = new File(dir);
+			return minecraftDirectory.exists() && minecraftDirectory.isDirectory();
 		}
 		return false;
 	}
@@ -119,7 +120,7 @@ public class Installer {
 	 */
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean createDirs() {
-		File versions = new File(baseDir, "versions");
+		File versions = new File(minecraftDirectory, "versions");
 		if (!versions.exists()) {
 			if (!versions.mkdir()) {
 				return false;
@@ -167,7 +168,7 @@ public class Installer {
 					if (url.endsWith("/")) {
 						url = url.substring(0, url.length() - 1);
 					}
-					File lib = new File(baseDir, "libraries");
+					File lib = new File(minecraftDirectory, "libraries");
 					if (!lib.exists()) {
 						if (!lib.mkdir()) {
 							return false;
@@ -292,7 +293,7 @@ public class Installer {
 	 * @return true if successful
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean createJar() {
+	public boolean createJar(boolean allowGui, Component parentWindow) {
 		//delete old file
 		//FIXME: this might create errors with forge installs and maybe should be removed
 		File file = new File(ourDir, name + ".jar");
@@ -328,6 +329,19 @@ public class Installer {
 							}
 							String mcversion = build.getStringValue("mcversion");
 							String forgeversion = build.getStringValue("version");
+
+							if(allowGui) {
+								String forgeDir = String.format("%s-Forge%s-%s", mcversion, forgeversion, branch);
+								File forgeVersionDir = new File(minecraftDirectory, "versions/" + forgeDir);
+								NwLogger.INSTALLER_LOGGER.fine("Searching for minecraftforge Installation at: " + forgeVersionDir.getAbsolutePath());
+								if (forgeVersionDir.exists() && forgeVersionDir.isDirectory()) {
+									File forgeVersionJson = new File(forgeVersionDir, forgeDir + ".json");
+									if (forgeVersionJson.exists()) {
+										JOptionPane.showConfirmDialog(parentWindow, "A MinecraftForge Installation was found!\nDo you want to skip MinecraftForge Installation?", "MinecraftForge detected!", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+									}
+								}
+							}
+
 							url = new URL(ModpackValues.URL_FORGE_INSTALLER + mcversion + "-" + forgeversion + branch + "/forge-" + mcversion + "-" + forgeversion + branch + "-installer.jar");
 						}
 
@@ -340,7 +354,7 @@ public class Installer {
 
 						//Invoking Run Method
 						NwLogger.INSTALLER_LOGGER.fine("Starting Client Installation...");
-						Object result = runMethod.invoke(instance, baseDir);
+						Object result = runMethod.invoke(instance, minecraftDirectory);
 						if ((Boolean) result) {
 							NwLogger.INSTALLER_LOGGER.info("Minecraft Forge Installation finished.");
 							return true;
@@ -383,7 +397,7 @@ public class Installer {
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean createProfile(String profileName, String javaOptions, String gameDirectory, int updateFrequency) {
 		if (createProfile) {
-			File launcherProfiles = new File(baseDir, "launcher_profiles.json");
+			File launcherProfiles = new File(minecraftDirectory, "launcher_profiles.json");
 			if (!launcherProfiles.exists()) {
 				JOptionPane.showMessageDialog(null, "The launcher_profiles.json file is missing!\nYou need to run the minecraft launcher at least once!", "File not found", JOptionPane.ERROR_MESSAGE);
 				return false;
