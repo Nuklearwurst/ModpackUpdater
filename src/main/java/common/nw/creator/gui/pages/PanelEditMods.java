@@ -337,6 +337,8 @@ public class PanelEditMods implements IPageHandler, IDropFileHandler, ITableHold
 		panel_editmods.setLayout(new GridBagLayout());
 		btnNew = new JButton();
 		btnNew.setText("New");
+		btnNew.setMnemonic('N');
+		btnNew.setDisplayedMnemonicIndex(0);
 		GridBagConstraints gbc;
 		gbc = new GridBagConstraints();
 		gbc.gridx = 2;
@@ -353,6 +355,8 @@ public class PanelEditMods implements IPageHandler, IDropFileHandler, ITableHold
 		panel_editmods.add(spacer1, gbc);
 		btnEdit = new JButton();
 		btnEdit.setText("Edit");
+		btnEdit.setMnemonic('E');
+		btnEdit.setDisplayedMnemonicIndex(0);
 		gbc = new GridBagConstraints();
 		gbc.gridx = 2;
 		gbc.gridy = 2;
@@ -361,6 +365,8 @@ public class PanelEditMods implements IPageHandler, IDropFileHandler, ITableHold
 		panel_editmods.add(btnEdit, gbc);
 		btnRemove = new JButton();
 		btnRemove.setText("Remove");
+		btnRemove.setMnemonic('R');
+		btnRemove.setDisplayedMnemonicIndex(0);
 		gbc = new GridBagConstraints();
 		gbc.gridx = 2;
 		gbc.gridy = 3;
@@ -369,6 +375,8 @@ public class PanelEditMods implements IPageHandler, IDropFileHandler, ITableHold
 		panel_editmods.add(btnRemove, gbc);
 		chbxHideMods = new JCheckBox();
 		chbxHideMods.setText("Hide mods");
+		chbxHideMods.setMnemonic('M');
+		chbxHideMods.setDisplayedMnemonicIndex(5);
 		gbc = new GridBagConstraints();
 		gbc.gridx = 2;
 		gbc.gridy = 4;
@@ -377,6 +385,8 @@ public class PanelEditMods implements IPageHandler, IDropFileHandler, ITableHold
 		panel_editmods.add(chbxHideMods, gbc);
 		chbxHideConfig = new JCheckBox();
 		chbxHideConfig.setText("Hide configs");
+		chbxHideConfig.setMnemonic('C');
+		chbxHideConfig.setDisplayedMnemonicIndex(5);
 		gbc = new GridBagConstraints();
 		gbc.gridx = 2;
 		gbc.gridy = 5;
@@ -409,6 +419,8 @@ public class PanelEditMods implements IPageHandler, IDropFileHandler, ITableHold
 		panel_editmods.add(spacer2, gbc);
 		btnEditBlacklist = new JButton();
 		btnEditBlacklist.setText("Edit Blacklist");
+		btnEditBlacklist.setMnemonic('B');
+		btnEditBlacklist.setDisplayedMnemonicIndex(5);
 		gbc = new GridBagConstraints();
 		gbc.gridx = 2;
 		gbc.gridy = 7;

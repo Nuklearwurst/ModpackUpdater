@@ -56,20 +56,8 @@ public class PanelInit implements IExtendedPageHandler {
 	private void $$$setupUI$$$() {
 		panel_init = new JPanel();
 		panel_init.setLayout(new GridBagLayout());
-		txtInit = new JTextPane();
-		txtInit.setContentType("text/html");
-		txtInit.setEditable(false);
-		txtInit.setFont(new Font(txtInit.getFont().getName(), Font.BOLD, txtInit.getFont().getSize()));
-		txtInit.setText("<html>\r\n  <head>\r\n    \r\n  </head>\r\n  <body>\r\n    <p style=\"margin-top: 0\">\r\n      <b>Welcome to The Modpack Installer<br>This installer will guide you \r\n      through the modpack installation process.<br><br>Now insert the modpack \r\n      Url: </b>\r\n    </p>\r\n  </body>\r\n</html>\r\n");
-		GridBagConstraints gbc;
-		gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.gridwidth = 2;
-		gbc.weightx = 1.0;
-		gbc.fill = GridBagConstraints.BOTH;
-		panel_init.add(txtInit, gbc);
 		final JPanel spacer1 = new JPanel();
+		GridBagConstraints gbc;
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 3;
@@ -102,6 +90,20 @@ public class PanelInit implements IExtendedPageHandler {
 		gbc.gridwidth = 2;
 		gbc.anchor = GridBagConstraints.WEST;
 		panel_init.add(chbxDownloadLibraries, gbc);
+		final JScrollPane scrollPane1 = new JScrollPane();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.gridwidth = 2;
+		gbc.weightx = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		panel_init.add(scrollPane1, gbc);
+		txtInit = new JTextPane();
+		txtInit.setContentType("text/html");
+		txtInit.setEditable(false);
+		txtInit.setFont(new Font(txtInit.getFont().getName(), Font.BOLD, txtInit.getFont().getSize()));
+		txtInit.setText("<html>\r\n  <head>\r\n\r\n  </head>\r\n  <body>\r\n    <p style=\"margin-top: 0\">\r\n      \r\n    </p>\r\n  </body>\r\n</html>\r\n");
+		scrollPane1.setViewportView(txtInit);
 	}
 
 	/**

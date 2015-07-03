@@ -179,12 +179,6 @@ public class Updater {
 
 		waitForUi();
 
-		// should update
-		listener.setOverallProgress(1);
-		if (!shouldCheckUpdate()) {
-			return;
-		}
-
 		// read local mod info
 		listener.setOverallProgress(2);
 		if (!readLocalData()) {
@@ -419,20 +413,6 @@ public class Updater {
 			warningMessage = warningMessage + "\nNo modpack could be found!";
 			errored = true;
 			return false;
-		}
-		return true;
-	}
-
-	/**
-	 * is it time to check for new updates?
-	 */
-	private boolean shouldCheckUpdate() {
-		if (local.updateFrequency < 0) {
-			local.updateFrequency = local.updateFrequency * -1;
-			return true;
-		}
-		if (local.updateFrequency == 0) {
-			return true;
 		}
 		return true;
 	}
@@ -800,8 +780,6 @@ public class Updater {
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	private boolean save() {
 		// setting new variables
-
-		local.lastUpdate = new Date(System.currentTimeMillis());
 		local.files = new ArrayList<String>();
 		local.trackedFileVersions = new HashMap<String, String>();
 

@@ -521,6 +521,11 @@ public class DialogEditMod extends JDialog {
 		btnDownload = new JButton();
 		btnDownload.setText("Download");
 		panel3.add(btnDownload, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		label1.setLabelFor(txtName);
+		label3.setLabelFor(txtVersion);
+		label5.setLabelFor(txtUrl);
+		label7.setLabelFor(txtFile);
+		label8.setLabelFor(txtMD5);
 		btnGroupNameType = new ButtonGroup();
 		btnGroupNameType.add(rdbtnNameFilename);
 		btnGroupNameType.add(rdbtnNameZip);

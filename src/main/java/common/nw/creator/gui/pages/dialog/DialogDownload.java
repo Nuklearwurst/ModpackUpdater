@@ -51,6 +51,8 @@ public class DialogDownload extends JDialog implements IProgressWatcher {
 		contentPane.add(panel1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
 		buttonCancel = new JButton();
 		buttonCancel.setText("Cancel");
+		buttonCancel.setMnemonic('C');
+		buttonCancel.setDisplayedMnemonicIndex(0);
 		panel1.add(buttonCancel);
 		final JPanel panel2 = new JPanel();
 		panel2.setLayout(new GridLayoutManager(4, 1, new Insets(0, 0, 0, 0), -1, -1));

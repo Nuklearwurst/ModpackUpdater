@@ -37,12 +37,18 @@ public class InstallerWindow {
 		content_panel.add(btn_panel, BorderLayout.SOUTH);
 		btnBack = new JButton();
 		btnBack.setText("Back");
+		btnBack.setMnemonic('B');
+		btnBack.setDisplayedMnemonicIndex(0);
 		btn_panel.add(btnBack);
 		btnNext = new JButton();
 		btnNext.setText("Next");
+		btnNext.setMnemonic('N');
+		btnNext.setDisplayedMnemonicIndex(0);
 		btn_panel.add(btnNext);
 		btnCancel = new JButton();
 		btnCancel.setText("Cancel");
+		btnCancel.setMnemonic('C');
+		btnCancel.setDisplayedMnemonicIndex(0);
 		btn_panel.add(btnCancel);
 		content_panel.add(card_panel, BorderLayout.CENTER);
 	}

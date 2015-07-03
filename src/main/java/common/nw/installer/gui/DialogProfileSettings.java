@@ -15,7 +15,6 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import common.nw.modpack.LocalModpack;
 import common.nw.utils.Utils;
-import common.nw.utils.log.NwLogger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,14 +35,8 @@ public class DialogProfileSettings extends JDialog {
 	private JButton btnReset;
 	private JTextField txtDirectory;
 	private JButton btnOpen;
-	private JRadioButton rdbtnDay;
-	private JRadioButton rdbtnLaunch;
-	private JRadioButton rdbtnWeek;
-	private JRadioButton rdbtnCustom;
-	private JFormattedTextField txtFreq;
 	private JTextField txtJavaOptions;
 	private JButton btnDefault;
-	private ButtonGroup btnGroupUpdateFreq;
 
 	private InstallerWindow installer;
 
@@ -114,36 +107,6 @@ public class DialogProfileSettings extends JDialog {
 			}
 		});
 
-		rdbtnLaunch.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				updateRadioButtons();
-			}
-		});
-
-		rdbtnDay.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				updateRadioButtons();
-			}
-		});
-
-		rdbtnWeek.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				updateRadioButtons();
-			}
-		});
-
-		rdbtnCustom.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				updateRadioButtons();
-			}
-		});
-
-		txtFreq.setValue(0);
-
 		init();
 	}
 
@@ -196,9 +159,6 @@ public class DialogProfileSettings extends JDialog {
 					try {
 						LocalModpack local = new Gson().fromJson(new FileReader(modpack),
 								LocalModpack.class);
-						rdbtnCustom.setSelected(true);
-						txtFreq.setText(local.updateFrequency + "");
-						txtFreq.setEnabled(true);
 					} catch (Exception e) {
 						e.printStackTrace();
 						JOptionPane.showMessageDialog(this, "Error when reading existing modpack.json file!", "Warning!", JOptionPane.WARNING_MESSAGE);
@@ -214,46 +174,14 @@ public class DialogProfileSettings extends JDialog {
 		txtName.setText(installer.page2.txtProfile.getText());
 	}
 
-	private void updateRadioButtons() {
-		if (rdbtnCustom.isSelected()) {
-			txtFreq.setEnabled(true);
-		} else {
-			txtFreq.setEnabled(false);
-		}
-		txtFreq.setText("" + getUpdateFrequency());
-	}
-
 	/**
 	 * ok button
 	 */
 	private void finish() {
 		installer.profile_gameDirectory = txtDirectory.getText();
 		installer.profile_javaOptions = txtJavaOptions.getText();
-		installer.profile_updateFrequency = getUpdateFrequency();
 		installer.page2.txtProfile.setText(txtName.getText());
 		this.dispose();
-	}
-
-	private int getUpdateFrequency() {
-		String s = btnGroupUpdateFreq.getSelection().getActionCommand();
-		if (s.equals("launch")) {
-			return 0;
-		}
-		if (s.equals("day")) {
-			return 1;
-		}
-		if (s.equals("week")) {
-			return 7;
-		}
-		if (s.equals("custom")) {
-			String freq = txtFreq.getText();
-			try {
-				return Integer.parseInt(freq);
-			} catch (NumberFormatException e) {
-				NwLogger.INSTALLER_LOGGER.warn("Error parsing Update Frequency (" + s + ")", e);
-			}
-		}
-		return 0;
 	}
 
 	/**
@@ -270,22 +198,6 @@ public class DialogProfileSettings extends JDialog {
 		txtName.setText(installer.page2.txtProfile.getText());
 		txtDirectory.setText(installer.profile_gameDirectory);
 		txtJavaOptions.setText(installer.profile_javaOptions);
-		txtFreq.setText("" + installer.profile_updateFrequency);
-		switch (installer.profile_updateFrequency) {
-			case 0:
-				rdbtnDay.setSelected(true);
-				break;
-			case 1:
-				rdbtnDay.setSelected(true);
-				break;
-			case 7:
-				rdbtnWeek.setSelected(true);
-				break;
-			default:
-				rdbtnCustom.setSelected(true);
-				break;
-		}
-		updateRadioButtons();
 	}
 
 	{
@@ -321,15 +233,21 @@ public class DialogProfileSettings extends JDialog {
 		panel1.add(panel2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
 		btnOk = new JButton();
 		btnOk.setText("OK");
+		btnOk.setMnemonic('O');
+		btnOk.setDisplayedMnemonicIndex(0);
 		panel2.add(btnOk, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		btnCancel = new JButton();
 		btnCancel.setText("Cancel");
+		btnCancel.setMnemonic('C');
+		btnCancel.setDisplayedMnemonicIndex(0);
 		panel2.add(btnCancel, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		btnUseProfile = new JButton();
 		btnUseProfile.setText("Use existing profile");
+		btnUseProfile.setMnemonic('U');
+		btnUseProfile.setDisplayedMnemonicIndex(0);
 		panel2.add(btnUseProfile, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		final JPanel panel3 = new JPanel();
-		panel3.setLayout(new GridLayoutManager(7, 6, new Insets(5, 5, 5, 5), -1, -1));
+		panel3.setLayout(new GridLayoutManager(4, 6, new Insets(5, 5, 5, 5), -1, -1));
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
@@ -344,6 +262,8 @@ public class DialogProfileSettings extends JDialog {
 		panel3.add(txtName, new GridConstraints(0, 2, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
 		btnReset = new JButton();
 		btnReset.setText("Reset");
+		btnReset.setMnemonic('R');
+		btnReset.setDisplayedMnemonicIndex(0);
 		panel3.add(btnReset, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, 1, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		final JLabel label2 = new JLabel();
 		label2.setText("Game Directory:");
@@ -352,49 +272,24 @@ public class DialogProfileSettings extends JDialog {
 		panel3.add(txtDirectory, new GridConstraints(1, 2, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
 		btnOpen = new JButton();
 		btnOpen.setText("Open");
+		btnOpen.setMnemonic('O');
+		btnOpen.setDisplayedMnemonicIndex(0);
 		panel3.add(btnOpen, new GridConstraints(1, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, 1, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		final JLabel label3 = new JLabel();
-		label3.setText("Update Frequency:");
-		panel3.add(label3, new GridConstraints(2, 0, 1, 4, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		final Spacer spacer2 = new Spacer();
-		panel3.add(spacer2, new GridConstraints(6, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-		rdbtnLaunch = new JRadioButton();
-		rdbtnLaunch.setActionCommand("launch");
-		rdbtnLaunch.setSelected(true);
-		rdbtnLaunch.setText("Every Launch");
-		panel3.add(rdbtnLaunch, new GridConstraints(3, 0, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 1, false));
-		rdbtnCustom = new JRadioButton();
-		rdbtnCustom.setActionCommand("custom");
-		rdbtnCustom.setText("Every");
-		panel3.add(rdbtnCustom, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, 1, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 1, false));
-		rdbtnWeek = new JRadioButton();
-		rdbtnWeek.setActionCommand("week");
-		rdbtnWeek.setText("Every Week");
-		panel3.add(rdbtnWeek, new GridConstraints(3, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		final JLabel label4 = new JLabel();
-		label4.setText("Java Options:");
-		panel3.add(label4, new GridConstraints(5, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		panel3.add(spacer2, new GridConstraints(3, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		final JLabel label3 = new JLabel();
+		label3.setText("Java Options:");
+		panel3.add(label3, new GridConstraints(2, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		btnDefault = new JButton();
 		btnDefault.setText("Default");
-		panel3.add(btnDefault, new GridConstraints(5, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		btnDefault.setMnemonic('D');
+		btnDefault.setDisplayedMnemonicIndex(0);
+		panel3.add(btnDefault, new GridConstraints(2, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		txtJavaOptions = new JTextField();
-		panel3.add(txtJavaOptions, new GridConstraints(5, 2, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-		txtFreq = new JFormattedTextField();
-		txtFreq.setColumns(10);
-		txtFreq.setText("0");
-		panel3.add(txtFreq, new GridConstraints(4, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(40, -1), new Dimension(40, 24), new Dimension(40, -1), 0, false));
-		rdbtnDay = new JRadioButton();
-		rdbtnDay.setActionCommand("day");
-		rdbtnDay.setText("Every Day");
-		panel3.add(rdbtnDay, new GridConstraints(3, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		final JLabel label5 = new JLabel();
-		label5.setText("Days");
-		panel3.add(label5, new GridConstraints(4, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		btnGroupUpdateFreq = new ButtonGroup();
-		btnGroupUpdateFreq.add(rdbtnLaunch);
-		btnGroupUpdateFreq.add(rdbtnCustom);
-		btnGroupUpdateFreq.add(rdbtnDay);
-		btnGroupUpdateFreq.add(rdbtnWeek);
+		panel3.add(txtJavaOptions, new GridConstraints(2, 2, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+		label1.setLabelFor(txtName);
+		label2.setLabelFor(txtDirectory);
+		label3.setLabelFor(txtJavaOptions);
 	}
 
 	/**

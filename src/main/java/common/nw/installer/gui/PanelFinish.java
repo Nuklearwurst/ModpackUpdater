@@ -59,22 +59,11 @@ public class PanelFinish implements IExtendedPageHandler {
 	private void $$$setupUI$$$() {
 		panel_finish = new JPanel();
 		panel_finish.setLayout(new GridBagLayout());
-		txtpnFinish = new JTextPane();
-		txtpnFinish.setEditable(false);
-		txtpnFinish.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 12));
-		txtpnFinish.setText("Installation Finished!");
-		GridBagConstraints gbc;
-		gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.weightx = 1.0;
-		gbc.weighty = 1.0;
-		gbc.fill = GridBagConstraints.BOTH;
-		panel_finish.add(txtpnFinish, gbc);
 		txtpnInstructions = new JTextPane();
 		txtpnInstructions.setEditable(false);
 		txtpnInstructions.setFont(new Font("Arial", txtpnInstructions.getFont().getStyle(), 12));
 		txtpnInstructions.setText("To use the modpack select the versionname you chose in the profile editor under 'use Version'\n\nYou might also want to change the Game-Directory and  JVM-arguments (for bigger modpacks)");
+		GridBagConstraints gbc;
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 1;
@@ -98,6 +87,19 @@ public class PanelFinish implements IExtendedPageHandler {
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(4, 4, 4, 4);
 		panel_finish.add(txtExampleJVMOptions, gbc);
+		final JScrollPane scrollPane1 = new JScrollPane();
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.weightx = 1.0;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		panel_finish.add(scrollPane1, gbc);
+		txtpnFinish = new JTextPane();
+		txtpnFinish.setEditable(false);
+		txtpnFinish.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 12));
+		txtpnFinish.setText("Installation Finished!");
+		scrollPane1.setViewportView(txtpnFinish);
 	}
 
 	/**

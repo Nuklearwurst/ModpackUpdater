@@ -123,12 +123,6 @@ public class PanelSettings implements IExtendedPageHandler {
 	private void $$$setupUI$$$() {
 		panel_settings = new JPanel();
 		panel_settings.setLayout(new GridLayoutManager(5, 5, new Insets(0, 0, 0, 0), -1, -1));
-		txtpnInstallerSettings = new JTextPane();
-		txtpnInstallerSettings.setContentType("text/html");
-		txtpnInstallerSettings.setEditable(false);
-		txtpnInstallerSettings.setFont(new Font(txtpnInstallerSettings.getFont().getName(), txtpnInstallerSettings.getFont().getStyle(), txtpnInstallerSettings.getFont().getSize()));
-		txtpnInstallerSettings.setText("<html>\r\n  <head>\r\n    \r\n  </head>\r\n  <body>\r\n    <p style=\"margin-top: 0\">\r\n      <b>Installer Settings:<br>Now select your .minecraft-folder (usually \r\n      preset) and the version name (used inside the mc-launcher)<br>You can \r\n      also create a Profile. </b>\r\n    </p>\r\n  </body>\r\n</html>\r\n");
-		panel_settings.add(txtpnInstallerSettings, new GridConstraints(0, 0, 1, 5, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
 		txtVersionName = new JTextField();
 		panel_settings.add(txtVersionName, new GridConstraints(1, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
 		btnModpackName = new JButton();
@@ -159,6 +153,14 @@ public class PanelSettings implements IExtendedPageHandler {
 		btnProfileSettings.setEnabled(false);
 		btnProfileSettings.setText("Modpack Settings");
 		panel_settings.add(btnProfileSettings, new GridConstraints(4, 3, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		final JScrollPane scrollPane1 = new JScrollPane();
+		panel_settings.add(scrollPane1, new GridConstraints(0, 0, 1, 5, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		txtpnInstallerSettings = new JTextPane();
+		txtpnInstallerSettings.setContentType("text/html");
+		txtpnInstallerSettings.setEditable(false);
+		txtpnInstallerSettings.setFont(new Font(txtpnInstallerSettings.getFont().getName(), txtpnInstallerSettings.getFont().getStyle(), txtpnInstallerSettings.getFont().getSize()));
+		txtpnInstallerSettings.setText("<html>\r\n  <head>\r\n    \r\n  </head>\r\n  <body>\r\n    <p style=\"margin-top: 0\">\r\n      <b>Installer Settings:<br>Now select your .minecraft-folder (usually \r\n      preset) and the version name (used inside the mc-launcher)<br>You can \r\n      also create a Profile. </b>\r\n    </p>\r\n  </body>\r\n</html>\r\n");
+		scrollPane1.setViewportView(txtpnInstallerSettings);
 	}
 
 	/**

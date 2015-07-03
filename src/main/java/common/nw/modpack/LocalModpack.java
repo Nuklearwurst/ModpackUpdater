@@ -1,6 +1,5 @@
 package common.nw.modpack;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +12,6 @@ public class LocalModpack {
 		name = modPackName;
 		url = modPackRepo;
 		version = modPackVersion;
-		updateFrequency = 0;
 	}
 
 	public static final int ALWAYS = 0;
@@ -33,8 +31,4 @@ public class LocalModpack {
 	
 	/** used for files which updates have to be triggered */
 	public Map<String, String> trackedFileVersions = new HashMap<String, String>();
-	
-	public int updateFrequency = 0;
-	public Date lastUpdate = new Date(0);
-
 }
