@@ -125,8 +125,6 @@ public class ModInfo {
 			this.file = file;
 
 			// scan version, update remote , fall back to other version typews
-			// if necessary @see Mod
-			// TODO read forge version
 
 			// read .litemod version file
 			if (getFileName().endsWith(".litemod")) {

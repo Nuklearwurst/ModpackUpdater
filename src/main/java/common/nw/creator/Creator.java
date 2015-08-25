@@ -2,11 +2,9 @@ package common.nw.creator;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import common.nw.modpack.ModpackValues;
-import common.nw.modpack.RepoMod;
-import common.nw.modpack.RepoModpack;
-import common.nw.modpack.RepoVersionInfo;
+import common.nw.modpack.*;
 import common.nw.utils.DownloadHelper;
+import common.nw.utils.log.NwLogger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +21,7 @@ public class Creator {
 
 	public String fileLoc;
 	public String outputLoc;
-	
+
 	public boolean shouldReadFiles = false;
 
 	private File workingDir;
@@ -34,15 +32,15 @@ public class Creator {
 		modpack.files = new ArrayList<RepoMod>();
 		modpack.blacklist = new ArrayList<RepoMod>();
 		modpack.minecraft.arguments = new ArrayList<String>();
-		modpack.minecraft.libraries  = new ArrayList<String>();
-		
+		modpack.minecraft.libraries = new ArrayList<String>();
+
 	}
 
 	/**
 	 * reads folder structure
 	 */
 	public boolean readFiles() {
-		if(modpack.files == null) {
+		if (modpack.files == null) {
 			modpack.files = new ArrayList<RepoMod>();
 		}
 
@@ -76,33 +74,43 @@ public class Creator {
 
 	/**
 	 * adds a modFile to the list
-	 * FIXME: this should be combined with add mod dialog
+	 *
+	 * @param base the path to the file (the directory the file is in) relative to the working dir
 	 */
-	@Deprecated
 	private void addMod(File file, String base) {
-		System.out.println(base + "  Filename: " + file.getName());
+		NwLogger.CREATOR_LOGGER.info("Adding Mod: " + base + "  Filename: " + file.getName());
+
 		RepoMod mod = new RepoMod();
-
 		// handle files in base dir
-
 		mod.setFileName(base.isEmpty() ? file.getName() : base + "/"
 				+ file.getName());
-		mod.version = mod.getFileName();
-		mod.name = mod.getFileName();
-		
-		//update types
-		mod.versionType = ModpackValues.versionTypeFileName;
-		mod.nameType = ModpackValues.nameTypeFileName;
-		
-		//handle config
-		if(mod.getFileName().startsWith("config/")) {
+
+		//read version data
+		ModInfo info = new ModInfo(mod.getFileName());
+		info.loadInfoFromFile(file);
+
+		//copy version data to remote mod
+		mod.name = info.name;
+		mod.version = info.version;
+
+		if(info.hasName) {
+			mod.nameType = ModpackValues.nameTypeZipEntry;
+		} else {
+			mod.nameType = ModpackValues.nameTypeFileName;
+		}
+
+		if(info.hasVersionFile) {
+			mod.versionType = ModpackValues.versionTypeZipEntry;
+		} else if(mod.getFileName().startsWith("config/") || mod.getFileName().endsWith(".conf") || mod.getFileName().endsWith(".cfg")) {
+			//handle config files
 			mod.versionType = ModpackValues.versionTypeTracked;
-			mod.version = DateFormat.getDateInstance().format(new Date(System.currentTimeMillis()));
+			mod.version = DateFormat.getDateInstance().format(new Date());
+		} else {
+			mod.versionType = ModpackValues.versionTypeFileName;
 		}
 
 		// handle download url
 		String dir = modpack.modpackRepo + base.replace(" ", "%20");
-
 		// handle dir ending
 		if (!dir.endsWith("/")) {
 			dir = dir + "/";
@@ -114,12 +122,13 @@ public class Creator {
 
 		mod.md5 = DownloadHelper.getHash(file);
 
-		if (mod.getFileName().endsWith(".litemod")) {
-			// TODO: handle Litemod
-		} else if (mod.getFileName().endsWith(".zip")
-				|| mod.getFileName().endsWith(".jar")) {
-			// TODO: handle forgemods
-		}
+
+//		mod.version = mod.getFileName();
+//		mod.name = mod.getFileName();
+//
+//		//update types
+//		mod.versionType = ModpackValues.versionTypeFileName;
+//		mod.nameType = ModpackValues.nameTypeFileName;
 
 		modpack.files.add(mod);
 	}

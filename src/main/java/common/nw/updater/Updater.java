@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +31,7 @@ public class Updater {
 	 */
 	private List<String> args;
 	/**
-	 * the minecraft profile name TODO support stuff with profiles
+	 * the minecraft profile name
 	 */
 	private String profileName;
 	/**
@@ -739,7 +738,6 @@ public class Updater {
 		int attempts = 0;
 		boolean retry;
 		do {
-			//TODO have an option to ignore duplicates
 			UpdateResult result = DownloadHelper.getMod(listener, mod,
 					modNumber, modValue, gameDir, false);
 			if (result != UpdateResult.Good) {
