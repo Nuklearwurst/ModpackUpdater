@@ -65,6 +65,7 @@ public class TableModelList extends AbstractTableModel {
 				}
 			}
 		}
+		this.fireTableDataChanged();
 	}
 
 	@Override
