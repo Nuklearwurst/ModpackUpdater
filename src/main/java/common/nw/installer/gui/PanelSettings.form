@@ -10,18 +10,20 @@
     <children>
       <component id="7e76a" class="javax.swing.JTextField" binding="txtVersionName">
         <constraints>
-          <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="1" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="The name of the version that gets created in the minecraft launcher."/>
+        </properties>
       </component>
       <component id="5542a" class="javax.swing.JButton" binding="btnModpackName">
         <constraints>
-          <grid row="1" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Modpack Name"/>
+          <text value="Reset"/>
         </properties>
       </component>
       <component id="883b3" class="javax.swing.JLabel">
@@ -30,6 +32,7 @@
         </constraints>
         <properties>
           <text value="Version name:"/>
+          <toolTipText value="The name of the version that gets created in the minecraft launcher."/>
         </properties>
       </component>
       <component id="dc2dc" class="javax.swing.JLabel">
@@ -38,6 +41,7 @@
         </constraints>
         <properties>
           <text value="Minecraft:"/>
+          <toolTipText value="The path to your .minecraft folder.&#10;Should be correct for most people."/>
         </properties>
       </component>
       <component id="a88d5" class="javax.swing.JTextField" binding="txtMinecraft">
@@ -46,7 +50,9 @@
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="The path to your .minecraft folder.&#10;Should be correct for most people."/>
+        </properties>
       </component>
       <component id="bab15" class="javax.swing.JButton" binding="btnOpen">
         <constraints>
@@ -62,6 +68,7 @@
         </constraints>
         <properties>
           <text value="Create Profile"/>
+          <toolTipText value="Check this if you want to automatically create a profile using this modpack."/>
         </properties>
       </component>
       <component id="24948" class="javax.swing.JLabel" binding="lblProfile">
@@ -71,6 +78,7 @@
         <properties>
           <enabled value="false"/>
           <text value="Profile Name:"/>
+          <toolTipText value="The name of the profile."/>
         </properties>
       </component>
       <component id="da9d8" class="javax.swing.JTextField" binding="txtProfile">
@@ -81,6 +89,7 @@
         </constraints>
         <properties>
           <enabled value="false"/>
+          <toolTipText value="The name of the profile."/>
         </properties>
       </component>
       <component id="12a52" class="javax.swing.JButton" binding="btnProfileSettings">
@@ -89,7 +98,8 @@
         </constraints>
         <properties>
           <enabled value="false"/>
-          <text value="Modpack Settings"/>
+          <text value="Profile Settings"/>
+          <toolTipText value="Modpack Profile settings, such as installation directory."/>
         </properties>
       </component>
       <scrollpane id="d2767">

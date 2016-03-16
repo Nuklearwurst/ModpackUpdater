@@ -24,7 +24,9 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class Installer {
@@ -79,7 +81,7 @@ public class Installer {
 	public static RepoModpack downloadModpack(String url) {
 		try {
 			String json = null;
-			if(!url.startsWith("http:") && !url.startsWith("www.") || !url.contains("/")) {
+			if(!url.startsWith("http:") && !url.startsWith("www.") && !url.startsWith("https:") || !url.contains("/")) {
 				//try and read local file
 				NwLogger.INSTALLER_LOGGER.info("Modpack URL does not seem to be an internet url! Trying to get local File");
 				json = DownloadHelper.getStringFromFile(url, null);
@@ -420,9 +422,31 @@ public class Installer {
 					JsonNodeFactories.field("javaArgs", JsonNodeFactories.string(javaOptions)),
 			};
 
-			HashMap<JsonStringNode, JsonNode> profileCopy = Maps.newHashMap(jsonProfileData.getNode("profiles").getFields());
 			HashMap<JsonStringNode, JsonNode> rootCopy = Maps.newHashMap(jsonProfileData.getFields());
-			profileCopy.put(JsonNodeFactories.string(profileName), JsonNodeFactories.object(fields));
+			HashMap<JsonStringNode, JsonNode> profileCopy = Maps.newHashMap(jsonProfileData.getNode("profiles").getFields());
+
+
+			JsonNode node = profileCopy.get(profileName);
+			if(node != null && node.hasFields()) {
+				List<JsonField> fieldList = node.getFieldList();
+				Iterator<JsonField> iter = fieldList.iterator();
+				while (iter.hasNext()) {
+					JsonField element = iter.next();
+					String text = element.getName().getText();
+					if(text != null && !text.isEmpty()) {
+						if(text.equals("name") || text.equals("lastVersionId") || text.equals("gameDir") || text.equals("javaArgs")) {
+							iter.remove();
+						}
+					}
+				}
+				fieldList.addAll(Arrays.asList(fields));
+				final JsonField[] fieldsArray = fieldList.toArray(new JsonField[fieldList.size()]);
+				profileCopy.put(JsonNodeFactories.string(profileName), JsonNodeFactories.object(fieldsArray));
+			} else {
+				profileCopy.put(JsonNodeFactories.string(profileName), JsonNodeFactories.object(fields));
+			}
+
+
 			JsonRootNode profileJsonCopy = JsonNodeFactories.object(profileCopy);
 
 			rootCopy.put(JsonNodeFactories.string("profiles"), profileJsonCopy);

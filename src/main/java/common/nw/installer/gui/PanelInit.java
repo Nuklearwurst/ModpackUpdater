@@ -56,6 +56,7 @@ public class PanelInit implements IExtendedPageHandler {
 	private void $$$setupUI$$$() {
 		panel_init = new JPanel();
 		panel_init.setLayout(new GridBagLayout());
+		panel_init.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null));
 		final JPanel spacer1 = new JPanel();
 		GridBagConstraints gbc;
 		gbc = new GridBagConstraints();
@@ -81,6 +82,7 @@ public class PanelInit implements IExtendedPageHandler {
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		panel_init.add(txtUrl, gbc);
 		chbxDownloadLibraries = new JCheckBox();
+		chbxDownloadLibraries.setMargin(new Insets(4, 2, 2, 2));
 		chbxDownloadLibraries.setSelected(true);
 		chbxDownloadLibraries.setText("Download supported Libraries (recommended)");
 		chbxDownloadLibraries.setToolTipText("You should download supported libraries using the installer. Otherwise you have to do it manually.");
@@ -90,20 +92,18 @@ public class PanelInit implements IExtendedPageHandler {
 		gbc.gridwidth = 2;
 		gbc.anchor = GridBagConstraints.WEST;
 		panel_init.add(chbxDownloadLibraries, gbc);
-		final JScrollPane scrollPane1 = new JScrollPane();
+		txtInit = new JTextPane();
+		txtInit.setEditable(false);
+		txtInit.setFont(new Font(txtInit.getFont().getName(), Font.BOLD, txtInit.getFont().getSize()));
+		txtInit.setMargin(new Insets(6, 6, 12, 6));
+		txtInit.setText("Welcome to The Modpack Installer\n\nThis installer will guide you through the modpack installation process.\n\nNow insert the modpack Url:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.gridwidth = 2;
 		gbc.weightx = 1.0;
 		gbc.fill = GridBagConstraints.BOTH;
-		panel_init.add(scrollPane1, gbc);
-		txtInit = new JTextPane();
-		txtInit.setContentType("text/html");
-		txtInit.setEditable(false);
-		txtInit.setFont(new Font(txtInit.getFont().getName(), Font.BOLD, txtInit.getFont().getSize()));
-		txtInit.setText("<html>\r\n  <head>\r\n\r\n  </head>\r\n  <body>\r\n    <p style=\"margin-top: 0\">\r\n      \r\n    </p>\r\n  </body>\r\n</html>\r\n");
-		scrollPane1.setViewportView(txtInit);
+		panel_init.add(txtInit, gbc);
 	}
 
 	/**

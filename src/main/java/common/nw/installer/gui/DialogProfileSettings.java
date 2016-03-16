@@ -40,7 +40,7 @@ public class DialogProfileSettings extends JDialog {
 
 	private InstallerWindow installer;
 
-	public static final String DEFAULT_JAVA_OPTIONS = "-Xmx2G -XX:PermSize=256m -XX:MaxPermSize=512m";
+	public static final String DEFAULT_JAVA_OPTIONS = "-Xmx2G -XX:MaxPermSize=256m";
 
 	public DialogProfileSettings(Frame parent, boolean modal,
 	                             InstallerWindow installer) {
@@ -49,7 +49,8 @@ public class DialogProfileSettings extends JDialog {
 
 		setTitle("Profile Settings");
 
-		setBounds(parent.getX() + 10, parent.getY() + 10, 400, 260);
+		setMinimumSize(new Dimension(400, 160));
+		setBounds(parent.getX() + 10, parent.getY() + 10, 400, 160);
 
 		setContentPane(contentPane);
 		getRootPane().setDefaultButton(btnOk);

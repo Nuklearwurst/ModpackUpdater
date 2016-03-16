@@ -51,6 +51,7 @@ public class InstallerWindow {
 		btnCancel.setDisplayedMnemonicIndex(0);
 		btn_panel.add(btnCancel);
 		content_panel.add(card_panel, BorderLayout.CENTER);
+		card_panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(4, 4, 8, 4), null));
 	}
 
 	/**
@@ -299,8 +300,9 @@ public class InstallerWindow {
 	public InstallerWindow(String url) {
 		//Initialize UI
 		mainFrame = new JFrame("Installer Window");
-		mainFrame.setBounds(200, 200, 450, 400);
+		mainFrame.setPreferredSize(new Dimension(450, 300));
 		mainFrame.setMinimumSize(new Dimension(400, 300));
+		mainFrame.setLocationByPlatform(true);
 		$$$setupUI$$$();
 		mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		mainFrame.setContentPane(content_panel);
