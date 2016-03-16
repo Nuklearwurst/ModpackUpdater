@@ -16,7 +16,7 @@ public class TableModelList extends AbstractTableModel {
 
 	public TableModelList(Object[] heads, String[] fieldNames, List<?> list) {
 		//display warnings 
-		if(fieldNames == null && heads.length > 1) {
+		if (fieldNames == null && heads.length > 1) {
 			NwLogger.CREATOR_LOGGER.error("Warning, array length of 'heads' is too long!");
 		} else if (fieldNames != null && heads.length != fieldNames.length) {
 			NwLogger.CREATOR_LOGGER.error("Warning, array length of 'heads' is not the same as 'fieldNames'!");
@@ -34,8 +34,8 @@ public class TableModelList extends AbstractTableModel {
 			return;
 		}
 		// init with new size
-		values = new Object[heads.length][list.size()]; 
-		
+		values = new Object[heads.length][list.size()];
+
 		//cycle through all elements
 		for (int y = 0; y < list.size(); y++) {
 			//get element
@@ -44,15 +44,15 @@ public class TableModelList extends AbstractTableModel {
 				return;
 			}
 			//hanlde datatypes
-			if(fields == null) {
+			if (fields == null) {
 				//datatype -->String, etc
-				values[0][y] = o; 
-			} else { 
+				values[0][y] = o;
+			} else {
 				//handle objects containing more information
 				for (int x = 0; x < heads.length; x++) {
 					try {
 						//object
-						values[x][y] = o.getClass().getField(fields[x]).get(o); 
+						values[x][y] = o.getClass().getField(fields[x]).get(o);
 					} catch (IllegalArgumentException e) {
 						e.printStackTrace();
 					} catch (IllegalAccessException e) {

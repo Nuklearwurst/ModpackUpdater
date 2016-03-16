@@ -115,9 +115,9 @@ public class Utils {
 	/**
 	 * opens a file using a JFileChooser
 	 *
-	 * @param c                parent
-	 * @param mode             selection Mode {@link JFileChooser}
-	 * @param buttonText       buttonText, uses "Open" when null ({@link JFileChooser})
+	 * @param c          parent
+	 * @param mode       selection Mode {@link JFileChooser}
+	 * @param buttonText buttonText, uses "Open" when null ({@link JFileChooser})
 	 * @return File
 	 */
 	@SuppressWarnings({"SameParameterValue", "WeakerAccess"})

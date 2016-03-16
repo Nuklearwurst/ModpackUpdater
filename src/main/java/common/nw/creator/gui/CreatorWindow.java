@@ -25,14 +25,14 @@ public class CreatorWindow {
 
 	private JFrame window;
 	private PageHolder pageHolder;
-	
+
 	private PanelInit page0;
 	private PanelSettings page1;
 	private PanelMinecraftSettings page2;
 	private PanelLoading page3;
 	private PanelEditMods page4;
 	private PanelFinish page5;
-	
+
 	private JButton btnBack;
 	private JButton btnNext;
 	private JLabel lblHeader;
@@ -72,7 +72,7 @@ public class CreatorWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		
+
 		//settings window props
 		window = new JFrame();
 		window.setTitle("Modpack Creator");
@@ -94,7 +94,7 @@ public class CreatorWindow {
 		lblHeader = new JLabel("Header here!");
 		panelHead.add(lblHeader);
 
-		
+
 		//content panel
 		pageHolder = new PageHolder();
 		JPanel contentPanel = pageHolder.getPanel();
@@ -114,7 +114,7 @@ public class CreatorWindow {
 
 		page3 = new PanelLoading(creator);
 		GridBagLayout gbl_page3 = (GridBagLayout) page3.getLayout();
-		gbl_page3.rowHeights = new int[] { 64, 0, 0, 0 };
+		gbl_page3.rowHeights = new int[]{64, 0, 0, 0};
 		pageHolder.addPage(page3, (String) page3.getProperty(Reference.KEY_NAME));
 
 		page4 = new PanelEditMods(creator, window);
@@ -122,17 +122,17 @@ public class CreatorWindow {
 
 		page5 = new PanelFinish(creator);
 		pageHolder.addPage(page5, (String) page5.getProperty(Reference.KEY_NAME));
-		
+
 
 		JPanel panelButtons = new JPanel();
 		panelButtons.setBorder(new EmptyBorder(2, 5, 2, 5));
 		window.getContentPane().add(panelButtons, BorderLayout.SOUTH);
 		GridBagLayout gbl_panelButtons = new GridBagLayout();
-		gbl_panelButtons.columnWidths = new int[] { 0, 0, 0, 0, 0 };
-		gbl_panelButtons.rowHeights = new int[] { 0, 0 };
-		gbl_panelButtons.columnWeights = new double[] { 0.0, 1.0, 0.0, 0.0,
-				Double.MIN_VALUE };
-		gbl_panelButtons.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
+		gbl_panelButtons.columnWidths = new int[]{0, 0, 0, 0, 0};
+		gbl_panelButtons.rowHeights = new int[]{0, 0};
+		gbl_panelButtons.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0,
+				Double.MIN_VALUE};
+		gbl_panelButtons.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		panelButtons.setLayout(gbl_panelButtons);
 
 		JButton btnCancel = new JButton("Cancel");
@@ -179,7 +179,7 @@ public class CreatorWindow {
 	}
 
 	private void quitWindow() {
-		if(page0.shouldSaveProperties()) {
+		if (page0.shouldSaveProperties()) {
 			CreatorProperties.saveProperties();
 		}
 		window.dispose();
@@ -189,8 +189,8 @@ public class CreatorWindow {
 	private void updatePage() {
 		// updateButtons
 		Object o = pageHolder.getCurrentPageProperty(Reference.KEY_TURNABLE);
-		if(o != null && o instanceof Boolean) {
-			if (!(Boolean)o) {
+		if (o != null && o instanceof Boolean) {
+			if (!(Boolean) o) {
 				btnNext.setEnabled(false);
 				btnBack.setEnabled(false);
 			} else {
@@ -207,31 +207,31 @@ public class CreatorWindow {
 				}
 			}
 		}
-		
+
 		String s = "Step " + (pageHolder.getCurrentPageIndex() + 1) + " of " + (pageHolder.getLastPageIndex() + 1) + ".";
 		if (DEBUG) {
 			s += "\n..." + pageHolder.getCurrentPageProperty(Reference.KEY_NAME);
 		}
 		lblHeader.setText(s);
 	}
-	
+
 	private void nextPage() {
-		if(pageHolder.getCurrentPageIndex() == pageHolder.getLastPageIndex()) {
+		if (pageHolder.getCurrentPageIndex() == pageHolder.getLastPageIndex()) {
 			quitWindow();
 			return;
 		}
 		pageHolder.nextPage();
 		updatePage();
 	}
-	
+
 	private void previousPage() {
-		if(pageHolder.getCurrentPageIndex() == 0) {
+		if (pageHolder.getCurrentPageIndex() == 0) {
 			return;
 		}
 		pageHolder.previousPage();
 		updatePage();
 	}
-	
+
 	private void initData() {
 		creator = new Creator();
 	}

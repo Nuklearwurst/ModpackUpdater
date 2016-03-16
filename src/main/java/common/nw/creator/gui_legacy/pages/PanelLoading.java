@@ -14,7 +14,7 @@ public class PanelLoading extends JPanel implements IPageHandler, IProgressListe
 
 	private JProgressBar progressBar;
 	private JLabel label;
-	
+
 	private Creator creator;
 
 	/**
@@ -22,13 +22,13 @@ public class PanelLoading extends JPanel implements IPageHandler, IProgressListe
 	 */
 	public PanelLoading(Creator creator) {
 		this.creator = creator;
-		
+
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] { 0, 0 };
-		gridBagLayout.rowHeights = new int[] { 119, 29, -18, 0, 0 };
-		gridBagLayout.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0,
-				Double.MIN_VALUE };
+		gridBagLayout.columnWidths = new int[]{0, 0};
+		gridBagLayout.rowHeights = new int[]{119, 29, -18, 0, 0};
+		gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0,
+				Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 
 		label = new JLabel("Creating");
@@ -56,10 +56,10 @@ public class PanelLoading extends JPanel implements IPageHandler, IProgressListe
 
 	@Override
 	public Object getProperty(String s) {
-		if(s.equals(Reference.KEY_NAME)) {
+		if (s.equals(Reference.KEY_NAME)) {
 			return "Loading";
 		}
-		if(s.equals(Reference.KEY_TURNABLE)) {
+		if (s.equals(Reference.KEY_TURNABLE)) {
 			return !(progressBar.getValue() < 100) || progressBar.getValue() <= 0;
 		}
 		return null;

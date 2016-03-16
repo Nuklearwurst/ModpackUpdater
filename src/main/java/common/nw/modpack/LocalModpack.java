@@ -8,7 +8,7 @@ import java.util.Map;
 public class LocalModpack {
 
 	public LocalModpack(String modPackName, String modPackRepo,
-			String modPackVersion) {
+	                    String modPackVersion) {
 		name = modPackName;
 		url = modPackRepo;
 		version = modPackVersion;
@@ -18,17 +18,27 @@ public class LocalModpack {
 	public static final int EVERY_DAY = 1;
 	public static final int EVERY_WEEK = 2;
 
-	/** modapck name */
+	/**
+	 * modapck name
+	 */
 	public String name;
-	/** modpack version */
+	/**
+	 * modpack version
+	 */
 	public String version;
 
-	/** modpack url */
+	/**
+	 * modpack url
+	 */
 	public String url;
 
-	/** tracks all the updated mods */
+	/**
+	 * tracks all the updated mods
+	 */
 	public List<String> files = new ArrayList<String>();
-	
-	/** used for files which updates have to be triggered */
+
+	/**
+	 * used for files which updates have to be triggered
+	 */
 	public Map<String, String> trackedFileVersions = new HashMap<String, String>();
 }

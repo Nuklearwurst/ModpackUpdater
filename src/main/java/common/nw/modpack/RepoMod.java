@@ -8,22 +8,27 @@ public class RepoMod {
 	public String nameType; // currently not supported
 	public String version;
 	public String versionType; // currently not supported
-	
+
 	/**
 	 * the download url of the mod
 	 */
 	public String downloadUrl;
-	
-	/** 
+
+	/**
 	 * how the mod should be downloaded
+	 *
 	 * @see {@link ModpackValues}
 	 */
 	public String downloadType;
-	
-	/** md5 used for download */
+
+	/**
+	 * md5 used for download
+	 */
 	public String md5;
-	
-	/** contains dir and name in minecraft folder */
+
+	/**
+	 * contains dir and name in minecraft folder
+	 */
 	private String fileName;
 
 	/**

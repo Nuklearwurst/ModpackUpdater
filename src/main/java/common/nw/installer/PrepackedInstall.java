@@ -8,6 +8,7 @@ import java.awt.*;
 
 /**
  * used to provide preset modpack installer
+ *
  * @author Nuklearwurst
  */
 public final class PrepackedInstall {

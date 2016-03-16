@@ -17,30 +17,39 @@ import java.util.List;
 
 public class Launch implements ITweaker {
 
-	/** default launch target */
+	/**
+	 * default launch target
+	 */
 	private static final String DEFAULT_LAUNCH_TARGET = "net.minecraft.client.main.Main";
-	
-	/** 
-	 * the launch arguments 
-	 * @see {@link ITweaker} 
+
+	/**
+	 * the launch arguments
+	 *
+	 * @see {@link ITweaker}
 	 */
 	private final String[] launchArguments = {"modpack", "modpackrepo", "modpackversion"};
 
-	/** should open gui? */
+	/**
+	 * should open gui?
+	 */
 	private boolean useGui = true;
 
-	/** probably unused */
+	/**
+	 * probably unused
+	 */
 	public Launch() {
 	}
 
-	/** used if launched directly */
+	/**
+	 * used if launched directly
+	 */
 	public Launch(boolean useGui) {
 		this.useGui = useGui;
 	}
 
 	@Override
 	public void acceptOptions(List<String> args, File gameDir, File assetsDir,
-			String profile) {
+	                          String profile) {
 
 		Updater.logger.info("Starting modpack updater!");
 		if (useGui) {
@@ -71,15 +80,15 @@ public class Launch implements ITweaker {
 		} catch (Exception e) {
 			NwLogger.UPDATER_LOGGER.error("Unknown error occurred!", e);
 		}
-		
+
 		Updater.logger.info("Update finished!");
-		
+
 		// close gui before process is terminated
 		if (useGui) {
 			//noinspection ConstantConditions
 			window.close();
 		}
-		
+
 		// close minecraft if needed
 		if (updater.quitToLauncher()) {
 			//error when exiting
@@ -119,10 +128,10 @@ public class Launch implements ITweaker {
 
 	@Override
 	public void injectIntoClassLoader(LaunchClassLoader classLoader) {
-		
+
 	}
 
-	
+
 	/**
 	 * returns the Minecraft start-class
 	 */
@@ -160,7 +169,7 @@ public class Launch implements ITweaker {
 			optionParser.allowsUnrecognizedOptions();
 			OptionSet options = optionParser.parse(args);
 
-			if(options.has(noGuiOption)) {
+			if (options.has(noGuiOption)) {
 				useGui = !noGuiOption.value(options);
 			}
 			if (options.has(gamedirOption)) {
@@ -169,7 +178,7 @@ public class Launch implements ITweaker {
 			if (options.has(assetdirOption)) {
 				assetDir = gamedirOption.value(options);
 			}
-			if(options.has(profileNameOption)) {
+			if (options.has(profileNameOption)) {
 				profileName = profileNameOption.value(options);
 			}
 		} catch (Exception e) {

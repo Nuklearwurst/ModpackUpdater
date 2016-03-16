@@ -94,15 +94,15 @@ public class Creator {
 		mod.name = info.name;
 		mod.version = info.version;
 
-		if(info.hasName) {
+		if (info.hasName) {
 			mod.nameType = ModpackValues.nameTypeZipEntry;
 		} else {
 			mod.nameType = ModpackValues.nameTypeFileName;
 		}
 
-		if(info.hasVersionFile) {
+		if (info.hasVersionFile) {
 			mod.versionType = ModpackValues.versionTypeZipEntry;
-		} else if(mod.getFileName().startsWith("config/") || mod.getFileName().endsWith(".conf") || mod.getFileName().endsWith(".cfg")) {
+		} else if (mod.getFileName().startsWith("config/") || mod.getFileName().endsWith(".conf") || mod.getFileName().endsWith(".cfg")) {
 			//handle config files
 			mod.versionType = ModpackValues.versionTypeTracked;
 			mod.version = DateFormat.getDateInstance().format(new Date());

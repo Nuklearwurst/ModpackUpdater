@@ -26,13 +26,13 @@ final class LogFormatter extends Formatter {
 				.append(Utils.parseIntWithMinLength(calendar.get(Calendar.SECOND), 2)).append("][")
 				.append(record.getLevel().getLocalizedName());
 		String name = record.getLoggerName();
-		if(name != null && !name.isEmpty()) {
+		if (name != null && !name.isEmpty()) {
 			sb.append("][")
-				.append(name);
+					.append(name);
 		}
 		sb.append("] ")
-			.append(formatMessage(record))
-			.append(LINE_SEPARATOR);
+				.append(formatMessage(record))
+				.append(LINE_SEPARATOR);
 
 		if (record.getThrown() != null) {
 			try {

@@ -10,6 +10,7 @@ import javax.swing.*;
 public class PanelFinish extends JPanel implements IPageHandler {
 
 	private Creator creator;
+
 	/**
 	 * Create the panel.
 	 */
@@ -23,10 +24,10 @@ public class PanelFinish extends JPanel implements IPageHandler {
 
 	@Override
 	public Object getProperty(String s) {
-		if(s.equals(Reference.KEY_NAME)) {
+		if (s.equals(Reference.KEY_NAME)) {
 			return "Finish";
 		}
-		if(s.equals(Reference.KEY_TURNABLE)) {
+		if (s.equals(Reference.KEY_TURNABLE)) {
 			return true;
 		}
 		return null;
@@ -34,7 +35,7 @@ public class PanelFinish extends JPanel implements IPageHandler {
 
 	@Override
 	public void onPageOpened(PageHolder holder, boolean forward) {
-		if(forward) {
+		if (forward) {
 			creator.createOutputFile(this);
 		}
 	}

@@ -20,24 +20,38 @@ import java.util.zip.ZipFile;
 
 public class ModInfo {
 
-	/** mod name */
+	/**
+	 * mod name
+	 */
 	public String name;
 
-	/** mod version */
+	/**
+	 * mod version
+	 */
 	public String version;
 
-	/** location of the modFile */
+	/**
+	 * location of the modFile
+	 */
 	private String fileName;
 
-	/** local mod File */
+	/**
+	 * local mod File
+	 */
 	public File file;
 
-	/** remote File */
+	/**
+	 * remote File
+	 */
 	private RepoMod remoteInfo;
 
-	/** is the name read of the zip file? */
+	/**
+	 * is the name read of the zip file?
+	 */
 	public boolean hasName = false;
-	/** is the version read of the zip file? */
+	/**
+	 * is the version read of the zip file?
+	 */
 	public boolean hasVersionFile = false;
 
 	/**
@@ -73,7 +87,6 @@ public class ModInfo {
 	}
 
 	/**
-	 * 
 	 * @return remote data of the mod
 	 */
 	public RepoMod getRemoteInfo() {
@@ -83,7 +96,7 @@ public class ModInfo {
 	/**
 	 * sets the remote data of a local mod (check first wether they are both the
 	 * same using equals!) and validates the VersionData
-	 * 
+	 *
 	 * @param mod remote mod
 	 */
 	public void setRemoteInfo(RepoMod mod) {
@@ -110,7 +123,7 @@ public class ModInfo {
 
 	/**
 	 * read version from file
-	 * 
+	 *
 	 * @param baseDir directory this mod file is contained in
 	 */
 	@SuppressWarnings("unchecked")
@@ -146,7 +159,7 @@ public class ModInfo {
 						hasVersionFile = true;
 					}
 				}
-			} else if(getFileName().endsWith(".jar")){
+			} else if (getFileName().endsWith(".jar")) {
 				//TODO move this to an external class
 				String versionFile = getVersionFileFromZip(file, "*mod.info");
 				if (versionFile != null && !versionFile.isEmpty()) {
@@ -154,12 +167,12 @@ public class ModInfo {
 					JsonNode versionData;
 					try {
 						versionData = parser.parse(versionFile);
-						if(versionData.hasElements()) {
+						if (versionData.hasElements()) {
 							//Old mcmod.info file format
 							List<JsonNode> modinfo = versionData.getElements();
 							parseModInfoList(modinfo);
-						} else if(versionData.hasFields()) {
-							if("2".equals(versionData.getNumberValue("modListVersion"))) {
+						} else if (versionData.hasFields()) {
+							if ("2".equals(versionData.getNumberValue("modListVersion"))) {
 								List<JsonNode> modinfo = versionData.getArrayNode("modList");
 								parseModInfoList(modinfo);
 							} else {
@@ -179,8 +192,8 @@ public class ModInfo {
 			}
 			if (remoteInfo != null) {
 				updateVersionInformation(); // update version info according to the
-									// version type specified in remoteMods
-									// config
+				// version type specified in remoteMods
+				// config
 			}
 		} else {
 			// no local file found
@@ -188,7 +201,7 @@ public class ModInfo {
 		}
 	}
 
-	private void parseModInfoList(List<JsonNode> modinfo) throws IllegalArgumentException{
+	private void parseModInfoList(List<JsonNode> modinfo) throws IllegalArgumentException {
 		if (!modinfo.isEmpty()) {
 			name = modinfo.get(0).getStringValue("modid");
 			version = modinfo.get(0).getStringValue("version");
@@ -199,11 +212,9 @@ public class ModInfo {
 
 	/**
 	 * returns the String of the specified file contained in the ZIP-archive
-	 * 
-	 * @param file
-	 *            zip file
-	 * @param name
-	 *            name of the file inside the zip
+	 *
+	 * @param file zip file
+	 * @param name name of the file inside the zip
 	 */
 	@SuppressWarnings({"SameParameterValue", "WeakerAccess"})
 	public static String getVersionFileFromZip(File file, String name) {
@@ -211,12 +222,12 @@ public class ModInfo {
 			String out = null;
 			ZipFile modZip = new ZipFile(file);
 			ZipEntry entry = null;
-			if(name.startsWith("*")) {
+			if (name.startsWith("*")) {
 				name = name.substring(1);
 				Enumeration<? extends ZipEntry> enumeration = modZip.entries();
-				while(enumeration.hasMoreElements()) {
+				while (enumeration.hasMoreElements()) {
 					ZipEntry zipEntry = enumeration.nextElement();
-					if(zipEntry.getName().endsWith(name)) {
+					if (zipEntry.getName().endsWith(name)) {
 						entry = zipEntry;
 						break;
 					}
@@ -255,7 +266,7 @@ public class ModInfo {
 
 	/**
 	 * if this mod has no remote representative any more it should be deleted
-	 * 
+	 *
 	 * @return whether this mod should be deleted
 	 */
 	public boolean shouldBeDeleted() {
@@ -264,7 +275,7 @@ public class ModInfo {
 
 	/**
 	 * check versions
-	 * 
+	 *
 	 * @return whether this mod needs an update
 	 */
 	public boolean needUpdate() {
@@ -280,7 +291,7 @@ public class ModInfo {
 
 	/**
 	 * version is null when no local modFile was found
-	 * 
+	 *
 	 * @return whether this mod is missing on the client
 	 */
 	public boolean isMissing() {
@@ -300,7 +311,7 @@ public class ModInfo {
 				//local version was read from zip-version file but remote is managed by filename
 				return this.getFileName().equals(mod.name);
 			} else if (mod.nameType.equals(ModpackValues.nameTypeZipEntry)) {
-				if(!this.hasName) {
+				if (!this.hasName) {
 					//We could not read a zip name, this is a different mod1
 					return false;
 				}

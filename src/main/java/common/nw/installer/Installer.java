@@ -81,7 +81,7 @@ public class Installer {
 	public static RepoModpack downloadModpack(String url) {
 		try {
 			String json = null;
-			if(!url.startsWith("http:") && !url.startsWith("www.") && !url.startsWith("https:") || !url.contains("/")) {
+			if (!url.startsWith("http:") && !url.startsWith("www.") && !url.startsWith("https:") || !url.contains("/")) {
 				//try and read local file
 				NwLogger.INSTALLER_LOGGER.info("Modpack URL does not seem to be an internet url! Trying to get local File");
 				json = DownloadHelper.getStringFromFile(url, null);
@@ -223,7 +223,7 @@ public class Installer {
 		}
 		HashMap<JsonStringNode, JsonNode> dataCopy = Maps.newHashMap(versionData.getFields());
 		//Add inheritance if needed
-		if(repo.minecraft.jarUpdateType.equals(ModpackValues.jarForgeInherit)) {
+		if (repo.minecraft.jarUpdateType.equals(ModpackValues.jarForgeInherit)) {
 			String forgeVersion = null;
 			try {
 				//noinspection StatementWithEmptyBody
@@ -246,7 +246,7 @@ public class Installer {
 					}
 					String mcversion = build.getStringValue("mcversion");
 					String forgeversion = build.getStringValue("version");
-					forgeVersion =  mcversion + "-Forge" + forgeversion + branch;
+					forgeVersion = mcversion + "-Forge" + forgeversion + branch;
 				}
 			} catch (MalformedURLException e) {
 				NwLogger.INSTALLER_LOGGER.error("Error parsing Minecraft Forge Installer version...", e);
@@ -261,7 +261,7 @@ public class Installer {
 			} catch (Exception e) {
 				NwLogger.INSTALLER_LOGGER.error("Unknown Error occurred!", e);
 			}
-			if(forgeVersion != null) {
+			if (forgeVersion != null) {
 				dataCopy.put(JsonNodeFactories.string("inheritsFrom"), JsonNodeFactories.string(forgeVersion));
 			}
 		}
@@ -327,7 +327,7 @@ public class Installer {
 							String mcversion = build.getStringValue("mcversion");
 							String forgeversion = build.getStringValue("version");
 
-							if(allowGui) {
+							if (allowGui) {
 								String forgeDir = String.format("%s-Forge%s%s", mcversion, forgeversion, branch);
 								File forgeVersionDir = new File(minecraftDirectory, "versions/" + forgeDir);
 								NwLogger.INSTALLER_LOGGER.fine("Searching for minecraftforge Installation at: " + forgeVersionDir.getAbsolutePath());
@@ -335,7 +335,7 @@ public class Installer {
 									File forgeVersionJson = new File(forgeVersionDir, forgeDir + ".json");
 									if (forgeVersionJson.exists()) {
 										int result = JOptionPane.showConfirmDialog(parentWindow, "A MinecraftForge Installation was found!\nDo you want to skip MinecraftForge Installation?", "MinecraftForge detected!", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-										if(result == JOptionPane.YES_OPTION) {
+										if (result == JOptionPane.YES_OPTION) {
 											return true;
 										}
 									}
@@ -427,14 +427,14 @@ public class Installer {
 
 
 			JsonNode node = profileCopy.get(profileName);
-			if(node != null && node.hasFields()) {
+			if (node != null && node.hasFields()) {
 				List<JsonField> fieldList = node.getFieldList();
 				Iterator<JsonField> iter = fieldList.iterator();
 				while (iter.hasNext()) {
 					JsonField element = iter.next();
 					String text = element.getName().getText();
-					if(text != null && !text.isEmpty()) {
-						if(text.equals("name") || text.equals("lastVersionId") || text.equals("gameDir") || text.equals("javaArgs")) {
+					if (text != null && !text.isEmpty()) {
+						if (text.equals("name") || text.equals("lastVersionId") || text.equals("gameDir") || text.equals("javaArgs")) {
 							iter.remove();
 						}
 					}

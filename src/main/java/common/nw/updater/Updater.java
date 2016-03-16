@@ -41,6 +41,7 @@ public class Updater {
 
 	/**
 	 * configuration flags<br>
+	 *
 	 * @see {@link RepoMod#fileType}
 	 */
 	private int flags = 0;
@@ -206,7 +207,7 @@ public class Updater {
 		}
 
 		// update mc
-		if((flags & FLAG_SERVER) == 0) {
+		if ((flags & FLAG_SERVER) == 0) {
 			listener.setOverallProgress("Checking for minecraft update", 6);
 			if (checkUpdate()) {
 				waitForUi();
@@ -327,8 +328,8 @@ public class Updater {
 			/////////////////
 			// Parse flags //
 			/////////////////
-			if(options.has(serverOption)) {
-				if(serverOption.value(options)) {
+			if (options.has(serverOption)) {
+				if (serverOption.value(options)) {
 					logger.info("Applying server specific settings!");
 					flags |= FLAG_SERVER;
 				}
@@ -489,7 +490,7 @@ public class Updater {
 	 * checks for minecraft or library update
 	 */
 	private boolean checkUpdate() {
-		if(VersionInfo.REPO_MODPACK_REVISION < remote.updaterRevision) {
+		if (VersionInfo.REPO_MODPACK_REVISION < remote.updaterRevision) {
 			logger.info("New Updater necessary!!");
 			return true;
 		}
@@ -615,7 +616,7 @@ public class Updater {
 			}
 		} else if (ans == JOptionPane.NO_OPTION) {
 			int ans2 = listener.showConfirmDialog("Overwrite local version?", "If this is a server you can update the local version information.\nThis will make sure that you won't get asked to update on this version again.", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
-			if(ans2 ==  JOptionPane.YES_OPTION) {
+			if (ans2 == JOptionPane.YES_OPTION) {
 				local.version = remote.minecraft.version;
 				NwLogger.UPDATER_LOGGER.info("Updated local version info to remote!");
 			}

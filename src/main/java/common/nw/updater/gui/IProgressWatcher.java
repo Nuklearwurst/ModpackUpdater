@@ -6,24 +6,24 @@ import java.awt.*;
 public interface IProgressWatcher {
 
 	boolean isCancelled();
-	
+
 	/**
 	 * used to force the updater to pause
 	 * the updater will pause as long this method returns true
 	 */
 	boolean isPaused();
-	
+
 	boolean quitToLauncher();
-	
+
 	@SuppressWarnings("SameParameterValue")
 	int showErrorDialog(String title, String message);
-	
+
 	@SuppressWarnings("SameParameterValue")
 	int showConfirmDialog(String message, String title, int optionType, int messageType);
 
 	@SuppressWarnings("SameParameterValue")
 	String showInputDialog(String message);
-	
+
 	@SuppressWarnings("SameParameterValue")
 	int showOptionDialog(String msg, String title, int optionType, int messageType, Icon icon, String[] options, String defaultOption);
 

@@ -86,7 +86,7 @@ public class PanelSettings implements IExtendedPageHandler {
 				|| txtProfile.getText().isEmpty()) {
 			txtProfile.setText(window.modpack.modpackName);
 
-			if(!readExsistingProfile(window, window.modpack.modpackName)) {
+			if (!readExsistingProfile(window, window.modpack.modpackName)) {
 				if (window.profile_gameDirectory == null
 						|| window.profile_gameDirectory.isEmpty()) {
 					//Insert default value

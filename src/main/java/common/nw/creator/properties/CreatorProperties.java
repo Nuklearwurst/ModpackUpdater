@@ -28,7 +28,7 @@ public class CreatorProperties {
 
 	public static boolean readProperties() {
 		File propFile = new File(CreatorProperties.PROPERTIES_FILE);
-		if(propFile.exists()) {
+		if (propFile.exists()) {
 			Properties prop = new Properties();
 			try {
 				FileInputStream fs = new FileInputStream(propFile);
@@ -63,13 +63,13 @@ public class CreatorProperties {
 		try {
 			FileOutputStream propFile = new FileOutputStream(CreatorProperties.PROPERTIES_FILE);
 			Properties prop = new Properties();
-			if(LAST_OPENED_MODPACK == null) {
+			if (LAST_OPENED_MODPACK == null) {
 				LAST_OPENED_MODPACK = "";
 			}
-			if(LAST_OPENED_MOD_DIRECTORY == null) {
+			if (LAST_OPENED_MOD_DIRECTORY == null) {
 				LAST_OPENED_MOD_DIRECTORY = "";
 			}
-			if(LAST_INPUT_DIRECTORY == null) {
+			if (LAST_INPUT_DIRECTORY == null) {
 				LAST_INPUT_DIRECTORY = "";
 			}
 			prop.setProperty(Keys.LAST_OPENED_MODPACK, LAST_OPENED_MODPACK);

@@ -21,11 +21,11 @@ public class SwingUtils {
 		JMenuItem selectAllAction = new JMenuItem(textComponent.getActionMap().get(DefaultEditorKit.selectAllAction));
 		selectAllAction.setText("Select All");
 
-		popup.add (cutAction);
-		popup.add (copyAction);
-		popup.add (pasteAction);
+		popup.add(cutAction);
+		popup.add(copyAction);
+		popup.add(pasteAction);
 		popup.addSeparator();
-		popup.add (selectAllAction);
+		popup.add(selectAllAction);
 
 		return popup;
 	}
