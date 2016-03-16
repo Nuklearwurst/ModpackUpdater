@@ -147,20 +147,32 @@ public class ModInfo {
 					}
 				}
 			} else if(getFileName().endsWith(".jar")){
+				//TODO move this to an external class
 				String versionFile = getVersionFileFromZip(file, "*mod.info");
 				if (versionFile != null && !versionFile.isEmpty()) {
 					JdomParser parser = new JdomParser();
 					JsonNode versionData;
 					try {
 						versionData = parser.parse(versionFile);
-						List<JsonNode> modinfo = versionData.getElements();
-						if(!modinfo.isEmpty()) {
-							name = modinfo.get(0).getStringValue("modid");
-							version = modinfo.get(0).getStringValue("version");
-							hasName = true;
-							hasVersionFile = true;
+						if(versionData.hasElements()) {
+							//Old mcmod.info file format
+							List<JsonNode> modinfo = versionData.getElements();
+							parseModInfoList(modinfo);
+						} else if(versionData.hasFields()) {
+							if("2".equals(versionData.getNumberValue("modListVersion"))) {
+								List<JsonNode> modinfo = versionData.getArrayNode("modList");
+								parseModInfoList(modinfo);
+							} else {
+								NwLogger.NW_LOGGER.error("Error reading forge version file! Unknown fileformat!");
+							}
+						} else {
+							NwLogger.NW_LOGGER.error("Error reading forge version file! Unknown fileformat!");
 						}
 					} catch (InvalidSyntaxException e) {
+						NwLogger.NW_LOGGER.error("Error reading forge version file", e);
+					} catch (IllegalArgumentException e) {
+						NwLogger.NW_LOGGER.error("Error reading forge version file", e);
+					} catch (IllegalStateException e) {
 						NwLogger.NW_LOGGER.error("Error reading forge version file", e);
 					}
 				}
@@ -173,6 +185,15 @@ public class ModInfo {
 		} else {
 			// no local file found
 			version = null;
+		}
+	}
+
+	private void parseModInfoList(List<JsonNode> modinfo) throws IllegalArgumentException{
+		if (!modinfo.isEmpty()) {
+			name = modinfo.get(0).getStringValue("modid");
+			version = modinfo.get(0).getStringValue("version");
+			hasName = true;
+			hasVersionFile = true;
 		}
 	}
 

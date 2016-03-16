@@ -18,6 +18,8 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class CreatorWindow {
 
@@ -75,7 +77,12 @@ public class CreatorWindow {
 		window = new JFrame();
 		window.setTitle("Modpack Creator");
 		window.setBounds(100, 100, 450, 400);
-		window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		window.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		window.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				quitWindow();
+			}
+		});
 		window.getContentPane().setLayout(new BorderLayout(0, 0));
 
 		//btn panel
@@ -132,7 +139,7 @@ public class CreatorWindow {
 		btnCancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				cancel();
+				quitWindow();
 			}
 		});
 		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
@@ -171,11 +178,12 @@ public class CreatorWindow {
 		updatePage();
 	}
 
-	private void cancel() {
+	private void quitWindow() {
 		if(page0.shouldSaveProperties()) {
 			CreatorProperties.saveProperties();
 		}
 		window.dispose();
+		System.exit(0);
 	}
 
 	private void updatePage() {
@@ -209,7 +217,7 @@ public class CreatorWindow {
 	
 	private void nextPage() {
 		if(pageHolder.getCurrentPageIndex() == pageHolder.getLastPageIndex()) {
-			cancel();
+			quitWindow();
 			return;
 		}
 		pageHolder.nextPage();
