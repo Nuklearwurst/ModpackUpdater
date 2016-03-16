@@ -33,6 +33,7 @@ public class Creator {
 		modpack.blacklist = new ArrayList<RepoMod>();
 		modpack.minecraft.arguments = new ArrayList<String>();
 		modpack.minecraft.libraries = new ArrayList<String>();
+		modpack.updaterRevision = VersionInfo.REPO_MODPACK_REVISION;
 
 	}
 

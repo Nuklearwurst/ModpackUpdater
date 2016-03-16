@@ -469,7 +469,7 @@ public class Updater {
 			if (local.name != null && remote.modpackName != null
 					&& !local.name.equals(remote.modpackName)) {
 				int ans = listener.showConfirmDialog(
-						"Local name is different from remote!\nShould it be set to remote?",
+						"Local name is different from remote!\nShould it be set to remote?\nOnly do this if you are sure you are downloading the correct modpack.",
 						"Warning!", JOptionPane.YES_NO_OPTION,
 						JOptionPane.WARNING_MESSAGE);
 				if (ans == JOptionPane.YES_OPTION) {
@@ -489,6 +489,10 @@ public class Updater {
 	 * checks for minecraft or library update
 	 */
 	private boolean checkUpdate() {
+		if(VersionInfo.REPO_MODPACK_REVISION < remote.updaterRevision) {
+			logger.info("New Updater necessary!!");
+			return true;
+		}
 		if ((local.version != null && local.version
 				.equals(remote.minecraft.version))
 				|| remote.minecraft.version == null) {
