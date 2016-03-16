@@ -12,7 +12,7 @@ import java.awt.*;
  * @author Nuklearwurst
  */
 public final class PrepackedInstall {
-	public static final String MODPACK_URL = "https://dl.dropboxusercontent.com/u/87474141/minecraft/Modpack%203%20%281.7.10%29/modpack.json";
+	public static final String MODPACK_URL = "https://dl.dropboxusercontent.com/u/87474141/minecraft/Modpack%204%20%281.7.10%29/modpack.json";
 
 	/**
 	 * Launch the application.
