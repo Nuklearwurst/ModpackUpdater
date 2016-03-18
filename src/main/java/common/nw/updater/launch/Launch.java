@@ -30,12 +30,14 @@ public class Launch implements ITweaker {
 	/**
 	 * probably unused
 	 */
+	@SuppressWarnings("unused")
 	public Launch() {
 	}
 
 	/**
 	 * used if launched directly
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public Launch(boolean useGui) {
 		this.useGui = useGui;
 	}

@@ -12,10 +12,10 @@ import javax.swing.table.AbstractTableModel;
  */
 public class TableModelDataList extends AbstractTableModel {
 
-	private IDataTable data;
+	private final IDataTable data;
 
-	private String[] tableHeader;
-	private String[] fieldNames;
+	private final String[] tableHeader;
+	private final String[] fieldNames;
 
 	private boolean editable;
 
@@ -32,6 +32,7 @@ public class TableModelDataList extends AbstractTableModel {
 		this.editable = editable;
 	}
 
+	@SuppressWarnings("unused")
 	public TableModelDataList(IDataTable data, String[] tableHeader, String[] fieldNames) {
 		this(data, tableHeader, fieldNames, false);
 	}
@@ -54,14 +55,17 @@ public class TableModelDataList extends AbstractTableModel {
 		return data.getElement(rowIndex, fieldNames[columnIndex]);
 	}
 
+	@SuppressWarnings("unused")
 	public void setEditable(boolean editable) {
 		this.editable = editable;
 	}
 
+	@SuppressWarnings("unused")
 	public boolean isEditable() {
 		return editable;
 	}
 
+	@SuppressWarnings("SimplifiableIfStatement")
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
 		if (rowIndex >= getRowCount() || columnIndex >= getColumnCount()) {

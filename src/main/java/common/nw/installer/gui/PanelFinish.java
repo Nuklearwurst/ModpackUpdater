@@ -12,7 +12,7 @@ import java.awt.*;
  * @author Nuklearwurst
  */
 public class PanelFinish implements IExtendedPageHandler {
-	protected JTextPane txtpnFinish;
+	private JTextPane txtpnFinish;
 	private JTextPane txtpnInstructions;
 	private JTextField txtExampleJVMOptions;
 	private JPanel panel_finish;

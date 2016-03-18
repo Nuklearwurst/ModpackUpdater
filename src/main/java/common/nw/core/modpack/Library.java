@@ -33,6 +33,7 @@ public class Library implements IDataTableElement {
 	public Library() {
 	}
 
+	@SuppressWarnings("WeakerAccess")
 	public Library(String data) {
 		JdomParser parser = new JdomParser();
 		try {
@@ -68,6 +69,7 @@ public class Library implements IDataTableElement {
 		return CompactJsonFormatter.fieldOrderPreservingCompactJsonFormatter().format(node);
 	}
 
+	@SuppressWarnings("unused")
 	public boolean isValid() {
 		return id != null && !id.isEmpty() && url != null && !url.isEmpty();
 	}
@@ -105,6 +107,7 @@ public class Library implements IDataTableElement {
 		return isVital;
 	}
 
+	@SuppressWarnings("unused")
 	public void setVital(boolean vital) {
 		isVital = vital;
 	}

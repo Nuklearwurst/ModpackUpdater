@@ -11,7 +11,7 @@ public class NwLogger {
 	public static final NwLogger NW_LOGGER = new NwLogger("NwLogger");
 	public static final NwLogger UPDATER_LOGGER = new NwLogger("ModpackUpdater");
 	public static final NwLogger INSTALLER_LOGGER = new NwLogger("ModpackInstaller");
-	public static NwLogger CREATOR_LOGGER = new NwLogger("ModpackCreator");
+	public static final NwLogger CREATOR_LOGGER = new NwLogger("ModpackCreator");
 
 	private final Logger logger;
 
@@ -25,10 +25,6 @@ public class NwLogger {
 		}
 		logger.setUseParentHandlers(false);
 		logger.addHandler(consoleHandler);
-	}
-
-	public NwLogger(String name, NwLogHelper parent) {
-		this(name);
 	}
 
 	public void severe(String msg) {
@@ -70,6 +66,7 @@ public class NwLogger {
 		logger.fine(msg);
 	}
 
+	@SuppressWarnings("unused")
 	public void log(Level level, String msg) {
 		logger.log(level, msg);
 	}

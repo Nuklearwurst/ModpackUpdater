@@ -15,7 +15,6 @@ import common.nw.core.modpack.RepoModpack;
 import common.nw.core.utils.DownloadHelper;
 import common.nw.core.utils.FileUtils;
 import common.nw.core.utils.Utils;
-import common.nw.core.utils.log.NwLogHelper;
 import common.nw.core.utils.log.NwLogger;
 
 import javax.swing.*;
@@ -37,24 +36,24 @@ public class Installer {
 	/**
 	 * version Name (mc-launcher)
 	 */
-	private String name;
+	private final String name;
 
 	/**
 	 * .minecraft Path
 	 */
-	private String dir;
+	private final String dir;
 
 	/**
 	 * should a profile be created?
 	 * (mc-launcher)
 	 */
 
-	private boolean createProfile;
+	private final boolean createProfile;
 
 	/**
 	 * should the libs be downloaded?
 	 */
-	private boolean downloadLib;
+	private final boolean downloadLib;
 
 
 	/**
@@ -67,7 +66,7 @@ public class Installer {
 	 */
 	private File ourDir;
 
-	private RepoModpack repo;
+	private final RepoModpack repo;
 
 	/**
 	 * json-version information (mc-launcher)
@@ -77,7 +76,7 @@ public class Installer {
 	/**
 	 * download url of this modpack
 	 */
-	private String modpackUrl;
+	private final String modpackUrl;
 
 
 	public Installer(RepoModpack repo, String name, String dir, String url,
@@ -122,8 +121,7 @@ public class Installer {
 	 * are all entries valid?
 	 */
 	public boolean validateEntries() {
-		boolean notNull = name != null && !name.isEmpty() && dir != null
-				&& !dir.isEmpty();
+		boolean notNull = name != null && !name.isEmpty() && !dir.isEmpty();
 		if (notNull) {
 			minecraftDirectory = new File(dir);
 			return minecraftDirectory.exists() && minecraftDirectory.isDirectory();
@@ -147,17 +145,17 @@ public class Installer {
 		ourDir = new File(versions, name);
 		if (!ourDir.exists()) {
 			if (!ourDir.mkdir()) {
-				NwLogHelper.severe("Error creating version directory!");
+				NwLogger.NW_LOGGER.severe("Error creating version directory!");
 				return false;
 			}
 		} else {
 			//compensate wrong upper/lower case
 			if (!Utils.deleteFileOrDir(ourDir)) {
-				NwLogHelper.error("Error deleting old version dir!");
+				NwLogger.NW_LOGGER.severe("Error deleting old version dir!");
 				return false;
 			}
 			if (!ourDir.mkdir()) {
-				NwLogHelper.error("Error recreating version dir!");
+				NwLogger.NW_LOGGER.severe("Error recreating version dir!");
 				return false;
 			}
 		}
@@ -460,7 +458,7 @@ public class Installer {
 	 * @return success of the profile creation
 	 * @see <a href=https://github.com/MinecraftForge/Installer>https://github.com/MinecraftForge/Installer</a>
 	 */
-	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
+	@SuppressWarnings({"BooleanMethodIsAlwaysInverted", "UnusedParameters"})
 	public boolean createProfile(String profileName, String javaOptions, String gameDirectory, int updateFrequency) {
 		if (createProfile) {
 			File launcherProfiles = new File(minecraftDirectory, "launcher_profiles.json");
@@ -481,12 +479,12 @@ public class Installer {
 			}
 
 			//our Data
-			JsonField[] fields = new JsonField[]{
-					JsonNodeFactories.field("name", JsonNodeFactories.string(profileName)),
-					JsonNodeFactories.field("lastVersionId", JsonNodeFactories.string(this.name)),
-					JsonNodeFactories.field("gameDir", JsonNodeFactories.string(gameDirectory)),
-					JsonNodeFactories.field("javaArgs", JsonNodeFactories.string(javaOptions)),
-			};
+			HashMap<JsonStringNode, JsonNode> newData = Maps.newHashMap();
+			newData.put(JsonNodeFactories.string("name"), JsonNodeFactories.string(profileName));
+			newData.put(JsonNodeFactories.string("lastVersionId"), JsonNodeFactories.string(this.name));
+			newData.put(JsonNodeFactories.string("gameDir"), JsonNodeFactories.string(gameDirectory));
+			newData.put(JsonNodeFactories.string("javaArgs"), JsonNodeFactories.string(javaOptions));
+
 
 			HashMap<JsonStringNode, JsonNode> rootCopy = Maps.newHashMap(jsonProfileData.getFields());
 			HashMap<JsonStringNode, JsonNode> profileCopy = Maps.newHashMap(jsonProfileData.getNode("profiles").getFields());
@@ -495,22 +493,15 @@ public class Installer {
 			JsonNode node = profileCopy.get(JsonNodeFactories.string(profileName));
 			//keep data that we don't modify
 			if (node != null && node.hasFields()) {
-				List<JsonField> fieldList = node.getFieldList();
-				Iterator<JsonField> iter = fieldList.iterator();
-				while (iter.hasNext()) {
-					JsonField element = iter.next();
-					String text = element.getName().getText();
-					if (text != null && !text.isEmpty()) {
-						if (text.equals("name") || text.equals("lastVersionId") || text.equals("gameDir") || text.equals("javaArgs")) {
-							iter.remove();
-						}
-					}
-				}
-				fieldList.addAll(Arrays.asList(fields));
-				final JsonField[] fieldsArray = fieldList.toArray(new JsonField[fieldList.size()]);
-				profileCopy.put(JsonNodeFactories.string(profileName), JsonNodeFactories.object(fieldsArray));
+				Map<JsonStringNode, JsonNode> fieldList = Maps.newHashMap(node.getFields());
+				fieldList.remove(JsonNodeFactories.string("name"));
+				fieldList.remove(JsonNodeFactories.string("gameDir"));
+				fieldList.remove(JsonNodeFactories.string("javaArgs"));
+				fieldList.remove(JsonNodeFactories.string("lastVersionId"));
+				fieldList.putAll(newData);
+				profileCopy.put(JsonNodeFactories.string(profileName), JsonNodeFactories.object(fieldList));
 			} else {
-				profileCopy.put(JsonNodeFactories.string(profileName), JsonNodeFactories.object(fields));
+				profileCopy.put(JsonNodeFactories.string(profileName), JsonNodeFactories.object(newData));
 			}
 
 

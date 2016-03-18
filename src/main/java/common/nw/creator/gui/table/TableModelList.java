@@ -9,8 +9,8 @@ import java.util.List;
 
 public class TableModelList extends AbstractTableModel {
 
-	private Object[] heads;
-	private String[] fields;
+	private final Object[] heads;
+	private final String[] fields;
 	private List<?> list;
 
 	private Object[][] values;
@@ -82,26 +82,6 @@ public class TableModelList extends AbstractTableModel {
 		return fields.length;
 	}
 
-	/**
-	 * use updateData and setValues
-	 * this will reset when calling updateData
-	 */
-	@Deprecated
-	public void addRow(Object[] o) {
-		if (values == null) {
-			values = new Object[getColumnCount()][0];
-		}
-		Object[][] old = values.clone();
-		values = new Object[old.length][old[0].length + 1];
-		System.out.println("x: " + old.length + "y: " + old[0].length);
-		for (int x = 0; x < old.length; x++) {
-			System.arraycopy(old[x], 0, values[x], 0, old[0].length);
-		}
-		for (int i = 0; i < o.length; i++) {
-			values[i][old[0].length] = o[i];
-		}
-	}
-
 	@Override
 	public String getColumnName(int col) {
 		//read head data
@@ -121,15 +101,6 @@ public class TableModelList extends AbstractTableModel {
 	@Deprecated
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 		values[columnIndex][rowIndex] = aValue;
-	}
-
-	/**
-	 * use setValues() and updateData()
-	 * this will only clear until next update
-	 */
-	@Deprecated
-	public void clear() {
-		values = new Object[getColumnCount()][0];
 	}
 
 	public void setValues(List<?> list) {

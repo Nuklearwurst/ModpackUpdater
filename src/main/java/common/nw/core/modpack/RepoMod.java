@@ -36,6 +36,7 @@ public class RepoMod {
 	 * no flag means: mod allowed on every configuration
 	 * other flags mean: mod is allowed on any of these configurations
 	 */
+	@SuppressWarnings("unused")
 	public int fileType; // currently not supported
 
 	public String getFileNameSystem() {

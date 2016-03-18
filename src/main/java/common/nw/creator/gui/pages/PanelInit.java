@@ -30,7 +30,8 @@ public class PanelInit implements IPageHandler, IDropFileHandler {
 	private JCheckBox chbxProperties;
 	private JLabel lblLoading;
 
-	private Creator creator;
+	@SuppressWarnings("FieldCanBeLocal")
+	private final Creator creator;
 
 	public PanelInit(Creator creator) {
 		this.creator = creator;

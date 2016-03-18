@@ -16,6 +16,7 @@ public class Utils {
 	/**
 	 * calculate the time passed since the given date(in Days)
 	 */
+	@SuppressWarnings("unused")
 	public static int getDaysSimceUpdate(Date date) {
 		long time = System.currentTimeMillis() - date.getTime();
 		double days = time / 86400000D;
@@ -112,7 +113,7 @@ public class Utils {
 	 * @param flavor requested DataFlavor
 	 * @return found value
 	 */
-	@SuppressWarnings("SameParameterValue")
+	@SuppressWarnings({"SameParameterValue", "WeakerAccess"})
 	public static Object getSystemClipboard(DataFlavor flavor) {
 		try {
 			Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();

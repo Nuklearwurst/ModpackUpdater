@@ -7,8 +7,8 @@ import java.util.List;
  */
 public class ListDataTable implements IDataTable {
 
-	private String[] dataFields;
-	private List<? extends IDataTableElement> elements;
+	private final String[] dataFields;
+	private final List<? extends IDataTableElement> elements;
 
 	public ListDataTable(String[] dataFields, List<? extends IDataTableElement> elements) {
 		this.dataFields = dataFields;

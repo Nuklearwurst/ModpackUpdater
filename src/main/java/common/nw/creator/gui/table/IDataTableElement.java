@@ -7,6 +7,7 @@ package common.nw.creator.gui.table;
  */
 public interface IDataTableElement {
 
+	@SuppressWarnings("unused")
 	String[] getSupportedFields();
 
 	Object getValue(final String field);

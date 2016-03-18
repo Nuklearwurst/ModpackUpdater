@@ -21,6 +21,7 @@
           <gridbag top="0" left="0" bottom="0" right="4" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <labelFor value="e28c6"/>
           <text value="Modpack Url:"/>
         </properties>
       </component>

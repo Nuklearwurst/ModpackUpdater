@@ -10,6 +10,7 @@ public interface IDataTable {
 	/**
 	 * @return the data fields available
 	 */
+	@SuppressWarnings("unused")
 	String[] getDataFields();
 
 	/**
@@ -23,6 +24,7 @@ public interface IDataTable {
 	 * @param row the row of the entry
 	 * @return an {@link IDataTableElement} describing the entry at the given row
 	 */
+	@SuppressWarnings("unused")
 	IDataTableElement getRowEntry(int row);
 
 	/**
@@ -45,8 +47,9 @@ public interface IDataTable {
 	void setElement(int row, String field, Object value);
 
 	class SimpleDataTableElement implements IDataTableElement {
-		private Map<String, Object> values;
+		private final Map<String, Object> values;
 
+		@SuppressWarnings("unused")
 		public SimpleDataTableElement(Map<String, Object> values) {
 			this.values = values;
 		}

@@ -29,14 +29,15 @@ public class Updater {
 	/**
 	 * arguments
 	 */
-	private List<String> args;
+	private final List<String> args;
 	/**
 	 * the minecraft profile name
 	 */
-	private String versionName;
+	private final String versionName;
 	/**
 	 * the minecraft game directory to update into
 	 */
+	@SuppressWarnings("CanBeFinal")
 	private File gameDir;
 
 	/**
@@ -515,6 +516,7 @@ public class Updater {
 	 * adds remote information to existing mods, used to check which mods need
 	 * an update
 	 */
+	@SuppressWarnings("SameReturnValue")
 	private boolean addRemoteInformation() {
 		for (RepoMod remoteMod : remote.files) {
 			// updating entries

@@ -41,6 +41,7 @@ public class Creator {
 	/**
 	 * reads folder structure
 	 */
+	@SuppressWarnings("SameReturnValue")
 	public boolean readFiles() {
 		if (modpack.files == null) {
 			modpack.files = new ArrayList<>();

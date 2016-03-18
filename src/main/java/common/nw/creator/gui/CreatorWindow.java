@@ -27,10 +27,15 @@ public class CreatorWindow {
 	private PageHolder pageHolder;
 
 	private PanelInit page0;
+	@SuppressWarnings("FieldCanBeLocal")
 	private PanelSettings page1;
+	@SuppressWarnings("FieldCanBeLocal")
 	private PanelMinecraftSettings page2;
+	@SuppressWarnings("FieldCanBeLocal")
 	private PanelLoading page3;
+	@SuppressWarnings("FieldCanBeLocal")
 	private PanelEditMods page4;
+	@SuppressWarnings("FieldCanBeLocal")
 	private PanelFinish page5;
 
 	private JButton btnBack;
@@ -62,6 +67,7 @@ public class CreatorWindow {
 	/**
 	 * Create the application.
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public CreatorWindow() {
 		CreatorProperties.readProperties();
 		initData();

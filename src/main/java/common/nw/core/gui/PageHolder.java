@@ -14,15 +14,16 @@ public class PageHolder {
 
 	private int page;
 
-	private JPanel mainPanel;
-	private CardLayout layout;
+	private final JPanel mainPanel;
+	private final CardLayout layout;
 
-	private List<IPageHandler> handler;
-	private IPageHandler globalHandler;
+	private final List<IPageHandler> handler;
+	private final IPageHandler globalHandler;
 
+	@SuppressWarnings("CanBeFinal")
 	private boolean globalHandlerFallbackMode;
 
-	private List<IPageUpdateListener> updateListener;
+	private final List<IPageUpdateListener> updateListener;
 
 	public PageHolder() {
 		//init values
@@ -38,15 +39,12 @@ public class PageHolder {
 		mainPanel.setLayout(layout);
 	}
 
+	@SuppressWarnings("unused")
 	public void addPageUpdateListener(IPageUpdateListener u) {
 		this.updateListener.add(u);
 	}
 
 	public Object getCurrentPageProperty(String s) {
-		return getPageProperty(s, page);
-	}
-
-	private Object getPageProperty(String s, int page) {
 		return getCurrentPageHandler().getProperty(s);
 	}
 
@@ -73,6 +71,7 @@ public class PageHolder {
 		return handler;
 	}
 
+	@SuppressWarnings("unused")
 	public IPageHandler getGlobalPageHandler() {
 		return globalHandler;
 	}
@@ -81,14 +80,17 @@ public class PageHolder {
 		return handler.get(page);
 	}
 
+	@SuppressWarnings("unused")
 	public void addPageWithName(IExtendedPageHandler p) {
 		addPage(p.getPanel(), p, (String) p.getProperty(Reference.KEY_NAME));
 	}
 
+	@SuppressWarnings("unused")
 	public void addPageWithName(JPanel p, IPageHandler h) {
 		addPage(p, h, (String) h.getProperty(Reference.KEY_NAME));
 	}
 
+	@SuppressWarnings("unused")
 	public void addPageWithName(IPanel p, IPageHandler h) {
 		addPage(p.getPanel(), h, (String) h.getProperty(Reference.KEY_NAME));
 	}
@@ -97,10 +99,12 @@ public class PageHolder {
 		addPage(p.getPanel(), p);
 	}
 
+	@SuppressWarnings("unused")
 	public void addPage(IExtendedPageHandler p, String s) {
 		addPage(p.getPanel(), p, s);
 	}
 
+	@SuppressWarnings("unused")
 	public void addPage(JPanel p) {
 		mainPanel.add(p);
 		if (p instanceof IPageHandler) {
@@ -119,15 +123,18 @@ public class PageHolder {
 		}
 	}
 
+	@SuppressWarnings("WeakerAccess")
 	public void addPage(JPanel p, IPageHandler handler) {
 		mainPanel.add(p);
 		this.handler.add(handler);
 	}
 
+	@SuppressWarnings("unused")
 	public void addPage(IPanel p, IPageHandler handler) {
 		addPage(p.getPanel(), handler);
 	}
 
+	@SuppressWarnings("unused")
 	public void addPage(IPanel p, IPageHandler handler, String s) {
 		addPage(p.getPanel(), handler, s);
 	}
@@ -190,6 +197,7 @@ public class PageHolder {
 	/**
 	 * shows the last page
 	 */
+	@SuppressWarnings("unused")
 	public void lastPage() {
 		if (!tryLeavePage(true)) {
 			return;

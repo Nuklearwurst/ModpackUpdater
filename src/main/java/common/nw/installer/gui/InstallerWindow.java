@@ -254,7 +254,7 @@ public class InstallerWindow {
 	/**
 	 * Main Window
 	 */
-	public JFrame mainFrame;
+	public final JFrame mainFrame;
 	/////////////////////////////////////////
 	// Button Panel and other gui elements //
 	/////////////////////////////////////////
@@ -268,11 +268,11 @@ public class InstallerWindow {
 	///////////
 	// Pages //
 	///////////
-	private PanelInit page0;
-	private PanelOverview page1;
-	protected PanelSettings page2;
-	private PanelLoading page3;
-	private PanelFinish page4;
+	private final PanelInit page0;
+	private final PanelOverview page1;
+	protected final PanelSettings page2;
+	private final PanelLoading page3;
+	private final PanelFinish page4;
 
 	/**
 	 * btnNext Text
@@ -290,6 +290,7 @@ public class InstallerWindow {
 
 	public String profile_gameDirectory;
 	public String profile_javaOptions;
+	@SuppressWarnings({"WeakerAccess", "CanBeFinal"})
 	public int profile_updateFrequency = 0;
 	protected RepoModpack modpack;
 

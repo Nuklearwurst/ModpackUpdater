@@ -41,8 +41,8 @@ public class PanelMinecraftSettings implements IPageHandler {
 	private ButtonGroup btnGroupJson;
 	private ButtonGroup btnGroupJar;
 
-	private Creator creator;
-	private JFrame frame;
+	private final Creator creator;
+	private final JFrame frame;
 
 	/**
 	 * Create the panel.
@@ -373,6 +373,10 @@ public class PanelMinecraftSettings implements IPageHandler {
 		rdbtnJsonAutoCreate.setText("Generate");
 		rdbtnJsonAutoCreate.setToolTipText("Auto-generates version json-file.\nOnly available when using Forge-jar-type.");
 		panel_minecraft_settings.add(rdbtnJsonAutoCreate, new GridConstraints(2, 2, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		label1.setLabelFor(txtVersion);
+		label4.setLabelFor(txtJar);
+		label5.setLabelFor(txtJson);
+		label6.setLabelFor(txtInstallInfo);
 		btnGroupJar = new ButtonGroup();
 		btnGroupJar.add(rdbtnDownloadJar);
 		btnGroupJar.add(rdbtnForgeJar);

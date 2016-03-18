@@ -13,9 +13,10 @@ import java.util.Map;
  */
 public class ReflectionDataTable<T> implements IDataTable {
 
-	private Map<String, Field> fieldMap;
-	private List<T> elements;
+	private final Map<String, Field> fieldMap;
+	private final List<T> elements;
 
+	@SuppressWarnings("unused")
 	public ReflectionDataTable(String[] dataFields, List<T> objects, Class<T> clazz) {
 		this.elements = objects;
 		fieldMap = new HashMap<>(dataFields.length);
@@ -70,8 +71,9 @@ public class ReflectionDataTable<T> implements IDataTable {
 
 	public class ReflectionDataEntry implements IDataTableElement {
 
-		private T object;
+		private final T object;
 
+		@SuppressWarnings("unused")
 		public ReflectionDataEntry(T object) {
 			this.object = object;
 		}

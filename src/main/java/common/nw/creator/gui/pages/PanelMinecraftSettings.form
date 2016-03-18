@@ -13,6 +13,7 @@
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <labelFor value="9da7"/>
           <text value="Version:"/>
           <toolTipText value="The version.  Can be anything."/>
         </properties>
@@ -75,6 +76,7 @@
           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <labelFor value="2ef3b"/>
           <text value="MC-jar location:"/>
           <toolTipText value="The location of the minecraft-json file.   Url or relative path.  Depends on the choice made in MC-json type."/>
         </properties>
@@ -84,6 +86,7 @@
           <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <labelFor value="db39c"/>
           <text value="MC-json location:"/>
           <toolTipText value="The location of the minecraft-jar file.   Url or relative path.  Depends on the choice made in MC-jar type."/>
         </properties>
@@ -109,6 +112,7 @@
           <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <labelFor value="ff1f4"/>
           <text value="Modpack Info:"/>
           <toolTipText value="URL pointing to a website displayed during installation. Leave empty for none."/>
         </properties>

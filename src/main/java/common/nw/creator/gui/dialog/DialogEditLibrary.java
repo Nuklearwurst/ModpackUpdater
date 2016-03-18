@@ -29,7 +29,7 @@ public class DialogEditLibrary extends JDialog {
 	/**
 	 * instance of the currently editing library
 	 */
-	private Library library;
+	private final Library library;
 
 	public DialogEditLibrary(Window parent, ITableHolder<Library> table, int index, final boolean create) {
 		super(parent, ModalityType.APPLICATION_MODAL);

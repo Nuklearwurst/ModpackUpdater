@@ -229,11 +229,13 @@ public class PanelSettings implements IExtendedPageHandler {
 		final JScrollPane scrollPane1 = new JScrollPane();
 		panel_settings.add(scrollPane1, new GridConstraints(0, 0, 1, 5, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
 		txtpnInstallerSettings = new JTextPane();
-		txtpnInstallerSettings.setContentType("text/html");
 		txtpnInstallerSettings.setEditable(false);
-		txtpnInstallerSettings.setFont(new Font(txtpnInstallerSettings.getFont().getName(), txtpnInstallerSettings.getFont().getStyle(), txtpnInstallerSettings.getFont().getSize()));
-		txtpnInstallerSettings.setText("<html>\r\n  <head>\r\n    \r\n  </head>\r\n  <body>\r\n    <p style=\"margin-top: 0\">\r\n      <b>Installer Settings:<br>Now select your .minecraft-folder (usually \r\n      preset) and the version name (used inside the mc-launcher)<br>You can \r\n      also create a Profile. </b>\r\n    </p>\r\n  </body>\r\n</html>\r\n");
+		txtpnInstallerSettings.setFont(new Font(txtpnInstallerSettings.getFont().getName(), Font.BOLD, txtpnInstallerSettings.getFont().getSize()));
+		txtpnInstallerSettings.setText("Installer Settings: \n\nNow select your .minecraft-folder (usually preset) and the version name (used inside the mc-launcher) \n\nYou can also create a Profile. ");
 		scrollPane1.setViewportView(txtpnInstallerSettings);
+		label1.setLabelFor(txtVersionName);
+		label2.setLabelFor(txtMinecraft);
+		lblProfile.setLabelFor(txtProfile);
 	}
 
 	/**

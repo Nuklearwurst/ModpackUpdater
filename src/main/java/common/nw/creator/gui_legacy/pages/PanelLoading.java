@@ -12,10 +12,11 @@ import java.io.File;
 
 public class PanelLoading extends JPanel implements IPageHandler, IProgressListener {
 
-	private JProgressBar progressBar;
-	private JLabel label;
+	private final JProgressBar progressBar;
+	@SuppressWarnings("FieldCanBeLocal")
+	private final JLabel label;
 
-	private Creator creator;
+	private final Creator creator;
 
 	/**
 	 * Create the panel.

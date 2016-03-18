@@ -6,6 +6,7 @@ public interface IPageHandler {
 
 	void onPageOpened(PageHolder holder, boolean forward);
 
+	@SuppressWarnings("UnusedParameters")
 	boolean onPageClosed(PageHolder holder, boolean forward);
 
 }

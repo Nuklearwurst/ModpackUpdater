@@ -15,11 +15,12 @@ import java.util.List;
 
 public class EditBlackListDialog extends JDialog implements ITableHolder<RepoMod> {
 
-	private JTable table;
+	private final JTable table;
 
-	private List<RepoMod> blacklist;
+	private final List<RepoMod> blacklist;
 
-	private JFrame parent;
+	@SuppressWarnings("unused")
+	private final JFrame parent;
 
 	/**
 	 * Create the dialog.

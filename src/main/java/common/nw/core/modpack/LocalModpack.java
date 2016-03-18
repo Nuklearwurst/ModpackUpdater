@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 public class LocalModpack {
 
 	public LocalModpack(String modPackName, String modPackRepo,
@@ -30,6 +31,7 @@ public class LocalModpack {
 	/**
 	 * modpack url
 	 */
+	@SuppressWarnings("CanBeFinal")
 	public String url;
 
 	/**

@@ -36,7 +36,7 @@ public class DialogProfileSettings extends JDialog {
 	private JTextField txtJavaOptions;
 	private JButton btnDefault;
 
-	private InstallerWindow installer;
+	private final InstallerWindow installer;
 
 	public static final String DEFAULT_JAVA_OPTIONS = "-Xmx2G -XX:MaxPermSize=256m";
 

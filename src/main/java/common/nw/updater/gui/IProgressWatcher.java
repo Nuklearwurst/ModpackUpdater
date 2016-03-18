@@ -35,5 +35,5 @@ public interface IProgressWatcher extends IDownloadProgressListener {
 	Component getGui();
 
 	@SuppressWarnings("SameParameterValue")
-	File selectFile(String minecraftDir, int mode, String title);
+	File selectFile(String directory, int mode, String title);
 }

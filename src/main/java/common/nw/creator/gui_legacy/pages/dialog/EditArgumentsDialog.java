@@ -15,9 +15,9 @@ import java.util.List;
 public class EditArgumentsDialog extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTable table;
+	private final JTable table;
 
-	private List<String> arguments;
+	private final List<String> arguments;
 
 
 	/**

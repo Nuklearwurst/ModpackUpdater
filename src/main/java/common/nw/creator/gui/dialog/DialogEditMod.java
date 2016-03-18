@@ -46,9 +46,9 @@ public class DialogEditMod extends JDialog {
 	private ButtonGroup btnGroupVersionType;
 	private ButtonGroup btnGroupNameType;
 
-	private boolean mode;
-	private int index;
-	private ITableHolder<RepoMod> table;
+	private final boolean mode;
+	private final int index;
+	private final ITableHolder<RepoMod> table;
 	private RepoMod mod;
 
 	public DialogEditMod(Window parent, boolean mode, int index, ITableHolder<RepoMod> table) {

@@ -107,6 +107,7 @@ public class PanelInit implements IExtendedPageHandler {
 		gbc.weightx = 1.0;
 		gbc.fill = GridBagConstraints.BOTH;
 		panel_init.add(txtInit, gbc);
+		label1.setLabelFor(txtUrl);
 	}
 
 	/**

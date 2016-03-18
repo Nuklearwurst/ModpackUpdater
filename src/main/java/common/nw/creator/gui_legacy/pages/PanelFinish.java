@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public class PanelFinish extends JPanel implements IPageHandler {
 
-	private Creator creator;
+	private final Creator creator;
 
 	/**
 	 * Create the panel.

@@ -23,7 +23,8 @@ public class DialogEditLibraries extends JDialog implements ITableHolder<Library
 	private JButton btnRemove;
 	private JCheckBox chbxLock;
 
-	private List<String> libraries;
+	private final List<String> libraries;
+	@SuppressWarnings("unused")
 	private final Window parentFrame;
 
 	private List<Library> libraryList;

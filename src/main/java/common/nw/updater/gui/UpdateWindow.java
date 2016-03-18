@@ -1,6 +1,5 @@
 package common.nw.updater.gui;
 
-import common.nw.core.utils.Utils;
 import common.nw.updater.Updater;
 
 import javax.swing.*;
@@ -23,13 +22,14 @@ public class UpdateWindow implements IProgressWatcher, WindowListener {
 	private JLabel lblOverallProgress;
 	private JLabel lblDownloadProgress;
 	private JPanel contentPanel;
-	private JFrame frmUpdater;
+	private final JFrame frmUpdater;
 
 
 	private boolean isCancelled = false;
 	private boolean isPaused = false;
 	private boolean quitToLauncher = false;
 
+	@SuppressWarnings("WeakerAccess")
 	public UpdateWindow() {
 		frmUpdater = new JFrame();
 		frmUpdater.setResizable(false);
@@ -158,9 +158,9 @@ public class UpdateWindow implements IProgressWatcher, WindowListener {
 	}
 
 	@Override
-	public File selectFile(String minecraftDir, int directoriesOnly, String s) {
-		JFileChooser fc = new JFileChooser(Utils.getMinecraftDir());
-		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+	public File selectFile(String minecraftDir, int mode, String s) {
+		JFileChooser fc = new JFileChooser(minecraftDir);
+		fc.setFileSelectionMode(mode);
 		fc.setDialogTitle(s);
 		if (fc.showOpenDialog(frmUpdater) == JFileChooser.APPROVE_OPTION) {
 			return fc.getSelectedFile();

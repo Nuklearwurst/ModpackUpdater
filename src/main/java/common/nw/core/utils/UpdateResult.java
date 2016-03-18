@@ -14,5 +14,8 @@ public enum UpdateResult {
 
 	FailedDeletingFile,
 
-	INVALID_URL, Unknown
+	INVALID_URL,
+
+	@SuppressWarnings("unused")
+	Unknown
 }

@@ -27,6 +27,7 @@ public class CreatorProperties {
 	public static String LAST_INPUT_DIRECTORY = "";
 	public static boolean LOAD = false;
 
+	@SuppressWarnings("UnusedReturnValue")
 	public static boolean readProperties() {
 		File propFile = new File(CreatorProperties.PROPERTIES_FILE);
 		if (propFile.exists()) {

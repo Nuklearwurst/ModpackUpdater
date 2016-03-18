@@ -1,5 +1,6 @@
 package common.nw.core.modpack;
 
+@SuppressWarnings("unused")
 public class ModpackValues {
 
 	private final static String directDownload = "directDownload";

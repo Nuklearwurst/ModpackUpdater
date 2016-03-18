@@ -8,7 +8,7 @@ import java.util.List;
 
 public class FileTransferHandler extends TransferHandler {
 
-	private IDropFileHandler target;
+	private final IDropFileHandler target;
 
 	public FileTransferHandler(IDropFileHandler dropTarget) {
 		this.target = dropTarget;

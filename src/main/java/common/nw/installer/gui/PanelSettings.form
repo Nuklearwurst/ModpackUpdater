@@ -31,6 +31,7 @@
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <labelFor value="7e76a"/>
           <text value="Version name:"/>
           <toolTipText value="The name of the version that gets created in the minecraft launcher."/>
         </properties>
@@ -40,6 +41,7 @@
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <labelFor value="a88d5"/>
           <text value="Minecraft:"/>
           <toolTipText value="The path to your .minecraft folder.&#10;Should be correct for most people."/>
         </properties>
@@ -77,6 +79,7 @@
         </constraints>
         <properties>
           <enabled value="false"/>
+          <labelFor value="da9d8"/>
           <text value="Profile Name:"/>
           <toolTipText value="The name of the profile."/>
         </properties>
@@ -112,10 +115,9 @@
           <component id="2d2cd" class="javax.swing.JTextPane" binding="txtpnInstallerSettings">
             <constraints/>
             <properties>
-              <contentType value="text/html"/>
               <editable value="false"/>
-              <font/>
-              <text value="&lt;html&gt;&#13;&#10;  &lt;head&gt;&#13;&#10;    &#13;&#10;  &lt;/head&gt;&#13;&#10;  &lt;body&gt;&#13;&#10;    &lt;p style=&quot;margin-top: 0&quot;&gt;&#13;&#10;      &lt;b&gt;Installer Settings:&lt;br&gt;Now select your .minecraft-folder (usually &#13;&#10;      preset) and the version name (used inside the mc-launcher)&lt;br&gt;You can &#13;&#10;      also create a Profile. &lt;/b&gt;&#13;&#10;    &lt;/p&gt;&#13;&#10;  &lt;/body&gt;&#13;&#10;&lt;/html&gt;&#13;&#10;"/>
+              <font style="1"/>
+              <text value="Installer Settings: &#10;&#10;Now select your .minecraft-folder (usually preset) and the version name (used inside the mc-launcher) &#10;&#10;You can also create a Profile. "/>
             </properties>
           </component>
         </children>

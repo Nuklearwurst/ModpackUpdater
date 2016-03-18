@@ -32,7 +32,7 @@ public class PanelSettings implements IPageHandler {
 	private JLabel lblUrl;
 	private JLabel lblFiles;
 
-	private Creator creator;
+	private final Creator creator;
 
 	/**
 	 * Create the panel.
@@ -344,6 +344,10 @@ public class PanelSettings implements IPageHandler {
 		gbc.gridy = 6;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		panel_settings.add(spacer9, gbc);
+		lblName.setLabelFor(txtName);
+		lblOutput.setLabelFor(txtOutput);
+		lblUrl.setLabelFor(txtUrl);
+		lblFiles.setLabelFor(txtFiles);
 	}
 
 	/**

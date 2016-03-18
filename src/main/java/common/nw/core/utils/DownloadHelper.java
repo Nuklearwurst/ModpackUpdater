@@ -1,7 +1,6 @@
 package common.nw.core.utils;
 
 import common.nw.core.modpack.ModInfo;
-import common.nw.core.utils.log.NwLogHelper;
 import common.nw.core.utils.log.NwLogger;
 import common.nw.updater.Updater;
 import common.nw.updater.gui.IDownloadProgressListener;
@@ -157,8 +156,8 @@ public class DownloadHelper {
 			Updater.logger.fine("HTTP fetch request for " + mod.name + " completed with success!");
 
 			if (!checkHash(mod.getRemoteInfo().md5, tempFile)) {
-				NwLogHelper.severe("Downloading mod: " + mod.name + " failed!");
-				NwLogHelper.severe("MD5 does not match! Remote: " + mod.getRemoteInfo().md5 + "; Local: " + getHash(tempFile));
+				NwLogger.NW_LOGGER.severe("Downloading mod: " + mod.name + " failed!");
+				NwLogger.NW_LOGGER.severe("MD5 does not match! Remote: " + mod.getRemoteInfo().md5 + "; Local: " + getHash(tempFile));
 				listener.setDownloadProgress("Downloading " + mod.name
 						+ "failed! MD5 does not match");
 				//noinspection ResultOfMethodCallIgnored
@@ -386,6 +385,7 @@ public class DownloadHelper {
 		return false;
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	public static String getStringFromFile(String strUrl, IDownloadProgressListener watcher) throws IOException {
 		String result = "";
 		File file = new File(strUrl);

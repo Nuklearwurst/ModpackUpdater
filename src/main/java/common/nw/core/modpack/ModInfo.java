@@ -3,8 +3,6 @@ package common.nw.core.modpack;
 import argo.jdom.JdomParser;
 import argo.jdom.JsonNode;
 import argo.saj.InvalidSyntaxException;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import common.nw.core.utils.DownloadHelper;
 import common.nw.core.utils.log.NwLogger;
 
@@ -13,7 +11,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -140,7 +137,7 @@ public class ModInfo {
 			// scan version, update remote , fall back to other version typews
 
 			// read .litemod version file
-			if (getFileName().endsWith(".litemod")) {
+			/*if (getFileName().endsWith(".litemod")) {
 				String versionFile = getVersionFileFromZip(file, "litemod.json");
 				if (versionFile != null && !versionFile.isEmpty()) {
 					if (versionFile.trim().startsWith("{")) {
@@ -159,7 +156,8 @@ public class ModInfo {
 						hasVersionFile = true;
 					}
 				}
-			} else if (getFileName().endsWith(".jar")) {
+			} else*/
+			if (getFileName().endsWith(".jar")) {
 				//TODO move this to an external class
 				String versionFile = getVersionFileFromZip(file, "*mod.info");
 				if (versionFile != null && !versionFile.isEmpty()) {
