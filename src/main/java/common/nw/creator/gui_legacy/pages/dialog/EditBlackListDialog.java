@@ -1,9 +1,9 @@
 package common.nw.creator.gui_legacy.pages.dialog;
 
-import common.nw.creator.gui.TableModelList;
-import common.nw.creator.gui.pages.dialog.DialogEditMod;
-import common.nw.creator.gui.pages.dialog.ITableHolder;
-import common.nw.modpack.RepoMod;
+import common.nw.core.modpack.RepoMod;
+import common.nw.creator.gui.dialog.DialogEditMod;
+import common.nw.creator.gui.table.ITableHolder;
+import common.nw.creator.gui.table.TableModelList;
 
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
@@ -13,7 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class EditBlackListDialog extends JDialog implements ITableHolder {
+public class EditBlackListDialog extends JDialog implements ITableHolder<RepoMod> {
 
 	private JTable table;
 
@@ -133,7 +133,7 @@ public class EditBlackListDialog extends JDialog implements ITableHolder {
 		if (index == -1) {
 			return;
 		}
-		DialogEditMod dialog = new DialogEditMod(parent, create, index, this);
+		DialogEditMod dialog = new DialogEditMod(this, create, index, this);
 		dialog.setVisible(true);
 	}
 
@@ -154,13 +154,13 @@ public class EditBlackListDialog extends JDialog implements ITableHolder {
 	}
 
 	@Override
-	public void setValue(int index, Object o) {
-		blacklist.set(index, (RepoMod) o);
+	public void setValue(int index, RepoMod o) {
+		blacklist.set(index, o);
 	}
 
 	@Override
-	public void addValue(Object o) {
-		blacklist.add((RepoMod) o);
+	public void addValue(RepoMod o) {
+		blacklist.add(o);
 	}
 
 	@Override
@@ -169,7 +169,7 @@ public class EditBlackListDialog extends JDialog implements ITableHolder {
 	}
 
 	@Override
-	public Object getValue(int index) {
+	public RepoMod getValue(int index) {
 		return blacklist.get(index);
 	}
 

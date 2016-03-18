@@ -1,15 +1,14 @@
 package common.nw.creator.gui.pages;
 
 import com.google.gson.Gson;
+import common.nw.core.gui.IPageHandler;
+import common.nw.core.gui.PageHolder;
+import common.nw.core.modpack.RepoModpack;
+import common.nw.core.utils.SwingUtils;
 import common.nw.creator.Creator;
-import common.nw.creator.gui.IDropFileHandler;
 import common.nw.creator.gui.Reference;
+import common.nw.creator.gui.transfer.IDropFileHandler;
 import common.nw.creator.properties.CreatorProperties;
-import common.nw.gui.IPageHandler;
-import common.nw.gui.PageHolder;
-import common.nw.modpack.RepoModpack;
-import common.nw.utils.SwingUtils;
-import common.nw.utils.Utils;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -149,7 +148,7 @@ public class PanelInit implements IPageHandler, IDropFileHandler {
 		btnLoadOpen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String file = Utils.openFile(panel_init, new File(txtLoadFrom.getText()));
+				String file = SwingUtils.openFile(panel_init, new File(txtLoadFrom.getText()));
 				if (file != null) {
 					txtLoadFrom.setText(file);
 					CreatorProperties.LAST_OPENED_MODPACK = file;

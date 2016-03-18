@@ -2,9 +2,9 @@ package common.nw.creator;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import common.nw.modpack.*;
-import common.nw.utils.DownloadHelper;
-import common.nw.utils.log.NwLogger;
+import common.nw.core.modpack.*;
+import common.nw.core.utils.DownloadHelper;
+import common.nw.core.utils.log.NwLogger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,16 +23,17 @@ public class Creator {
 	public String outputLoc;
 
 	public boolean shouldReadFiles = false;
+	public boolean defaultLibrariesGenerated = false;
 
 	private File workingDir;
 
 	public Creator() {
 		modpack = new RepoModpack();
 		modpack.minecraft = new RepoVersionInfo();
-		modpack.files = new ArrayList<RepoMod>();
-		modpack.blacklist = new ArrayList<RepoMod>();
-		modpack.minecraft.arguments = new ArrayList<String>();
-		modpack.minecraft.libraries = new ArrayList<String>();
+		modpack.files = new ArrayList<>();
+		modpack.blacklist = new ArrayList<>();
+		modpack.minecraft.arguments = new ArrayList<>();
+		modpack.minecraft.libraries = new ArrayList<>();
 		modpack.updaterRevision = VersionInfo.REPO_MODPACK_REVISION;
 
 	}
@@ -42,7 +43,7 @@ public class Creator {
 	 */
 	public boolean readFiles() {
 		if (modpack.files == null) {
-			modpack.files = new ArrayList<RepoMod>();
+			modpack.files = new ArrayList<>();
 		}
 
 		if (workingDir == null) {

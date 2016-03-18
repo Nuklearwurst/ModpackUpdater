@@ -1,5 +1,6 @@
 package common.nw.updater.gui;
 
+import common.nw.core.utils.Utils;
 import common.nw.updater.Updater;
 
 import javax.swing.*;
@@ -8,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
 
 /**
  * @author Nuklearwurst
@@ -153,6 +155,18 @@ public class UpdateWindow implements IProgressWatcher, WindowListener {
 	@Override
 	public Component getGui() {
 		return contentPanel;
+	}
+
+	@Override
+	public File selectFile(String minecraftDir, int directoriesOnly, String s) {
+		JFileChooser fc = new JFileChooser(Utils.getMinecraftDir());
+		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		fc.setDialogTitle(s);
+		if (fc.showOpenDialog(frmUpdater) == JFileChooser.APPROVE_OPTION) {
+			return fc.getSelectedFile();
+		} else {
+			return null;
+		}
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package common.nw.creator.gui_legacy.pages.dialog;
 
-import common.nw.creator.gui.TableModelList;
+
+import common.nw.creator.gui.table.TableModelList;
 
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;

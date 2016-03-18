@@ -1,7 +1,8 @@
 package common.nw.installer.gui;
 
-import common.nw.gui.IExtendedPageHandler;
-import common.nw.gui.PageHolder;
+
+import common.nw.core.gui.IExtendedPageHandler;
+import common.nw.core.gui.PageHolder;
 
 import javax.swing.*;
 import java.awt.*;

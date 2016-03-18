@@ -1,6 +1,7 @@
 package common.nw.creator.util;
 
-import common.nw.modpack.ModInfo;
+
+import common.nw.core.modpack.ModInfo;
 
 import java.io.File;
 

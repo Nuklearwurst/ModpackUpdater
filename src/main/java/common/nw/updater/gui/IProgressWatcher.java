@@ -1,17 +1,10 @@
 package common.nw.updater.gui;
 
-import javax.swing.Icon;
+import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 
-public interface IProgressWatcher {
-
-	boolean isCancelled();
-
-	/**
-	 * used to force the updater to pause
-	 * the updater will pause as long this method returns true
-	 */
-	boolean isPaused();
+public interface IProgressWatcher extends IDownloadProgressListener {
 
 	boolean quitToLauncher();
 
@@ -27,14 +20,6 @@ public interface IProgressWatcher {
 	@SuppressWarnings("SameParameterValue")
 	int showOptionDialog(String msg, String title, int optionType, int messageType, Icon icon, String[] options, String defaultOption);
 
-	void setDownloadProgress(String msg);
-
-	void setDownloadProgress(int progress);
-
-	void setDownloadProgress(String msg, int progress);
-
-	void setDownloadProgress(String msg, int progress, int maxProgress);
-
 	void setOverallProgress(int progress);
 
 	void setOverallProgress(String msg, int progress);
@@ -48,4 +33,7 @@ public interface IProgressWatcher {
 	 * gets called to get the current gui, return null if watcher has no gui
 	 */
 	Component getGui();
+
+	@SuppressWarnings("SameParameterValue")
+	File selectFile(String minecraftDir, int mode, String title);
 }

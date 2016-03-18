@@ -9,19 +9,17 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
-import com.google.gson.Gson;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import common.nw.modpack.LocalModpack;
-import common.nw.utils.Utils;
+import common.nw.core.utils.SwingUtils;
+import common.nw.core.utils.Utils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,9 +40,9 @@ public class DialogProfileSettings extends JDialog {
 
 	public static final String DEFAULT_JAVA_OPTIONS = "-Xmx2G -XX:MaxPermSize=256m";
 
-	public DialogProfileSettings(Frame parent, boolean modal,
+	public DialogProfileSettings(Window parent,
 	                             InstallerWindow installer) {
-		super(parent, modal);
+		super(parent, ModalityType.APPLICATION_MODAL);
 		this.installer = installer;
 
 		setTitle("Profile Settings");
@@ -73,7 +71,7 @@ public class DialogProfileSettings extends JDialog {
 				} else {
 					s = txtDirectory.getText();
 				}
-				s = Utils.openFolder(contentPane,
+				s = SwingUtils.openFolder(contentPane,
 						new File(s));
 				if (s != null) {
 					txtDirectory.setText(s);
@@ -134,7 +132,7 @@ public class DialogProfileSettings extends JDialog {
 		//getData
 		HashMap<JsonStringNode, JsonNode> profileCopy = Maps.newHashMap(jsonProfileData.getNode("profiles").getFields());
 		//format values to String array
-		ArrayList<String> options = new ArrayList<String>();
+		ArrayList<String> options = new ArrayList<>();
 		for (JsonStringNode node : profileCopy.keySet()) {
 			options.add(node.getText());
 		}
@@ -154,17 +152,6 @@ public class DialogProfileSettings extends JDialog {
 				txtName.setText(entry.getValue().getStringValue("name"));
 				txtDirectory.setText(entry.getValue().getStringValue("gameDir"));
 				txtJavaOptions.setText(entry.getValue().getStringValue("javaArgs"));
-				File modpack = new File(txtDirectory.getText() + File.separator + "modpack.json");
-				//modpack data
-				if (modpack.exists()) {
-					try {
-						LocalModpack local = new Gson().fromJson(new FileReader(modpack),
-								LocalModpack.class);
-					} catch (Exception e) {
-						e.printStackTrace();
-						JOptionPane.showMessageDialog(this, "Error when reading existing modpack.json file!", "Warning!", JOptionPane.WARNING_MESSAGE);
-					}
-				}
 				return;
 			}
 		}

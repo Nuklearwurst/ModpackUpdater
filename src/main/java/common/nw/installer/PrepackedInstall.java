@@ -1,7 +1,7 @@
 package common.nw.installer;
 
+import common.nw.core.utils.log.NwLogger;
 import common.nw.installer.gui.InstallerWindow;
-import common.nw.utils.log.NwLogger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +29,7 @@ public final class PrepackedInstall {
 					NwLogger.INSTALLER_LOGGER.error("Error when setting Look and Feel!", t);
 				}
 				try {
-					InstallerWindow window = new InstallerWindow(true);
+					InstallerWindow window = new InstallerWindow(MODPACK_URL);
 					window.mainFrame.pack();
 					window.mainFrame.setVisible(true);
 				} catch (Exception e) {

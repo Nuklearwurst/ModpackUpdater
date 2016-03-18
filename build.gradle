@@ -24,7 +24,7 @@ archivesBaseName = 'updater'
 sourceCompatibility = 1.6
 
 ext {
-    updaterVersion = '2.1.8'
+    updaterVersion = '2.2.0'
     installerVersion = '2.3.0'
     creatorVersion = '2.4.2'
 }

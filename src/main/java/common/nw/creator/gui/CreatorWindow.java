@@ -1,5 +1,8 @@
 package common.nw.creator.gui;
 
+import common.nw.core.gui.PageHolder;
+import common.nw.core.utils.SwingUtils;
+import common.nw.core.utils.log.NwLogger;
 import common.nw.creator.Creator;
 import common.nw.creator.gui.pages.PanelEditMods;
 import common.nw.creator.gui.pages.PanelInit;
@@ -8,9 +11,6 @@ import common.nw.creator.gui.pages.PanelSettings;
 import common.nw.creator.gui_legacy.pages.PanelFinish;
 import common.nw.creator.gui_legacy.pages.PanelLoading;
 import common.nw.creator.properties.CreatorProperties;
-import common.nw.gui.PageHolder;
-import common.nw.utils.Utils;
-import common.nw.utils.log.NwLogger;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -49,7 +49,7 @@ public class CreatorWindow {
 			@Override
 			public void run() {
 				try {
-					Utils.setOSLookAndFeel();
+					SwingUtils.setOSLookAndFeel();
 					CreatorWindow window = new CreatorWindow();
 					window.window.setVisible(true);
 				} catch (Exception e) {

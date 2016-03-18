@@ -1,6 +1,7 @@
 package common.nw.creator.properties;
 
-import common.nw.utils.log.NwLogger;
+
+import common.nw.core.utils.log.NwLogger;
 
 import java.io.*;
 import java.util.Properties;

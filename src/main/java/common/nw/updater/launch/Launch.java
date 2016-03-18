@@ -1,10 +1,10 @@
 package common.nw.updater.launch;
 
+import common.nw.core.utils.SwingUtils;
+import common.nw.core.utils.log.NwLogger;
 import common.nw.updater.ConsoleListener;
 import common.nw.updater.Updater;
 import common.nw.updater.gui.UpdateWindow;
-import common.nw.utils.Utils;
-import common.nw.utils.log.NwLogger;
 import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -21,13 +21,6 @@ public class Launch implements ITweaker {
 	 * default launch target
 	 */
 	private static final String DEFAULT_LAUNCH_TARGET = "net.minecraft.client.main.Main";
-
-	/**
-	 * the launch arguments
-	 *
-	 * @see {@link ITweaker}
-	 */
-	private final String[] launchArguments = {"modpack", "modpackrepo", "modpackversion"};
 
 	/**
 	 * should open gui?
@@ -49,16 +42,15 @@ public class Launch implements ITweaker {
 
 	@Override
 	public void acceptOptions(List<String> args, File gameDir, File assetsDir,
-	                          String profile) {
+	                          String versionName) {
 
 		Updater.logger.info("Starting modpack updater!");
 		if (useGui) {
-			Updater.logger.fine("Setting lood and feel for gui_legacy");
-			Utils.setOSLookAndFeel();
+			SwingUtils.setOSLookAndFeel();
 		}
 
 		// init updater
-		Updater updater = new Updater(args, gameDir, profile);
+		Updater updater = new Updater(args, gameDir, versionName);
 
 		UpdateWindow window = null;
 		// init gui
@@ -91,36 +83,9 @@ public class Launch implements ITweaker {
 
 		// close minecraft if needed
 		if (updater.quitToLauncher()) {
-			//error when exiting
-			Updater.logger.warn("FML save exit not available, forcing exit...");
+			Updater.logger.info("Quitting to launcher...");
+			Updater.logger.info("If you have minecraftforge installed this will error...");
 			Runtime.getRuntime().exit(0);
-//			try {
-//				Class clazz = null;
-//				try {
-//					clazz = Class.forName("cpw.mods.fml.common.FMLCommonHandler");
-//				} catch(ClassNotFoundException e) {
-//					try {
-//						Updater.logger.fine("Forge Mod Loader not found for minecraft version 1.7...");
-//						Updater.logger.fine("searching 1.8 package...");
-//						clazz = Class.forName("net.minecraftforge.fml.common.FMLCommonHandler");
-//					} catch(ClassNotFoundException e2) {
-//						//no minecraft forge found...
-//						Updater.logger.info("No Forge Mod Loader found, exiting normally");
-//						Runtime.getRuntime().exit(0);
-//					}
-//				}
-//				if(clazz != null) {
-//					Updater.logger.info("Using FML exit");
-//					Method instance = clazz.getMethod("instance", Void.class);
-//					Method exit = clazz.getMethod("exitJava", int.class, boolean.class);
-//					exit.invoke(instance.invoke(null), 0, false);
-//				}
-//			} catch(Exception e) {
-//				e.printStackTrace();
-//				//error when exiting
-//				Updater.logger.info("FML save exit failed, forcing exit...");
-//				Runtime.getRuntime().exit(0);
-//			}
 		} else {
 			Updater.logger.info("Starting minecraft...");
 		}
@@ -128,7 +93,7 @@ public class Launch implements ITweaker {
 
 	@Override
 	public void injectIntoClassLoader(LaunchClassLoader classLoader) {
-
+		//We don't have anything to inject into minecraft
 	}
 
 
@@ -137,14 +102,14 @@ public class Launch implements ITweaker {
 	 */
 	@Override
 	public String getLaunchTarget() {
-		//TODO: remove custom arguments ?
-		// https://github.com/MinecraftForge/FML/blob/1.7.10/src/main/java/cpw/mods/fml/common/launcher/FMLTweaker.java
+		//Default launch target --> Minecraft main
 		return DEFAULT_LAUNCH_TARGET;
 	}
 
 	@Override
 	public String[] getLaunchArguments() {
-		return launchArguments;
+		//We don't want to pass any arguments to minecraft
+		return new String[0];
 	}
 
 
@@ -152,19 +117,19 @@ public class Launch implements ITweaker {
 		boolean useGui = true;
 		String gameDir = "./";
 		String assetDir = "./";
-		String profileName = "None";
+		String versionName = null;
 		try {
 			OptionParser optionParser = new OptionParser();
 			ArgumentAcceptingOptionSpec<Boolean> noGuiOption = optionParser
 					.accepts("nogui").withOptionalArg().ofType(Boolean.class).defaultsTo(true);
 			ArgumentAcceptingOptionSpec<String> gamedirOption = optionParser
 					.accepts("gamedir")
-					.withRequiredArg().ofType(String.class).defaultsTo("user.dir");
+					.withRequiredArg().ofType(String.class);
 			ArgumentAcceptingOptionSpec<String> assetdirOption = optionParser
 					.accepts("assetdir")
 					.withRequiredArg().ofType(String.class);
-			ArgumentAcceptingOptionSpec<String> profileNameOption = optionParser
-					.accepts("profile")
+			ArgumentAcceptingOptionSpec<String> versionNameOption = optionParser
+					.accepts("versionName")
 					.withRequiredArg().ofType(String.class);
 			optionParser.allowsUnrecognizedOptions();
 			OptionSet options = optionParser.parse(args);
@@ -176,10 +141,10 @@ public class Launch implements ITweaker {
 				assetDir = gameDir = gamedirOption.value(options);
 			}
 			if (options.has(assetdirOption)) {
-				assetDir = gamedirOption.value(options);
+				assetDir = assetdirOption.value(options);
 			}
-			if (options.has(profileNameOption)) {
-				profileName = profileNameOption.value(options);
+			if (options.has(versionNameOption)) {
+				versionName = versionNameOption.value(options);
 			}
 		} catch (Exception e) {
 			Updater.logger.severe("Error parsing commandline!", e);
@@ -192,7 +157,7 @@ public class Launch implements ITweaker {
 		launch.acceptOptions(Arrays.asList(args),
 				new File(gameDir),
 				new File(assetDir),
-				profileName);
+				versionName);
 	}
 
 }

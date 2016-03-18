@@ -8,41 +8,49 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
-import common.nw.modpack.ModpackValues;
-import common.nw.modpack.RepoModpack;
-import common.nw.utils.DownloadHelper;
-import common.nw.utils.Utils;
-import common.nw.utils.log.NwLogHelper;
-import common.nw.utils.log.NwLogger;
+import common.nw.core.modpack.Library;
+import common.nw.core.modpack.LocalModpack;
+import common.nw.core.modpack.ModpackValues;
+import common.nw.core.modpack.RepoModpack;
+import common.nw.core.utils.DownloadHelper;
+import common.nw.core.utils.FileUtils;
+import common.nw.core.utils.Utils;
+import common.nw.core.utils.log.NwLogHelper;
+import common.nw.core.utils.log.NwLogger;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
 
 public class Installer {
 
+	private static final String JSON_MC_ARGUMENTS = "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type} --tweakClass common.nw.updater.launch.Launch --tweakClass cpw.mods.fml.common.launcher.FMLTweaker --modpackrepo %s --modpackversion %s";
+	private static final String JSON_TYPE = "release";
+	private static final String JSON_TIME = "2015-12-10T00:05:37-0500";
+
 	/**
-	 * version Name
+	 * version Name (mc-launcher)
 	 */
 	private String name;
+
 	/**
 	 * .minecraft Path
 	 */
 	private String dir;
+
 	/**
 	 * should a profile be created?
+	 * (mc-launcher)
 	 */
+
 	private boolean createProfile;
+
 	/**
 	 * should the libs be downloaded?
 	 */
@@ -53,28 +61,38 @@ public class Installer {
 	 * .minecraft folder
 	 */
 	private File minecraftDirectory;
+
 	/**
-	 * our VersionDirectory
+	 * our VersionDirectory (mc-launcher)
 	 */
 	private File ourDir;
 
 	private RepoModpack repo;
 
-	private String data;
+	/**
+	 * json-version information (mc-launcher)
+	 */
+	private JsonRootNode data;
+
+	/**
+	 * download url of this modpack
+	 */
+	private String modpackUrl;
 
 
-	public Installer(RepoModpack repo, String name, String dir,
+	public Installer(RepoModpack repo, String name, String dir, String url,
 	                 boolean createProfile, boolean downloadLib) {
 		this.repo = repo;
 		this.name = name;
 		this.dir = dir;
+		this.modpackUrl = url;
 		this.createProfile = createProfile;
 		minecraftDirectory = new File(dir);
 		this.downloadLib = downloadLib;
 	}
 
 	/**
-	 * downloads modapck.json file
+	 * downloads modpack.json file
 	 *
 	 * @return success
 	 */
@@ -156,72 +174,102 @@ public class Installer {
 		if (!downloadLib) {
 			return true;
 		}
-		JdomParser parser = new JdomParser();
-		JsonNode versionData;
 		try {
-			versionData = parser.parse(data);
-			List<JsonNode> libCopy = versionData.getArrayNode("libraries");
+			List<JsonNode> libCopy = data.getArrayNode("libraries");
 			for (JsonNode node : libCopy) {
-				String s = node.getStringValue("name");
-				if (s.contains("common.nuklearwurst:updater")) {
+				final String libName = node.getStringValue("name");
+				if (libName.contains("common.nuklearwurst:updater")) {
 					String url = node.getStringValue("url");
 					if (url.endsWith("/")) {
 						url = url.substring(0, url.length() - 1);
 					}
-					File lib = new File(minecraftDirectory, "libraries");
-					if (!lib.exists()) {
-						if (!lib.mkdir()) {
-							return false;
-						}
+					File libraryDirectory = new File(minecraftDirectory, "libraries");
+					if (!FileUtils.createDirectoryIfNecessary(libraryDirectory)) {
+						NwLogger.INSTALLER_LOGGER.error("Error creating library directory!");
+						return false;
 					}
-					File updater = new File(lib, "common" + File.separator
-							+ "nuklearwurst" + File.separator + "updater");
-					if (!updater.exists()) {
-						if (!updater.mkdirs()) {
-							return false;
-						}
+					final String version = libName.substring(libName.lastIndexOf(":") + 1);
+					File updaterDirectory = new File(libraryDirectory, "common" + File.separator + "nuklearwurst" + File.separator + "updater" + File.separator + version);
+					if (!FileUtils.createDirectoriesIfNecessary(updaterDirectory)) {
+						NwLogger.INSTALLER_LOGGER.error("Error creating library directory!");
+						return false;
 					}
-					String version = s.substring(s.lastIndexOf(":") + 1);
-					File dir = new File(updater, version);
-					if (!dir.exists()) {
-						if (!dir.mkdirs()) {
-							return false;
-						}
+					File updaterJarFile = new File(updaterDirectory, "updater-" + version + ".jar");
+					String realUrl = url + "/common/nuklearwurst/updater/" + version + "/updater-" + version + ".jar";
+					if (!DownloadHelper.downloadFile(realUrl, updaterJarFile)) {
+						NwLogger.INSTALLER_LOGGER.error("Error downloading updater jar-file!");
+						return false;
 					}
-					File file = new File(dir, "updater-" + version + ".jar");
-					String realUrl = url + "/common/nuklearwurst/updater/"
-							+ version + "/updater-" + version + ".jar";
-					DownloadHelper.downloadFile(realUrl, file);
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			NwLogger.INSTALLER_LOGGER.error("Unknown error when downloading libraries!", e);
 			return false;
 		}
 		return true;
 	}
 
+
 	/**
-	 * download json version file
+	 * downloads and parses json version file
+	 * <p/>
+	 * note: does not write json file to disk
+	 *
+	 * @see {@link #writeJson()}
 	 */
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean createJson() {
-		try {
-			data = DownloadHelper.getString(repo.minecraft.jsonName, null);
-		} catch (Exception e) {
-			NwLogger.INSTALLER_LOGGER.error("Error downloading version.json", e);
+		JdomParser parser = new JdomParser();
+		JsonRootNode versionJson;
+		HashMap<JsonStringNode, JsonNode> versionDataCopy;
+
+		if (ModpackValues.jsonGenerate.equals(repo.minecraft.jsonUpdateType)) {
+			//Generate new version-json file
+			versionDataCopy = Maps.newHashMap();
+			versionDataCopy.put(JsonNodeFactories.string("time"), JsonNodeFactories.string(JSON_TIME));
+			versionDataCopy.put(JsonNodeFactories.string("type"), JsonNodeFactories.string(JSON_TYPE));
+			versionDataCopy.put(JsonNodeFactories.string("minecraftArguments"), JsonNodeFactories.string(String.format(JSON_MC_ARGUMENTS, modpackUrl, repo.minecraft.version)));
+
+		} else if (ModpackValues.jsonDirectDownload.equals(repo.minecraft.jsonUpdateType)) {
+			//download version-json file
+			try {
+				String jsonString = DownloadHelper.getString(repo.minecraft.jsonName, null);
+				versionJson = parser.parse(jsonString);
+				versionDataCopy = Maps.newHashMap(versionJson.getFields());
+			} catch (InvalidSyntaxException e) {
+				NwLogger.INSTALLER_LOGGER.error("Error parsing version file!", e);
+				return false;
+			} catch (IOException e) {
+				NwLogger.INSTALLER_LOGGER.error("Error downloading version.json", e);
+				return false;
+			} catch (Exception e) {
+				NwLogger.INSTALLER_LOGGER.error("Unknown error downloading version.json", e);
+				return false;
+			}
+		} else {
+			NwLogger.INSTALLER_LOGGER.error("Unsupported version format: " + repo.minecraft.jsonUpdateType);
 			return false;
 		}
-		JdomParser parser = new JdomParser();
-		JsonRootNode versionData;
+
+		//Add libraries
+		final JsonStringNode libs = JsonNodeFactories.string("libraries");
+		final JsonNode libraryNode = versionDataCopy.get(libs);
+		final List<JsonNode> libraryList;
+		if (libraryNode == null) {
+			libraryList = new ArrayList<>();
+		} else {
+			libraryList = libraryNode.getElements();
+		}
 
 		try {
-			versionData = parser.parse(data);
+			libraryList.addAll(Library.parseJsonListFromStrings(repo.minecraft.libraries));
 		} catch (InvalidSyntaxException e) {
-			e.printStackTrace();
+			NwLogger.INSTALLER_LOGGER.error("Error reading modpack libraries!", e);
 			return false;
 		}
-		HashMap<JsonStringNode, JsonNode> dataCopy = Maps.newHashMap(versionData.getFields());
+		versionDataCopy.put(libs, JsonNodeFactories.array(libraryList));
+
+
 		//Add inheritance if needed
 		if (repo.minecraft.jarUpdateType.equals(ModpackValues.jarForgeInherit)) {
 			String forgeVersion = null;
@@ -262,12 +310,29 @@ public class Installer {
 				NwLogger.INSTALLER_LOGGER.error("Unknown Error occurred!", e);
 			}
 			if (forgeVersion != null) {
-				dataCopy.put(JsonNodeFactories.string("inheritsFrom"), JsonNodeFactories.string(forgeVersion));
+				versionDataCopy.put(JsonNodeFactories.string("inheritsFrom"), JsonNodeFactories.string(forgeVersion));
 			}
 		}
 		//Add Version Id
-		dataCopy.put(JsonNodeFactories.string("id"), JsonNodeFactories.string(name));
-		versionData = JsonNodeFactories.object(dataCopy);
+		versionDataCopy.put(JsonNodeFactories.string("id"), JsonNodeFactories.string(name));
+		versionJson = JsonNodeFactories.object(versionDataCopy);
+
+		//save json file data for later use
+		data = versionJson;
+		return true;
+	}
+
+	/**
+	 * writes the saved json file to disk
+	 *
+	 * @return success
+	 */
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
+	public boolean writeJson() {
+		if (data == null) {
+			NwLogger.INSTALLER_LOGGER.error("Error writing json-file: No data available!");
+			return false;
+		}
 		try {
 			File file = new File(ourDir, name + ".json");
 			if (file.exists()) {
@@ -276,7 +341,7 @@ public class Installer {
 				}
 			}
 			BufferedWriter newWriter = Files.newWriter(file, Charsets.UTF_8);
-			PrettyJsonFormatter.fieldOrderPreservingPrettyJsonFormatter().format(versionData, newWriter);
+			PrettyJsonFormatter.fieldOrderPreservingPrettyJsonFormatter().format(data, newWriter);
 			newWriter.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -290,7 +355,7 @@ public class Installer {
 	 *
 	 * @return true if successful
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "BooleanMethodIsAlwaysInverted"})
 	public boolean createJar(boolean allowGui, Component parentWindow) {
 		//delete old file
 		//FIXME: this might create errors with forge installs and maybe should be removed
@@ -389,7 +454,8 @@ public class Installer {
 
 	/**
 	 * create minecraft launcher profile <br>
-	 * code is based on the MinecraftForge-Installer
+	 * code is based on the MinecraftForge-Installer <br>
+	 * will also update local modpack version, if file is found
 	 *
 	 * @return success of the profile creation
 	 * @see <a href=https://github.com/MinecraftForge/Installer>https://github.com/MinecraftForge/Installer</a>
@@ -426,7 +492,8 @@ public class Installer {
 			HashMap<JsonStringNode, JsonNode> profileCopy = Maps.newHashMap(jsonProfileData.getNode("profiles").getFields());
 
 
-			JsonNode node = profileCopy.get(profileName);
+			JsonNode node = profileCopy.get(JsonNodeFactories.string(profileName));
+			//keep data that we don't modify
 			if (node != null && node.hasFields()) {
 				List<JsonField> fieldList = node.getFieldList();
 				Iterator<JsonField> iter = fieldList.iterator();
@@ -460,6 +527,24 @@ public class Installer {
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, "There was a problem writing the launch profile,  is it write protected?", "Error", JOptionPane.ERROR_MESSAGE);
 				return false;
+			}
+
+			//update version info
+			File modpack = new File(gameDirectory, "modpack.json");
+			//modpack data
+			if (modpack.exists()) {
+				try {
+					Gson gson = new Gson();
+					LocalModpack local = gson.fromJson(new FileReader(modpack),
+							LocalModpack.class);
+					local.version = repo.minecraft.version;
+					FileWriter fileWriter = new FileWriter(modpack);
+					gson.toJson(local, fileWriter);
+					fileWriter.close();
+				} catch (Exception e) {
+					NwLogger.INSTALLER_LOGGER.warn("Could not read local modpack.json file of profile: " + profileName, e);
+					JOptionPane.showMessageDialog(null, "Error when reading existing modpack.json file!\nInstalltion will continue...", "Warning!", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 			return true;
 		} else {

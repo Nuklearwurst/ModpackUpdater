@@ -1,10 +1,10 @@
 package common.nw.creator.gui_legacy.pages;
 
+import common.nw.core.gui.IPageHandler;
+import common.nw.core.gui.PageHolder;
 import common.nw.creator.Creator;
 import common.nw.creator.IProgressListener;
 import common.nw.creator.gui.Reference;
-import common.nw.gui.IPageHandler;
-import common.nw.gui.PageHolder;
 
 import javax.swing.*;
 import java.awt.*;

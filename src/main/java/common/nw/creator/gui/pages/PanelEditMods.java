@@ -1,33 +1,34 @@
 package common.nw.creator.gui.pages;
 
+import common.nw.core.gui.IPageHandler;
+import common.nw.core.gui.PageHolder;
+import common.nw.core.modpack.ModInfo;
+import common.nw.core.modpack.ModpackValues;
+import common.nw.core.modpack.RepoMod;
+import common.nw.core.utils.DownloadHelper;
 import common.nw.creator.Creator;
-import common.nw.creator.gui.FileTransferHandler;
-import common.nw.creator.gui.IDropFileHandler;
 import common.nw.creator.gui.Reference;
-import common.nw.creator.gui.TableModelList;
-import common.nw.creator.gui.pages.dialog.DialogEditMod;
+import common.nw.creator.gui.dialog.DialogEditMod;
+import common.nw.creator.gui.table.ITableHolder;
+import common.nw.creator.gui.table.TableModelList;
+import common.nw.creator.gui.transfer.FileTransferHandler;
+import common.nw.creator.gui.transfer.IDropFileHandler;
 import common.nw.creator.gui_legacy.pages.dialog.EditBlackListDialog;
-import common.nw.creator.gui.pages.dialog.ITableHolder;
-import common.nw.gui.IPageHandler;
-import common.nw.gui.PageHolder;
-import common.nw.modpack.ModInfo;
-import common.nw.modpack.ModpackValues;
-import common.nw.modpack.RepoMod;
-import common.nw.utils.DownloadHelper;
 
 import javax.swing.*;
 import java.awt.*;
-import java.text.DateFormat;
-import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.*;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Nuklearwurst
  */
-public class PanelEditMods implements IPageHandler, IDropFileHandler, ITableHolder {
+public class PanelEditMods implements IPageHandler, IDropFileHandler, ITableHolder<RepoMod> {
 
 	private JButton btnNew;
 	private JButton btnEdit;
@@ -128,7 +129,7 @@ public class PanelEditMods implements IPageHandler, IDropFileHandler, ITableHold
 
 	private void hideFiles() {
 		if (hiddenFiles == null) {
-			hiddenFiles = new ArrayList<RepoMod>();
+			hiddenFiles = new ArrayList<>();
 		}
 		//hide mods
 		if (chbxHideMods.isSelected()) {
@@ -265,13 +266,13 @@ public class PanelEditMods implements IPageHandler, IDropFileHandler, ITableHold
 	}
 
 	@Override
-	public void setValue(int index, Object o) {
-		mods.set(index, (RepoMod) o);
+	public void setValue(int index, RepoMod o) {
+		mods.set(index, o);
 	}
 
 	@Override
-	public void addValue(Object o) {
-		mods.add((RepoMod) o);
+	public void addValue(RepoMod o) {
+		mods.add(o);
 	}
 
 	@Override
@@ -280,7 +281,7 @@ public class PanelEditMods implements IPageHandler, IDropFileHandler, ITableHold
 	}
 
 	@Override
-	public Object getValue(int index) {
+	public RepoMod getValue(int index) {
 		return mods.get(index);
 	}
 

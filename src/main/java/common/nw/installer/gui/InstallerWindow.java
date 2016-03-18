@@ -1,13 +1,12 @@
 package common.nw.installer.gui;
 
-import common.nw.gui.PageHolder;
+import common.nw.core.gui.PageHolder;
+import common.nw.core.modpack.ModpackValues;
+import common.nw.core.modpack.RepoModpack;
+import common.nw.core.modpack.VersionInfo;
+import common.nw.core.utils.Utils;
+import common.nw.core.utils.log.NwLogger;
 import common.nw.installer.Installer;
-import common.nw.installer.PrepackedInstall;
-import common.nw.modpack.ModpackValues;
-import common.nw.modpack.RepoModpack;
-import common.nw.modpack.VersionInfo;
-import common.nw.utils.Utils;
-import common.nw.utils.log.NwLogger;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -140,7 +139,7 @@ public class InstallerWindow {
 			// Install
 			setProgress("Starting installation...", 0);
 			Installer installer = new Installer(modpack,
-					page2.txtVersionName.getText(), page2.txtMinecraft.getText(),
+					page2.txtVersionName.getText(), page2.txtMinecraft.getText(), page0.txtUrl.getText(),
 					page2.chbxCreateProfile.isSelected(),
 					page0.chbxDownloadLibraries.isSelected());
 
@@ -157,25 +156,40 @@ public class InstallerWindow {
 			setProgress("Preparing Minecraft directories", 10);
 			if (!installer.createDirs()) {
 				errorMessage += "\nAn error occurred while creating directories! \nPlease check if you have permission!";
-				installFinish();
+				finishInstallation();
 				return;
 			}
 			setProgress("Downloading Minecraft Version file", 20);
 			if (!installer.createJson()) {
-				if (JOptionPane
-						.showConfirmDialog(
-								mainFrame,
-								"Failed creating version.json file! \nDo you want to try again?",
-								"Error", JOptionPane.YES_NO_OPTION,
-								JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION) {
+				if (JOptionPane.showConfirmDialog(mainFrame,
+						"Failed creating version.json file! \nDo you want to try again?",
+						"Error", JOptionPane.YES_NO_OPTION,
+						JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION) {
 					if (!installer.createJson()) {
-						errorMessage += "\nAn error occurred while creating version.json file! \nPlease check if you have permission! \nPlease  check your internet connection!";
-						installFinish();
+						errorMessage += "\nAn error occurred while creating version.json file! \nPlease  check your internet connection!";
+						finishInstallation();
 						return;
 					}
 				} else {
-					errorMessage += "\nAn error occurred while creating version.json file! \nPlease check if you have permission! \nPlease  check your internet connection!";
-					installFinish();
+					errorMessage += "\nAn error occurred while creating version.json file! \nPlease  check your internet connection!";
+					finishInstallation();
+					return;
+				}
+			}
+			setProgress("Writing Minecraft Version file", 35);
+			if (!installer.writeJson()) {
+				if (JOptionPane.showConfirmDialog(mainFrame,
+						"Failed saving version.json file! \nDo you want to try again?",
+						"Error", JOptionPane.YES_NO_OPTION,
+						JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION) {
+					if (!installer.writeJson()) {
+						errorMessage += "\nAn error occurred while saving version.json file! \nPlease check if you have permission!";
+						finishInstallation();
+						return;
+					}
+				} else {
+					errorMessage += "\nAn error occurred while creating version.json file! \nPlease check if you have permission!";
+					finishInstallation();
 					return;
 				}
 			}
@@ -189,14 +203,14 @@ public class InstallerWindow {
 						errorMessage += "\nAn error occurred while creating version.jar file! "
 								+ "\nPlease check if you have permission! "
 								+ "\nPlease  check your internet connection!";
-						installFinish();
+						finishInstallation();
 						return;
 					}
 				} else {
 					errorMessage += "\nAn error occurred while creating version.jar file! "
 							+ "\nPlease check if you have permission! "
 							+ "\nPlease  check your internet connection!";
-					installFinish();
+					finishInstallation();
 					return;
 				}
 			}
@@ -215,24 +229,24 @@ public class InstallerWindow {
 										+ "\nDo you want to continue anyway?",
 								"Error", JOptionPane.YES_NO_OPTION,
 								JOptionPane.ERROR_MESSAGE) != JOptionPane.YES_OPTION) {
-							installFinish();
+							finishInstallation();
 							return;
 						}
 					}
 				} else {
 					errorMessage += "\nAn error occurred while downloading libraries! \nPlease check if you have permission! \nPlease  check your internet connection!";
-					installFinish();
+					finishInstallation();
 					return;
 				}
 			}
 			setProgress("Creating profile...", 90);
 			if (!installer.createProfile(page2.txtProfile.getText(), profile_javaOptions, profile_gameDirectory, profile_updateFrequency)) {
 				errorMessage += "Failed to create profile! \nMake sure the minecraft launcher is not running!";
-				installFinish();
+				finishInstallation();
 				return;
 			}
 			setProgress("Installation Complete!", 100);
-			installFinish();
+			finishInstallation();
 		}
 
 	}
@@ -288,14 +302,6 @@ public class InstallerWindow {
 	 * error log
 	 */
 	private String errorMessage = "";
-
-	public InstallerWindow() {
-		this(false);
-	}
-
-	public InstallerWindow(boolean preset) {
-		this(preset ? PrepackedInstall.MODPACK_URL : null);
-	}
 
 	public InstallerWindow(String url) {
 		//Initialize UI
@@ -394,9 +400,9 @@ public class InstallerWindow {
 				btnNext.setEnabled(true);
 				btnNext.setText("Finish");
 				if (errorMessage == null || errorMessage.isEmpty()) {
-					page4.txtpnFinish.setText("Installation finished without any errors!");
+					page4.setNoErrors();
 				} else {
-					page4.txtpnFinish.setText("Installation errored! \n" + errorMessage);
+					page4.setInstallErrorred(errorMessage);
 				}
 				break;
 		}
@@ -432,7 +438,7 @@ public class InstallerWindow {
 	 * open a dialog to configure profile settings
 	 */
 	protected void openProfileSettingsDialog() {
-		DialogProfileSettings dialog = new DialogProfileSettings(mainFrame, true, this);
+		DialogProfileSettings dialog = new DialogProfileSettings(mainFrame, this);
 		dialog.setVisible(true);
 	}
 
@@ -448,7 +454,7 @@ public class InstallerWindow {
 	/**
 	 * finish installing (and open next page)
 	 */
-	private void installFinish() {
+	private void finishInstallation() {
 		installing = false;
 		nextPage();
 	}
@@ -466,7 +472,7 @@ public class InstallerWindow {
 					NwLogger.INSTALLER_LOGGER.error("Error when setting Look and Feel!", t);
 				}
 				try {
-					InstallerWindow window = new InstallerWindow();
+					InstallerWindow window = new InstallerWindow(null);
 					window.mainFrame.pack();
 					window.mainFrame.setVisible(true);
 				} catch (Exception e) {

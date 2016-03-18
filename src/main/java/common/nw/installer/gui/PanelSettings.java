@@ -9,10 +9,11 @@ import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import common.nw.gui.IExtendedPageHandler;
-import common.nw.gui.PageHolder;
-import common.nw.utils.Utils;
-import common.nw.utils.log.NwLogger;
+import common.nw.core.gui.IExtendedPageHandler;
+import common.nw.core.gui.PageHolder;
+import common.nw.core.utils.SwingUtils;
+import common.nw.core.utils.Utils;
+import common.nw.core.utils.log.NwLogger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,7 +55,7 @@ public class PanelSettings implements IExtendedPageHandler {
 				if (!folder.exists()) {
 					folder = new File(Utils.getMinecraftDir());
 				}
-				String s = Utils.openFolder(panel_settings, folder);
+				String s = SwingUtils.openFolder(panel_settings, folder);
 				if (s != null) {
 					txtMinecraft.setText(s);
 				}
@@ -130,7 +131,7 @@ public class PanelSettings implements IExtendedPageHandler {
 		//getData
 		HashMap<JsonStringNode, JsonNode> profileCopy = Maps.newHashMap(jsonProfileData.getNode("profiles").getFields());
 		//format values to String array
-		ArrayList<String> options = new ArrayList<String>();
+		ArrayList<String> options = new ArrayList<>();
 		for (JsonStringNode node : profileCopy.keySet()) {
 			options.add(node.getText());
 		}

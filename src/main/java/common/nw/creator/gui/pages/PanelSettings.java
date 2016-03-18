@@ -1,12 +1,12 @@
 package common.nw.creator.gui.pages;
 
+import common.nw.core.gui.IPageHandler;
+import common.nw.core.gui.PageHolder;
+import common.nw.core.utils.SwingUtils;
 import common.nw.creator.Creator;
 import common.nw.creator.gui.CreatorWindow;
 import common.nw.creator.gui.Reference;
 import common.nw.creator.properties.CreatorProperties;
-import common.nw.gui.IPageHandler;
-import common.nw.gui.PageHolder;
-import common.nw.utils.Utils;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -74,7 +74,7 @@ public class PanelSettings implements IPageHandler {
 		btnOpenOutput.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String file = Utils.openFileOrDirectoryWithDefaultFileName(
+				String file = SwingUtils.openFileOrDirectoryWithDefaultFileName(
 						panel_settings, null, "modpack.json");
 				if (file != null) {
 					txtOutput.setText(file);
@@ -86,7 +86,7 @@ public class PanelSettings implements IPageHandler {
 		btnOpenFiles.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String file = Utils.openFolder(panel_settings, null);
+				String file = SwingUtils.openFolder(panel_settings, null);
 				if (file != null) {
 					txtFiles.setText(file);
 				}

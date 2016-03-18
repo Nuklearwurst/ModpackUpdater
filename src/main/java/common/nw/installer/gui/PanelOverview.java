@@ -1,7 +1,8 @@
 package common.nw.installer.gui;
 
-import common.nw.gui.IExtendedPageHandler;
-import common.nw.gui.PageHolder;
+
+import common.nw.core.gui.IExtendedPageHandler;
+import common.nw.core.gui.PageHolder;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -25,9 +26,7 @@ public class PanelOverview implements IExtendedPageHandler {
 					if (Desktop.isDesktopSupported()) {
 						try {
 							Desktop.getDesktop().browse(e.getURL().toURI());
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						} catch (URISyntaxException e1) {
+						} catch (IOException | URISyntaxException e1) {
 							e1.printStackTrace();
 						}
 					}

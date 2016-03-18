@@ -2,13 +2,13 @@ package common.nw.updater;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import common.nw.core.modpack.*;
+import common.nw.core.utils.DownloadHelper;
+import common.nw.core.utils.UpdateResult;
+import common.nw.core.utils.Utils;
+import common.nw.core.utils.log.NwLogger;
 import common.nw.installer.Installer;
-import common.nw.modpack.*;
 import common.nw.updater.gui.IProgressWatcher;
-import common.nw.utils.DownloadHelper;
-import common.nw.utils.UpdateResult;
-import common.nw.utils.Utils;
-import common.nw.utils.log.NwLogger;
 import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -33,14 +33,14 @@ public class Updater {
 	/**
 	 * the minecraft profile name
 	 */
-	private String profileName;
+	private String versionName;
 	/**
 	 * the minecraft game directory to update into
 	 */
 	private File gameDir;
 
 	/**
-	 * configuration flags<br>
+	 * configuration flags of outr instance (are we on a server/client/etc.)<br>
 	 *
 	 * @see {@link RepoMod#fileType}
 	 */
@@ -91,10 +91,10 @@ public class Updater {
 
 	private UpdateThread updateThread = null;
 
-	public Updater(List<String> args, File gameDir, String profile) {
+	public Updater(List<String> args, File gameDir, String versionName) {
 		this.args = args;
 		this.gameDir = gameDir;
-		this.profileName = profile;
+		this.versionName = versionName;
 	}
 
 	/**
@@ -319,7 +319,7 @@ public class Updater {
 					.accepts("modpackversion")
 					.withRequiredArg().ofType(String.class);
 			ArgumentAcceptingOptionSpec<Boolean> serverOption = optionParser
-					.accepts("server").withOptionalArg().ofType(Boolean.class).defaultsTo(true);
+					.accepts("serverMode").withOptionalArg().ofType(Boolean.class).defaultsTo(true);
 
 			optionParser.allowsUnrecognizedOptions();
 			OptionSet options = optionParser.parse(args.toArray(new String[args
@@ -331,6 +331,12 @@ public class Updater {
 			if (options.has(serverOption)) {
 				if (serverOption.value(options)) {
 					logger.info("Applying server specific settings!");
+					flags |= FLAG_SERVER;
+				}
+			} else {
+				if (versionName == null) {
+					//assume that we are on a server
+					//as we have no profile and none of the passed parameters indicate a client
 					flags |= FLAG_SERVER;
 				}
 			}
@@ -422,7 +428,7 @@ public class Updater {
 	 */
 	private boolean readLocalData() {
 		if (mods == null) {
-			mods = new ArrayList<ModInfo>();
+			mods = new ArrayList<>();
 		}
 		// no mods found
 		//continue updating
@@ -540,25 +546,25 @@ public class Updater {
 		String[] options = {"Install", "Continue without installing",
 				"Quit to launcher"};
 		int ans = listener.showOptionDialog(
-				"A new Modpack version is available. Do you want to install it?\nThis is not required on the server!!",
+				"A new Modpack version is available. Do you want to install it?\nCurrent Version: " + local.version
+						+ ", New Version: " + remote.minecraft.version + "\nThis is not required on the server!!",
 				"Update", JOptionPane.YES_NO_CANCEL_OPTION,
 				JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 		//install the new version
 		if (ans == JOptionPane.YES_OPTION) {
 			listener.setDownloadProgress("Installing new Version", 0);
 			String mcDir;
-			JFileChooser fc = new JFileChooser(Utils.getMinecraftDir());
-			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-				mcDir = fc.getSelectedFile().getAbsolutePath();
+
+			File selection = listener.selectFile(Utils.getMinecraftDir(), JFileChooser.DIRECTORIES_ONLY, "Select .minecraft directory!");
+			if (selection != null) {
+				mcDir = selection.getAbsolutePath();
 			} else {
 				warningMessage = warningMessage
 						+ "\nUser cancelled modpack update!";
 				return false;
 			}
 
-			Installer installer = new Installer(remote, remote.modpackName
-					+ "-" + remote.minecraft.version, mcDir, false, true);
+			Installer installer = new Installer(remote, versionName, mcDir, local.url, false, true);
 
 			listener.setDownloadProgress("Creating directories...", 10);
 			if (!installer.createDirs()) {
@@ -568,6 +574,13 @@ public class Updater {
 			}
 			listener.setDownloadProgress("Creating version .json...", 20);
 			if (!installer.createJson()) {
+				warningMessage = warningMessage
+						+ "\nError when creating version.json file.";
+				errored = true;
+				return false;
+			}
+			listener.setDownloadProgress("Writing version .json...", 40);
+			if (!installer.writeJson()) {
 				warningMessage = warningMessage
 						+ "\nError when creating version.json file.";
 				errored = true;
@@ -586,18 +599,9 @@ public class Updater {
 						+ "\nError when downloading updater.\nRun the installer manually if you experience problems";
 				errored = true;
 				//do not return as error is not critical
-//				return true;
-			}
-			listener.setDownloadProgress("Creating profile", 90);
-			//updating existing minecraft profile
-			//currently unused, probably not needed as existing version can be Overwritten
-			//TODO decide about profile creation
-			if (!installer.createProfile(profileName, null, null, -1)) {
-				warningMessage = warningMessage + "\nError when creating profile.";
-				errored = true;
-				//do not return as the error is not critical
 			}
 
+			//no profile stuff as launcher will discard any changes
 			//settings new version information
 			local.version = remote.minecraft.version;
 			listener.setDownloadProgress("Installation Complete!", 100);
@@ -607,8 +611,7 @@ public class Updater {
 				return false;
 			}
 
-			if (listener.showConfirmDialog(
-					"You have to select the new Version in the Minecraft Launcher!\nDo you want to continue without updating?", "Question", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+			if (listener.showConfirmDialog("You have to select the new Version in the Minecraft Launcher!\nDo you want to continue without updating?", "Question", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 				return false;
 			} else {
 				quitToLauncher = true;
@@ -635,7 +638,7 @@ public class Updater {
 	 * downloaded by the updater and not being on the blacklist )
 	 */
 	private boolean deleteOldMods() {
-		List<ModInfo> modsToDelete = new ArrayList<ModInfo>();
+		List<ModInfo> modsToDelete = new ArrayList<>();
 		// blacklist
 		if (remote.blacklist != null) {
 			for (RepoMod mod : remote.blacklist) {
@@ -672,7 +675,7 @@ public class Updater {
 	 * downloads all mods that need an update
 	 */
 	private boolean updateMods() {
-		List<ModInfo> modsToUpdate = new ArrayList<ModInfo>();
+		List<ModInfo> modsToUpdate = new ArrayList<>();
 
 		for (ModInfo mod : mods) {
 			if (mod.needUpdate()) {
@@ -783,8 +786,8 @@ public class Updater {
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	private boolean save() {
 		// setting new variables
-		local.files = new ArrayList<String>();
-		local.trackedFileVersions = new HashMap<String, String>();
+		local.files = new ArrayList<>();
+		local.trackedFileVersions = new HashMap<>();
 
 		for (ModInfo mod : mods) {
 			if (!mod.shouldBeDeleted()) {

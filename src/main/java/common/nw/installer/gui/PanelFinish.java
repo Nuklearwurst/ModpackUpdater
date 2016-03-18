@@ -1,7 +1,8 @@
 package common.nw.installer.gui;
 
-import common.nw.gui.IExtendedPageHandler;
-import common.nw.gui.PageHolder;
+
+import common.nw.core.gui.IExtendedPageHandler;
+import common.nw.core.gui.PageHolder;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -15,6 +16,7 @@ public class PanelFinish implements IExtendedPageHandler {
 	private JTextPane txtpnInstructions;
 	private JTextField txtExampleJVMOptions;
 	private JPanel panel_finish;
+	private JLabel lblJVMArgs;
 
 	public PanelFinish() {
 		txtpnFinish.setBackground(SystemColor.menu);
@@ -40,6 +42,22 @@ public class PanelFinish implements IExtendedPageHandler {
 	@Override
 	public JPanel getPanel() {
 		return panel_finish;
+	}
+
+	public void setNoErrors() {
+		txtpnFinish.setText("Installation finished without any errors!");
+		txtpnFinish.setBackground(SystemColor.menu);
+		txtpnInstructions.setVisible(true);
+		txtExampleJVMOptions.setVisible(true);
+		lblJVMArgs.setVisible(true);
+	}
+
+	public void setInstallErrorred(String errorMessage) {
+		txtpnFinish.setText("Installation errored! \n" + errorMessage);
+		txtpnFinish.setBackground(new Color(255, 187, 187));
+		txtpnInstructions.setVisible(false);
+		txtExampleJVMOptions.setVisible(false);
+		lblJVMArgs.setVisible(false);
 	}
 
 	{
@@ -69,14 +87,14 @@ public class PanelFinish implements IExtendedPageHandler {
 		gbc.gridy = 1;
 		gbc.fill = GridBagConstraints.BOTH;
 		panel_finish.add(txtpnInstructions, gbc);
-		final JLabel label1 = new JLabel();
-		label1.setText("Example JVM arguments:");
+		lblJVMArgs = new JLabel();
+		lblJVMArgs.setText("Example JVM arguments:");
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 2;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(4, 0, 0, 0);
-		panel_finish.add(label1, gbc);
+		panel_finish.add(lblJVMArgs, gbc);
 		txtExampleJVMOptions = new JTextField();
 		txtExampleJVMOptions.setEditable(false);
 		txtExampleJVMOptions.setText("-Xmx2G -XX:PermSize=256m -XX:MaxPermSize=512m");

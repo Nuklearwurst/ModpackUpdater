@@ -1,11 +1,12 @@
 package common.nw.updater;
 
+import common.nw.core.utils.log.NwLogger;
 import common.nw.updater.gui.IProgressWatcher;
-import common.nw.utils.log.NwLogger;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
@@ -57,6 +58,15 @@ public class ConsoleListener implements IProgressWatcher {
 
 	@Override
 	public Component getGui() {
+		return null;
+	}
+
+	@Override
+	public File selectFile(String minecraftDir, int directoriesOnly, String s) {
+		String ret = showInputDialog(s);
+		if (ret != null && !ret.isEmpty()) {
+			return new File(ret);
+		}
 		return null;
 	}
 

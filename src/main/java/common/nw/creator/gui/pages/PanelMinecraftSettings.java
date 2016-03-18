@@ -3,13 +3,15 @@ package common.nw.creator.gui.pages;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import common.nw.core.gui.IPageHandler;
+import common.nw.core.gui.PageHolder;
+import common.nw.core.modpack.Library;
+import common.nw.core.modpack.ModpackValues;
 import common.nw.creator.Creator;
 import common.nw.creator.gui.CreatorWindow;
 import common.nw.creator.gui.Reference;
+import common.nw.creator.gui.dialog.DialogEditLibraries;
 import common.nw.creator.gui_legacy.pages.dialog.EditArgumentsDialog;
-import common.nw.gui.IPageHandler;
-import common.nw.gui.PageHolder;
-import common.nw.modpack.ModpackValues;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,9 +24,13 @@ import java.awt.event.ActionListener;
 public class PanelMinecraftSettings implements IPageHandler {
 
 	private JTextField txtVersion;
+
 	private JRadioButton rdbtnDownloadJar;
 	private JRadioButton rdbtnForgeJar;
+
 	private JRadioButton rdbtnDownloadJson;
+	private JRadioButton rdbtnJsonAutoCreate;
+
 	private JTextField txtJar;
 	private JTextField txtJson;
 	private JTextField txtInstallInfo;
@@ -32,7 +38,6 @@ public class PanelMinecraftSettings implements IPageHandler {
 	private JButton btnEditArguments;
 	private JButton btnEditLibraries;
 	private JPanel panel_minecraft_settings;
-	private JRadioButton WIPRadioButton;
 	private ButtonGroup btnGroupJson;
 	private ButtonGroup btnGroupJar;
 
@@ -62,9 +67,42 @@ public class PanelMinecraftSettings implements IPageHandler {
 		});
 
 		rdbtnDownloadJson.setActionCommand(ModpackValues.jsonDirectDownload);
+		rdbtnJsonAutoCreate.setActionCommand(ModpackValues.jsonGenerate);
 
 		rdbtnDownloadJar.setActionCommand(ModpackValues.jarDirectDownload);
 		rdbtnForgeJar.setActionCommand(ModpackValues.jarForgeInherit);
+
+		rdbtnDownloadJson.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				updateJsonGenerated(false);
+			}
+		});
+
+		rdbtnJsonAutoCreate.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				updateJsonGenerated(true);
+				createDefaultLibs();
+			}
+		});
+
+		rdbtnForgeJar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setJsonGeneratedTypeEnabled(true);
+				setJsonUpdateType(ModpackValues.jsonGenerate);
+				createDefaultLibs();
+			}
+		});
+
+		rdbtnDownloadJar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setJsonGeneratedTypeEnabled(false);
+				setJsonUpdateType(ModpackValues.jsonDirectDownload);
+			}
+		});
 	}
 
 	private String getJsonUpdateType() {
@@ -90,26 +128,91 @@ public class PanelMinecraftSettings implements IPageHandler {
 		if (type == null || type.isEmpty()) {
 			type = ModpackValues.jsonDirectDownload;
 		}
-		if (type.equals(ModpackValues.jsonDirectDownload)) {
-			rdbtnDownloadJson.setSelected(true);
-		} else {
-			rdbtnDownloadJson.setSelected(true);
+		switch (type) {
+			case ModpackValues.jsonDirectDownload:
+				rdbtnDownloadJson.setSelected(true);
+				updateJsonGenerated(false);
+				break;
+			case ModpackValues.jsonGenerate:
+				rdbtnJsonAutoCreate.setSelected(true);
+				updateJsonGenerated(true);
+				break;
+			default:
+				rdbtnDownloadJson.setSelected(true);
+				updateJsonGenerated(false);
+				break;
 		}
+	}
+
+	/**
+	 * sets enabled status of json type buttons
+	 */
+	private void setJsonGeneratedTypeEnabled(boolean b) {
+		rdbtnDownloadJson.setEnabled(b);
+		rdbtnJsonAutoCreate.setEnabled(b);
+	}
+
+	private void createDefaultLibs() {
+		if (!creator.defaultLibrariesGenerated) {
+			Library updater = Library.createUpdaterLibrary(Reference.DEFAULT_UPDATER_VERSION);
+			JOptionPane.showMessageDialog(frame, "A default library has been added!");
+			Dialog d = new DialogEditLibraries(creator.modpack.minecraft.libraries, frame, updater);
+			d.pack();
+			d.setVisible(true);
+			creator.defaultLibrariesGenerated = true;
+		}
+
 	}
 
 	/**
 	 * used for import, sets the radio buttons
 	 */
+	@SuppressWarnings("Duplicates")
 	private void setJarUpdateType(String type) {
 		if (type == null || type.isEmpty()) {
 			type = ModpackValues.jarDirectDownload;
 		}
-		if (type.equals(ModpackValues.jarDirectDownload)) {
-			rdbtnDownloadJar.setSelected(true);
-		} else if (type.equals(ModpackValues.jarForgeInherit)) {
-			rdbtnForgeJar.setSelected(true);
+		switch (type) {
+			case ModpackValues.jarDirectDownload:
+				rdbtnDownloadJar.setSelected(true);
+
+				setJsonGeneratedTypeEnabled(false);
+				rdbtnDownloadJson.setSelected(true);
+				updateJsonGenerated(false);
+
+				break;
+			case ModpackValues.jarForgeInherit:
+				rdbtnForgeJar.setSelected(true);
+
+				setJsonGeneratedTypeEnabled(true);
+				rdbtnJsonAutoCreate.setSelected(true);
+
+				updateJsonGenerated(true);
+				break;
+			default:
+				rdbtnDownloadJar.setSelected(true);
+
+				setJsonGeneratedTypeEnabled(false);
+				rdbtnDownloadJson.setSelected(true);
+				updateJsonGenerated(false);
+				break;
+		}
+	}
+
+	/**
+	 * sets json mode generated (or not)
+	 * <p/>
+	 * depending on the value json textfield etc will get updated
+	 * true --> textfield gets disabled and text gets replaced
+	 * false --> textfields will be enabled and text cleared
+	 */
+	private void updateJsonGenerated(boolean generated) {
+		if (generated) {
+			txtJson.setEnabled(false);
+			txtJson.setText("-- generated --");
 		} else {
-			rdbtnDownloadJar.setSelected(true);
+			txtJson.setEnabled(true);
+			txtJson.setText("");
 		}
 	}
 
@@ -118,6 +221,7 @@ public class PanelMinecraftSettings implements IPageHandler {
 	 */
 	private void editArguments() {
 		Dialog d = new EditArgumentsDialog(creator.modpack.minecraft.arguments, frame, true);
+		d.pack();
 		d.setVisible(true);
 	}
 
@@ -125,7 +229,9 @@ public class PanelMinecraftSettings implements IPageHandler {
 	 * opens the edit libraries dialog
 	 */
 	private void editLibraries() {
-		JOptionPane.showMessageDialog(panel_minecraft_settings, "No implemented yet!");
+		Dialog d = new DialogEditLibraries(creator.modpack.minecraft.libraries, frame);
+		d.pack();
+		d.setVisible(true);
 	}
 
 	@Override
@@ -175,7 +281,11 @@ public class PanelMinecraftSettings implements IPageHandler {
 			creator.modpack.minecraft.jarUpdateType = this.getJarUpdateType();
 			creator.modpack.minecraft.jsonUpdateType = this.getJsonUpdateType();
 			creator.modpack.minecraft.versionName = this.txtJar.getText();
-			creator.modpack.minecraft.jsonName = this.txtJson.getText();
+			if (creator.modpack.minecraft.jsonUpdateType.equals(ModpackValues.jsonGenerate)) {
+				creator.modpack.minecraft.jsonName = null;
+			} else {
+				creator.modpack.minecraft.jsonName = this.txtJson.getText();
+			}
 			creator.modpack.minecraft.version = this.txtVersion.getText();
 			creator.modpack.minecraft.installInfoUrl = this.txtInstallInfo.getText();
 		}
@@ -258,16 +368,17 @@ public class PanelMinecraftSettings implements IPageHandler {
 		rdbtnForgeJar = new JRadioButton();
 		rdbtnForgeJar.setText("Forge");
 		panel_minecraft_settings.add(rdbtnForgeJar, new GridConstraints(1, 2, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		WIPRadioButton = new JRadioButton();
-		WIPRadioButton.setEnabled(false);
-		WIPRadioButton.setText("WIP");
-		panel_minecraft_settings.add(WIPRadioButton, new GridConstraints(2, 2, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		rdbtnJsonAutoCreate = new JRadioButton();
+		rdbtnJsonAutoCreate.setEnabled(false);
+		rdbtnJsonAutoCreate.setText("Generate");
+		rdbtnJsonAutoCreate.setToolTipText("Auto-generates version json-file.\nOnly available when using Forge-jar-type.");
+		panel_minecraft_settings.add(rdbtnJsonAutoCreate, new GridConstraints(2, 2, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		btnGroupJar = new ButtonGroup();
 		btnGroupJar.add(rdbtnDownloadJar);
 		btnGroupJar.add(rdbtnForgeJar);
 		btnGroupJson = new ButtonGroup();
 		btnGroupJson.add(rdbtnDownloadJson);
-		btnGroupJson.add(WIPRadioButton);
+		btnGroupJson.add(rdbtnJsonAutoCreate);
 	}
 
 	/**

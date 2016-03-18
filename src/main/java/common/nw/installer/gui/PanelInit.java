@@ -1,7 +1,9 @@
 package common.nw.installer.gui;
 
-import common.nw.gui.IExtendedPageHandler;
-import common.nw.gui.PageHolder;
+
+import common.nw.core.gui.IExtendedPageHandler;
+import common.nw.core.gui.PageHolder;
+import common.nw.core.utils.SwingUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +19,7 @@ public class PanelInit implements IExtendedPageHandler {
 
 	public PanelInit() {
 		txtInit.setBackground(SystemColor.menu);
+		txtUrl.setComponentPopupMenu(SwingUtils.createTextPopupMenu(txtUrl));
 	}
 
 	@Override

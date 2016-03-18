@@ -20,7 +20,7 @@
           <text value="To use the modpack select the versionname you chose in the profile editor under 'use Version'&#10;&#10;You might also want to change the Game-Directory and  JVM-arguments (for bigger modpacks)"/>
         </properties>
       </component>
-      <component id="ae28a" class="javax.swing.JLabel">
+      <component id="ae28a" class="javax.swing.JLabel" binding="lblJVMArgs">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag top="4" left="0" bottom="0" right="0" weightx="0.0" weighty="0.0"/>

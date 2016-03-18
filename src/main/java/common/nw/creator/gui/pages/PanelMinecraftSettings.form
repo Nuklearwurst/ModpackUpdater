@@ -163,13 +163,14 @@
           <text value="Forge"/>
         </properties>
       </component>
-      <component id="861a1" class="javax.swing.JRadioButton" binding="WIPRadioButton" default-binding="true">
+      <component id="861a1" class="javax.swing.JRadioButton" binding="rdbtnJsonAutoCreate">
         <constraints>
           <grid row="2" column="2" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <enabled value="false"/>
-          <text value="WIP"/>
+          <text value="Generate"/>
+          <toolTipText value="Auto-generates version json-file.&#10;Only available when using Forge-jar-type."/>
         </properties>
       </component>
     </children>
