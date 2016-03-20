@@ -1,7 +1,6 @@
-package common.nw.installer.gui;
+package common.nw.installer.gui.pages;
 
 
-import common.nw.core.gui.IExtendedPageHandler;
 import common.nw.core.gui.PageHolder;
 
 import javax.swing.*;
@@ -14,9 +13,9 @@ import java.net.URISyntaxException;
 /**
  * @author Nuklearwurst
  */
-public class PanelOverview implements IExtendedPageHandler {
+public class PanelOverview implements PageHolder.IExtendedPageHandler {
 	private JPanel panel_overview;
-	protected JEditorPane txtpnModpackInfo;
+	public JEditorPane txtpnModpackInfo;
 
 	public PanelOverview() {
 		txtpnModpackInfo.addHyperlinkListener(new HyperlinkListener() {

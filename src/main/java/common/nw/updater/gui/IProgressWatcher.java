@@ -1,5 +1,7 @@
 package common.nw.updater.gui;
 
+import common.nw.core.gui.IDownloadProgressListener;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;

@@ -1,11 +1,10 @@
 package common.nw.creator.gui.pages;
 
-import common.nw.core.gui.IPageHandler;
 import common.nw.core.gui.PageHolder;
 import common.nw.core.utils.SwingUtils;
 import common.nw.creator.Creator;
 import common.nw.creator.gui.CreatorWindow;
-import common.nw.creator.gui.Reference;
+import common.nw.creator.util.Reference;
 import common.nw.creator.properties.CreatorProperties;
 
 import javax.swing.*;
@@ -18,7 +17,7 @@ import java.io.File;
 /**
  * @author Nuklearwurst
  */
-public class PanelSettings implements IPageHandler {
+public class PanelSettings implements PageHolder.IPageHandler {
 	private JPanel panel_settings;
 	private JTextField txtName;
 	private JTextField txtOutput;

@@ -7,6 +7,8 @@ import common.nw.core.modpack.VersionInfo;
 import common.nw.core.utils.Utils;
 import common.nw.core.utils.log.NwLogger;
 import common.nw.installer.Installer;
+import common.nw.installer.gui.dialog.DialogProfileSettings;
+import common.nw.installer.gui.pages.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -270,7 +272,7 @@ public class InstallerWindow {
 	///////////
 	private final PanelInit page0;
 	private final PanelOverview page1;
-	protected final PanelSettings page2;
+	public final PanelSettings page2;
 	private final PanelLoading page3;
 	private final PanelFinish page4;
 
@@ -292,7 +294,7 @@ public class InstallerWindow {
 	public String profile_javaOptions;
 	@SuppressWarnings({"WeakerAccess", "CanBeFinal"})
 	public int profile_updateFrequency = 0;
-	protected RepoModpack modpack;
+	public RepoModpack modpack;
 
 	/**
 	 * true when an installation or download is in progress
@@ -438,7 +440,7 @@ public class InstallerWindow {
 	/**
 	 * open a dialog to configure profile settings
 	 */
-	protected void openProfileSettingsDialog() {
+	public void openProfileSettingsDialog() {
 		DialogProfileSettings dialog = new DialogProfileSettings(mainFrame, this);
 		dialog.setVisible(true);
 	}

@@ -1,7 +1,6 @@
-package common.nw.installer.gui;
+package common.nw.installer.gui.pages;
 
 
-import common.nw.core.gui.IExtendedPageHandler;
 import common.nw.core.gui.PageHolder;
 
 import javax.swing.*;
@@ -10,9 +9,9 @@ import java.awt.*;
 /**
  * @author Nuklearwurst
  */
-public class PanelLoading implements IExtendedPageHandler {
-	protected JProgressBar progressbar;
-	protected JLabel lblProgress;
+public class PanelLoading implements PageHolder.IExtendedPageHandler {
+	public JProgressBar progressbar;
+	public JLabel lblProgress;
 	private JPanel panel_loading;
 
 	@Override

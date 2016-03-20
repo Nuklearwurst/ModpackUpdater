@@ -1,4 +1,4 @@
-package common.nw.installer.gui;
+package common.nw.installer.gui.pages;
 
 import argo.jdom.JdomParser;
 import argo.jdom.JsonNode;
@@ -9,11 +9,12 @@ import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import common.nw.core.gui.IExtendedPageHandler;
 import common.nw.core.gui.PageHolder;
 import common.nw.core.utils.SwingUtils;
 import common.nw.core.utils.Utils;
 import common.nw.core.utils.log.NwLogger;
+import common.nw.installer.gui.dialog.DialogProfileSettings;
+import common.nw.installer.gui.InstallerWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,14 +28,14 @@ import java.util.Map;
 /**
  * @author Nuklearwurst
  */
-public class PanelSettings implements IExtendedPageHandler {
+public class PanelSettings implements PageHolder.IExtendedPageHandler {
 	private JTextPane txtpnInstallerSettings;
-	protected JTextField txtVersionName;
+	public JTextField txtVersionName;
 	private JButton btnModpackName;
-	protected JTextField txtMinecraft;
+	public JTextField txtMinecraft;
 	private JButton btnOpen;
-	protected JCheckBox chbxCreateProfile;
-	protected JTextField txtProfile;
+	public JCheckBox chbxCreateProfile;
+	public JTextField txtProfile;
 	private JButton btnProfileSettings;
 	private JPanel panel_settings;
 	private JLabel lblProfile;

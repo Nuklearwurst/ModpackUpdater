@@ -1,9 +1,9 @@
 package common.nw.core.utils;
 
+import common.nw.core.gui.IDownloadProgressListener;
 import common.nw.core.modpack.ModInfo;
 import common.nw.core.utils.log.NwLogger;
 import common.nw.updater.Updater;
-import common.nw.updater.gui.IDownloadProgressListener;
 import common.nw.updater.gui.IProgressWatcher;
 
 import java.io.*;
@@ -12,6 +12,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.util.zip.ZipEntry;
@@ -44,6 +46,23 @@ public class DownloadHelper {
 		return result;
 	}
 
+	public static boolean downloadFileNIO(String url, File out) {
+		URL website;
+		try {
+			website = new URL(url);
+		} catch (MalformedURLException e) {
+			NwLogger.NW_LOGGER.error("Malformed url!", e);
+			return false;
+		}
+		try (InputStream in = website.openStream()) {
+			Files.copy(in, out.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			NwLogger.NW_LOGGER.error("Error downloading!", e);
+			return false;
+		}
+		return true;
+	}
+
 	public static boolean downloadFile(String url, File out) {
 		URLConnection http;
 		InputStream httpInputStream = null;
@@ -53,8 +72,7 @@ public class DownloadHelper {
 			byte[] buffer = new byte[4096];
 			http = new URL(url).openConnection();
 			http.setReadTimeout(10000);
-			http.addRequestProperty("User-Agent",
-					"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)");
+			http.addRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)");
 
 			httpInputStream = http.getInputStream();
 			int contentLength = http.getContentLength();
@@ -110,6 +128,17 @@ public class DownloadHelper {
 
 	}
 
+	/**
+	 * downloads the given mod.</br>
+	 *
+	 * @param listener         used to update progressbar information
+	 * @param mod              the mod to download
+	 * @param modNumber        number of the mod, used for progressbar information
+	 * @param modValue         how much progress one mod is, --> used to set overall progress
+	 * @param baseDir          base directory of this minecraft instance
+	 * @param ignoreDuplicates if set to false this will try to use exsisting files by checking md5
+	 * @return success of the operation
+	 */
 	@SuppressWarnings("SameParameterValue")
 	public static UpdateResult getMod(IProgressWatcher listener, ModInfo mod,
 	                                  int modNumber, float modValue, File baseDir, boolean ignoreDuplicates) {

@@ -4,6 +4,7 @@ import common.nw.core.gui.PageHolder;
 import common.nw.core.utils.SwingUtils;
 import common.nw.core.utils.log.NwLogger;
 import common.nw.creator.Creator;
+import common.nw.creator.util.Reference;
 import common.nw.creator.gui.pages.PanelEditMods;
 import common.nw.creator.gui.pages.PanelInit;
 import common.nw.creator.gui.pages.PanelMinecraftSettings;

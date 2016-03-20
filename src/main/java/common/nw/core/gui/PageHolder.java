@@ -1,6 +1,6 @@
 package common.nw.core.gui;
 
-import common.nw.creator.gui.Reference;
+import common.nw.creator.util.Reference;
 
 import javax.swing.*;
 import java.awt.*;
@@ -90,11 +90,6 @@ public class PageHolder {
 		addPage(p, h, (String) h.getProperty(Reference.KEY_NAME));
 	}
 
-	@SuppressWarnings("unused")
-	public void addPageWithName(IPanel p, IPageHandler h) {
-		addPage(p.getPanel(), h, (String) h.getProperty(Reference.KEY_NAME));
-	}
-
 	public void addPage(IExtendedPageHandler p) {
 		addPage(p.getPanel(), p);
 	}
@@ -127,16 +122,6 @@ public class PageHolder {
 	public void addPage(JPanel p, IPageHandler handler) {
 		mainPanel.add(p);
 		this.handler.add(handler);
-	}
-
-	@SuppressWarnings("unused")
-	public void addPage(IPanel p, IPageHandler handler) {
-		addPage(p.getPanel(), handler);
-	}
-
-	@SuppressWarnings("unused")
-	public void addPage(IPanel p, IPageHandler handler, String s) {
-		addPage(p.getPanel(), handler, s);
 	}
 
 	public void addPage(JPanel p, IPageHandler handler, String s) {
@@ -280,5 +265,36 @@ public class PageHolder {
 
 	public JPanel getPanel() {
 		return mainPanel;
+	}
+
+	/**
+	 * update listener, get notified whenever the page changes
+	 */
+	@SuppressWarnings("WeakerAccess")
+	public interface IPageUpdateListener {
+		void onPageChanged(PageHolder holder, IPageHandler handler);
+	}
+
+	/**
+	 * receives callbacks on page changes etc.
+	 */
+	public interface IPageHandler {
+
+		Object getProperty(String s);
+
+		void onPageOpened(PageHolder holder, boolean forward);
+
+		@SuppressWarnings("UnusedParameters")
+		boolean onPageClosed(PageHolder holder, boolean forward);
+
+	}
+
+	/**
+	 * Extension to {@link IPageHandler} that also provides a {@link JPanel}
+	 *
+	 * @author Nuklearwurst
+	 */
+	public interface IExtendedPageHandler extends IPageHandler {
+		JPanel getPanel();
 	}
 }

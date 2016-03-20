@@ -1,12 +1,11 @@
 package common.nw.creator.gui.pages;
 
 import com.google.gson.Gson;
-import common.nw.core.gui.IPageHandler;
 import common.nw.core.gui.PageHolder;
 import common.nw.core.modpack.RepoModpack;
 import common.nw.core.utils.SwingUtils;
 import common.nw.creator.Creator;
-import common.nw.creator.gui.Reference;
+import common.nw.creator.util.Reference;
 import common.nw.creator.gui.transfer.IDropFileHandler;
 import common.nw.creator.properties.CreatorProperties;
 
@@ -21,7 +20,7 @@ import java.io.FileReader;
 /**
  * @author Nuklearwurst
  */
-public class PanelInit implements IPageHandler, IDropFileHandler {
+public class PanelInit implements PageHolder.IPageHandler, IDropFileHandler {
 	private JRadioButton rdbtnCreate;
 	private JPanel panel_init;
 	private JRadioButton rdbtnLoad;

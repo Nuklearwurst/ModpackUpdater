@@ -1,7 +1,6 @@
-package common.nw.installer.gui;
+package common.nw.installer.gui.pages;
 
 
-import common.nw.core.gui.IExtendedPageHandler;
 import common.nw.core.gui.PageHolder;
 
 import javax.swing.*;
@@ -11,7 +10,7 @@ import java.awt.*;
 /**
  * @author Nuklearwurst
  */
-public class PanelFinish implements IExtendedPageHandler {
+public class PanelFinish implements PageHolder.IExtendedPageHandler {
 	private JTextPane txtpnFinish;
 	private JTextPane txtpnInstructions;
 	private JTextField txtExampleJVMOptions;

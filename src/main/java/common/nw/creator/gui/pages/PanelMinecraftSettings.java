@@ -3,13 +3,12 @@ package common.nw.creator.gui.pages;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import common.nw.core.gui.IPageHandler;
 import common.nw.core.gui.PageHolder;
 import common.nw.core.modpack.Library;
 import common.nw.core.modpack.ModpackValues;
 import common.nw.creator.Creator;
 import common.nw.creator.gui.CreatorWindow;
-import common.nw.creator.gui.Reference;
+import common.nw.creator.util.Reference;
 import common.nw.creator.gui.dialog.DialogEditLibraries;
 import common.nw.creator.gui_legacy.pages.dialog.EditArgumentsDialog;
 
@@ -21,7 +20,7 @@ import java.awt.event.ActionListener;
 /**
  * @author Nuklearwurst
  */
-public class PanelMinecraftSettings implements IPageHandler {
+public class PanelMinecraftSettings implements PageHolder.IPageHandler {
 
 	private JTextField txtVersion;
 

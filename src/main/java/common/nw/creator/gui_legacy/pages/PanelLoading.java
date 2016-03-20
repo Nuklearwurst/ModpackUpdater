@@ -1,16 +1,14 @@
 package common.nw.creator.gui_legacy.pages;
 
-import common.nw.core.gui.IPageHandler;
 import common.nw.core.gui.PageHolder;
 import common.nw.creator.Creator;
-import common.nw.creator.IProgressListener;
-import common.nw.creator.gui.Reference;
+import common.nw.creator.util.Reference;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 
-public class PanelLoading extends JPanel implements IPageHandler, IProgressListener {
+public class PanelLoading extends JPanel implements PageHolder.IPageHandler {
 
 	private final JProgressBar progressBar;
 	@SuppressWarnings("FieldCanBeLocal")

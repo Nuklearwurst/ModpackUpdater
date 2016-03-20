@@ -677,8 +677,8 @@ public class Updater {
 	 * downloads all mods that need an update
 	 */
 	private boolean updateMods() {
+		//collect mods that need updating
 		List<ModInfo> modsToUpdate = new ArrayList<>();
-
 		for (ModInfo mod : mods) {
 			if (mod.needUpdate()) {
 				modsToUpdate.add(mod);
@@ -691,53 +691,61 @@ public class Updater {
 			listener.setDownloadProgress("", 2, 2);
 			return true;
 		}
-
-		int modNumber = 0; // index
-		float modValue = 90.0F / modsToUpdate.size(); // progress bar
+		// number of the current mod
+		int modNumber = 0;
+		// progress bar -- value of one mod (first 10% is checking for update)
+		float modValue = 90.0F / modsToUpdate.size();
 
 		for (ModInfo mod : modsToUpdate) {
 
+			//cancel if needed
 			waitForUi();
 			if (listener.isCancelled()) {
 				return true;
 			}
 
-			String updateReason = mod.isMissing() ? "MISSING" : "OUTDATED";
-
 			logger.info(String.format("Starting update for %s mod %s [%s] to version [%s] from %s",
-					updateReason, mod.name, mod.version,
+					mod.isMissing() ? "MISSING" : "OUTDATED", mod.name, mod.version,
 					mod.getRemoteInfo().version,
 					mod.getRemoteInfo().downloadUrl));
 
 			modNumber++;
-			if (mod.getRemoteInfo().downloadType == null || mod.getRemoteInfo().downloadType.equals(ModpackValues.modDirectDownload)) {
-				if (!performDirectModDownload(mod, modNumber, modValue)) {
-					warningMessage += "\nFailed downloading Mod: " + mod;
-					return false;
-				}
-			} else if (mod.getRemoteInfo().downloadType.equals(ModpackValues.modExtractDownload)) {
-				if (!performDirectModDownload(mod, modNumber, modValue)) {
-					warningMessage += "\nFailed downloading Mod: " + mod;
-					return false;
-				}
-				if (!DownloadHelper.extractArchive(mod.file, mod.file.getParentFile())) {
-					warningMessage += "\nFailed extracting Archive from: " + mod.file + ", to: " + mod.file.getParentFile();
-					return false;
-				}
-				//keep file for versioning
-			} else if (mod.getRemoteInfo().downloadType.equals(ModpackValues.modUserDownload)) {
-				warningMessage += "\nUnsupported downloadType: " + mod.getRemoteInfo().downloadType + " \nConsider updating your updater.jar to the newest version!";
-				errored = true;
-				return false;
-			} else {
-				//TODO default to user Download
-				warningMessage += "\nUnsupported downloadType: " + mod.getRemoteInfo().downloadType + " \nDefaulting to " + ModpackValues.modDirectDownload + "\nConsider updating your updater.jar to the newest version!";
-				if (!performDirectModDownload(mod, modNumber, modValue)) {
-					warningMessage += "\nFailed downloading Mod with unsupported downloadType: " + mod;
-					warningMessage += "\nTry reinstalling the modpack, otherwise contact your modpack author!";
+			//fallback to default downloadtype
+			if (mod.getRemoteInfo().downloadType == null) {
+				mod.getRemoteInfo().downloadType = ModpackValues.modDirectDownload;
+			}
+			switch (mod.getRemoteInfo().downloadType) {
+				case ModpackValues.modDirectDownload:
+					if (!performDirectModDownload(mod, modNumber, modValue)) {
+						warningMessage += "\nFailed downloading Mod: " + mod;
+						return false;
+					}
+					break;
+				case ModpackValues.modExtractDownload:
+					if (!performDirectModDownload(mod, modNumber, modValue)) {
+						warningMessage += "\nFailed downloading Mod: " + mod;
+						return false;
+					}
+					if (!DownloadHelper.extractArchive(mod.file, mod.file.getParentFile())) {
+						warningMessage += "\nFailed extracting Archive from: " + mod.file + ", to: " + mod.file.getParentFile();
+						return false;
+					}
+					//keep zip file for version tracking
+					break;
+				case ModpackValues.modUserDownload:
+					warningMessage += "\nUnsupported downloadType: " + mod.getRemoteInfo().downloadType + " \nConsider updating your updater.jar to the newest version!";
 					errored = true;
 					return false;
-				}
+				default:
+					//defaulting to direct download
+					warningMessage += "\nUnsupported downloadType: " + mod.getRemoteInfo().downloadType + " \nDefaulting to " + ModpackValues.modDirectDownload + "\nConsider updating your updater.jar to the newest version!";
+					if (!performDirectModDownload(mod, modNumber, modValue)) {
+						warningMessage += "\nFailed downloading Mod with unsupported downloadType: " + mod;
+						warningMessage += "\nTry reinstalling the modpack, otherwise contact your modpack author!";
+						errored = true;
+						return false;
+					}
+					break;
 			}
 		}
 		return true;
@@ -748,8 +756,10 @@ public class Updater {
 		int attempts = 0;
 		boolean retry;
 		do {
+			//download mod
 			UpdateResult result = DownloadHelper.getMod(listener, mod,
 					modNumber, modValue, gameDir, false);
+			//automatically try again if download failed (up to 4 times)
 			if (result != UpdateResult.Good) {
 				attempts++;
 			}
@@ -761,9 +771,11 @@ public class Updater {
 				return true;
 			}
 
+			//display dialog when download finally failed
+			//giving user the opportunity to retry the download
 			if ((result != UpdateResult.Good) && (!retry)) {
-				int r = listener.showConfirmDialog("Downloading mod \"" + mod.name + "\" version: \"" + mod.version + "\" failed!\nDo you want to retry?", "Retry?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-				if (r != JOptionPane.YES_OPTION) {
+				int dialogResult = listener.showConfirmDialog("Downloading mod \"" + mod.name + "\" version: \"" + mod.version + "\" failed!\nDo you want to retry?", "Retry?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				if (dialogResult != JOptionPane.YES_OPTION) {
 					warningMessage += "\nFailed updating mod: " + mod.getFileNameSystem() + "\nError when downloading: " + result;
 					errored = true;
 					logger.severe(warningMessage);
@@ -774,8 +786,7 @@ public class Updater {
 			}
 			if (result == UpdateResult.Good) {
 				retry = false;
-				//TODO check if this works in all cases
-				//updating local version infromation
+				//updating local version information
 				mod.version = mod.getRemoteInfo().version;
 			}
 		} while (retry);

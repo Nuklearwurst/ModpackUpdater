@@ -1,7 +1,6 @@
-package common.nw.installer.gui;
+package common.nw.installer.gui.pages;
 
 
-import common.nw.core.gui.IExtendedPageHandler;
 import common.nw.core.gui.PageHolder;
 import common.nw.core.utils.SwingUtils;
 
@@ -11,10 +10,10 @@ import java.awt.*;
 /**
  * @author Nuklearwurst
  */
-public class PanelInit implements IExtendedPageHandler {
+public class PanelInit implements PageHolder.IExtendedPageHandler {
 	private JTextPane txtInit;
-	protected JTextField txtUrl;
-	protected JCheckBox chbxDownloadLibraries;
+	public JTextField txtUrl;
+	public JCheckBox chbxDownloadLibraries;
 	private JPanel panel_init;
 
 	public PanelInit() {

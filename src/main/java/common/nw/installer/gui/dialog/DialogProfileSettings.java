@@ -1,4 +1,4 @@
-package common.nw.installer.gui;
+package common.nw.installer.gui.dialog;
 
 import argo.jdom.JdomParser;
 import argo.jdom.JsonNode;
@@ -14,6 +14,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import common.nw.core.utils.SwingUtils;
 import common.nw.core.utils.Utils;
+import common.nw.installer.gui.InstallerWindow;
 
 import javax.swing.*;
 import java.awt.*;

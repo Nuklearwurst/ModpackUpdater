@@ -1,13 +1,12 @@
 package common.nw.creator.gui_legacy.pages;
 
-import common.nw.core.gui.IPageHandler;
 import common.nw.core.gui.PageHolder;
 import common.nw.creator.Creator;
-import common.nw.creator.gui.Reference;
+import common.nw.creator.util.Reference;
 
 import javax.swing.*;
 
-public class PanelFinish extends JPanel implements IPageHandler {
+public class PanelFinish extends JPanel implements PageHolder.IPageHandler {
 
 	private final Creator creator;
 

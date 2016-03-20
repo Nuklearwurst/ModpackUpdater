@@ -8,7 +8,7 @@ import common.nw.core.modpack.RepoMod;
 import common.nw.core.utils.DownloadHelper;
 import common.nw.core.utils.UpdateResult;
 import common.nw.core.utils.log.NwLogger;
-import common.nw.updater.gui.IDownloadProgressListener;
+import common.nw.core.gui.IDownloadProgressListener;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,4 +1,4 @@
-package common.nw.updater.gui;
+package common.nw.core.gui;
 
 /**
  * @author Nuklearwurst

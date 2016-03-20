@@ -1,13 +1,12 @@
 package common.nw.creator.gui.pages;
 
-import common.nw.core.gui.IPageHandler;
 import common.nw.core.gui.PageHolder;
 import common.nw.core.modpack.ModInfo;
 import common.nw.core.modpack.ModpackValues;
 import common.nw.core.modpack.RepoMod;
 import common.nw.core.utils.DownloadHelper;
 import common.nw.creator.Creator;
-import common.nw.creator.gui.Reference;
+import common.nw.creator.util.Reference;
 import common.nw.creator.gui.dialog.DialogEditMod;
 import common.nw.creator.gui.table.ITableHolder;
 import common.nw.creator.gui.table.TableModelList;
@@ -28,7 +27,7 @@ import java.util.List;
 /**
  * @author Nuklearwurst
  */
-public class PanelEditMods implements IPageHandler, IDropFileHandler, ITableHolder<RepoMod> {
+public class PanelEditMods implements PageHolder.IPageHandler, IDropFileHandler, ITableHolder<RepoMod> {
 
 	private JButton btnNew;
 	private JButton btnEdit;
