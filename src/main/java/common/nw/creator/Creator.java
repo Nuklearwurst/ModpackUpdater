@@ -19,6 +19,9 @@ public class Creator {
 
 	public RepoModpack modpack;
 
+	/**
+	 * location of the directory to scan (only used when {@link #shouldReadFiles} is set to true)
+	 */
 	public String fileLoc;
 	public String outputLoc;
 

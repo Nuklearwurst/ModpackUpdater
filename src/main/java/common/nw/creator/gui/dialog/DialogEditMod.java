@@ -13,6 +13,7 @@ import common.nw.core.utils.Utils;
 import common.nw.creator.gui.table.ITableHolder;
 import common.nw.creator.properties.CreatorProperties;
 import common.nw.creator.util.CreatorUtils;
+import common.nw.creator.util.DownloadModTask;
 
 import javax.swing.*;
 import java.awt.*;
@@ -145,7 +146,10 @@ public class DialogEditMod extends JDialog {
 		} else {
 			index = 0;
 		}
-		DialogDownload d = new DialogDownload(this, new File("" + File.separator + ans.substring(index)), new DialogDownload.DownloadFileHandler() {
+		DialogProgress d = new DialogProgress(this);
+		d.pack();
+
+		DownloadModTask downloadModTask = new DownloadModTask(d, new DownloadModTask.DownloadFinishedHandler() {
 			@Override
 			public void onDownloadFinished(File file, UpdateResult result) {
 				if (result == UpdateResult.Good) {
@@ -157,7 +161,8 @@ public class DialogEditMod extends JDialog {
 				//noinspection ResultOfMethodCallIgnored
 				file.delete();
 			}
-		}, DialogDownload.createModInfoFromUrl(ans));
+		}, new File("" + File.separator + ans.substring(index)), DownloadModTask.createModInfoFromUrl(ans));
+		downloadModTask.start();
 		d.setVisible(true);
 	}
 

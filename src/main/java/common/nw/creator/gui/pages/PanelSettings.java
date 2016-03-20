@@ -17,7 +17,7 @@ import java.io.File;
 /**
  * @author Nuklearwurst
  */
-public class PanelSettings implements PageHolder.IPageHandler {
+public class PanelSettings implements PageHolder.IExtendedPageHandler {
 	private JPanel panel_settings;
 	private JTextField txtName;
 	private JTextField txtOutput;
@@ -171,6 +171,7 @@ public class PanelSettings implements PageHolder.IPageHandler {
 		return true;
 	}
 
+	@Override
 	public JPanel getPanel() {
 		return panel_settings;
 	}

@@ -16,11 +16,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 /**
  * @author Nuklearwurst
  */
-public class PanelMinecraftSettings implements PageHolder.IPageHandler {
+public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 
 	private JTextField txtVersion;
 
@@ -244,6 +245,7 @@ public class PanelMinecraftSettings implements PageHolder.IPageHandler {
 		return null;
 	}
 
+	@Override
 	public JPanel getPanel() {
 		return panel_minecraft_settings;
 	}
@@ -261,13 +263,13 @@ public class PanelMinecraftSettings implements PageHolder.IPageHandler {
 	@Override
 	public boolean onPageClosed(PageHolder holder, boolean forward) {
 		if (forward) {
-			boolean b = true;
+			boolean valid = true;
 			if (txtVersion.getText() == null || txtVersion.getText().isEmpty()
 					|| txtJar.getText() == null || txtJar.getText().isEmpty()
 					|| txtJson.getText() == null || txtJson.getText().isEmpty()) {
-				b = false;
+				valid = false;
 			}
-			if (!b) {
+			if (!valid) {
 				//noinspection PointlessBooleanExpression
 				if (!CreatorWindow.DEBUG) {
 					JOptionPane.showMessageDialog(panel_minecraft_settings,
@@ -287,6 +289,16 @@ public class PanelMinecraftSettings implements PageHolder.IPageHandler {
 			}
 			creator.modpack.minecraft.version = this.txtVersion.getText();
 			creator.modpack.minecraft.installInfoUrl = this.txtInstallInfo.getText();
+
+			//read values
+			if (creator.shouldReadFiles) {
+				if (!new File(creator.fileLoc).exists() || !creator.readFiles()) {
+					JOptionPane.showMessageDialog(frame,
+							"Error when reading Files!", "Error",
+							JOptionPane.ERROR_MESSAGE);
+					return false;
+				}
+			}
 		}
 		return true;
 	}
@@ -390,4 +402,5 @@ public class PanelMinecraftSettings implements PageHolder.IPageHandler {
 	public JComponent $$$getRootComponent$$$() {
 		return panel_minecraft_settings;
 	}
+
 }

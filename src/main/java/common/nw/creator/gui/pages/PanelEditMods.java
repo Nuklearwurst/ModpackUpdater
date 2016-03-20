@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * @author Nuklearwurst
  */
-public class PanelEditMods implements PageHolder.IPageHandler, IDropFileHandler, ITableHolder<RepoMod> {
+public class PanelEditMods implements PageHolder.IExtendedPageHandler, IDropFileHandler, ITableHolder<RepoMod> {
 
 	private JButton btnNew;
 	private JButton btnEdit;
@@ -314,6 +314,7 @@ public class PanelEditMods implements PageHolder.IPageHandler, IDropFileHandler,
 		return true;
 	}
 
+	@Override
 	public JPanel getPanel() {
 		return panel_editmods;
 	}

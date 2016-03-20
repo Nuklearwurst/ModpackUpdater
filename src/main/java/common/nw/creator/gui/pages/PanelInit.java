@@ -20,7 +20,7 @@ import java.io.FileReader;
 /**
  * @author Nuklearwurst
  */
-public class PanelInit implements PageHolder.IPageHandler, IDropFileHandler {
+public class PanelInit implements PageHolder.IExtendedPageHandler, IDropFileHandler {
 	private JRadioButton rdbtnCreate;
 	private JPanel panel_init;
 	private JRadioButton rdbtnLoad;
@@ -110,6 +110,7 @@ public class PanelInit implements PageHolder.IPageHandler, IDropFileHandler {
 		return true;
 	}
 
+	@Override
 	public JPanel getPanel() {
 		return panel_init;
 	}

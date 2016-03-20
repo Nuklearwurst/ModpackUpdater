@@ -4,14 +4,13 @@ import common.nw.core.gui.PageHolder;
 import common.nw.core.utils.SwingUtils;
 import common.nw.core.utils.log.NwLogger;
 import common.nw.creator.Creator;
-import common.nw.creator.util.Reference;
 import common.nw.creator.gui.pages.PanelEditMods;
 import common.nw.creator.gui.pages.PanelInit;
 import common.nw.creator.gui.pages.PanelMinecraftSettings;
 import common.nw.creator.gui.pages.PanelSettings;
-import common.nw.creator.gui_legacy.pages.PanelFinish;
-import common.nw.creator.gui_legacy.pages.PanelLoading;
+import common.nw.creator.gui.pages.PanelFinish;
 import common.nw.creator.properties.CreatorProperties;
+import common.nw.creator.util.Reference;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -33,11 +32,9 @@ public class CreatorWindow {
 	@SuppressWarnings("FieldCanBeLocal")
 	private PanelMinecraftSettings page2;
 	@SuppressWarnings("FieldCanBeLocal")
-	private PanelLoading page3;
+	private PanelEditMods page3;
 	@SuppressWarnings("FieldCanBeLocal")
-	private PanelEditMods page4;
-	@SuppressWarnings("FieldCanBeLocal")
-	private PanelFinish page5;
+	private PanelFinish page4;
 
 	private JButton btnBack;
 	private JButton btnNext;
@@ -110,25 +107,20 @@ public class CreatorWindow {
 
 		page0 = new PanelInit(creator);
 		page0.setBorder(new LineBorder(new Color(0, 0, 0)));
-		pageHolder.addPage(page0.getPanel(), page0, (String) page0.getProperty(Reference.KEY_NAME));
+		pageHolder.addPage(page0, (String) page0.getProperty(Reference.KEY_NAME));
 
 		page1 = new PanelSettings(creator);
 		page1.setBorder(new LineBorder(new Color(0, 0, 0)));
-		pageHolder.addPage(page1.getPanel(), page1, (String) page1.getProperty(Reference.KEY_NAME));
+		pageHolder.addPage(page1, (String) page1.getProperty(Reference.KEY_NAME));
 
 		page2 = new PanelMinecraftSettings(creator, window);
-		pageHolder.addPage(page2.getPanel(), page2, (String) page2.getProperty(Reference.KEY_NAME));
+		pageHolder.addPage(page2, (String) page2.getProperty(Reference.KEY_NAME));
 
-		page3 = new PanelLoading(creator);
-		GridBagLayout gbl_page3 = (GridBagLayout) page3.getLayout();
-		gbl_page3.rowHeights = new int[]{64, 0, 0, 0};
+		page3 = new PanelEditMods(creator, window);
 		pageHolder.addPage(page3, (String) page3.getProperty(Reference.KEY_NAME));
 
-		page4 = new PanelEditMods(creator, window);
-		pageHolder.addPage(page4.getPanel(), page4, (String) page4.getProperty(Reference.KEY_NAME));
-
-		page5 = new PanelFinish(creator);
-		pageHolder.addPage(page5, (String) page5.getProperty(Reference.KEY_NAME));
+		page4 = new PanelFinish(creator);
+		pageHolder.addPage(page4, (String) page4.getProperty(Reference.KEY_NAME));
 
 
 		JPanel panelButtons = new JPanel();
@@ -202,7 +194,7 @@ public class CreatorWindow {
 				btnBack.setEnabled(false);
 			} else {
 				btnNext.setEnabled(true);
-				if (pageHolder.isLastPage() || pageHolder.getCurrentPageIndex() == 4) { // last pages
+				if (pageHolder.isLastPage() || pageHolder.getCurrentPageIndex() == 3) { // last pages
 					btnNext.setText("Finish");
 				} else {
 					btnNext.setText("Next");
@@ -215,11 +207,8 @@ public class CreatorWindow {
 			}
 		}
 
-		String s = "Step " + (pageHolder.getCurrentPageIndex() + 1) + " of " + (pageHolder.getLastPageIndex() + 1) + ".";
-		if (DEBUG) {
-			s += "\n..." + pageHolder.getCurrentPageProperty(Reference.KEY_NAME);
-		}
-		lblHeader.setText(s);
+		final String title = "Step " + (pageHolder.getCurrentPageIndex() + 1) + " of " + (pageHolder.getLastPageIndex() + 1) + ".: " + pageHolder.getCurrentPageProperty(Reference.KEY_NAME);
+		lblHeader.setText(title);
 	}
 
 	private void nextPage() {
