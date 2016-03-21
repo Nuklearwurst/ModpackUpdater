@@ -21,7 +21,7 @@ repositories {
 
 group = 'common.nw'
 archivesBaseName = 'updater'
-sourceCompatibility = 1.6
+sourceCompatibility = 1.7
 
 ext {
     updaterVersion = '2.2.1'
