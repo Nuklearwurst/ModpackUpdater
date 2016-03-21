@@ -11,6 +11,7 @@ import common.nw.creator.Creator;
 import common.nw.creator.gui.CreatorWindow;
 import common.nw.creator.gui.dialog.DialogEditArguments;
 import common.nw.creator.gui.dialog.DialogEditLibraries;
+import common.nw.creator.gui.dialog.DialogForgeChooser;
 import common.nw.creator.util.Reference;
 
 import javax.swing.*;
@@ -39,6 +40,7 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 	private JButton btnEditArguments;
 	private JButton btnEditLibraries;
 	private JPanel panel_minecraft_settings;
+	private JButton btnSelectForge;
 	private ButtonGroup btnGroupJson;
 	private ButtonGroup btnGroupJar;
 
@@ -48,7 +50,7 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 	/**
 	 * Create the panel.
 	 */
-	public PanelMinecraftSettings(Creator creator, JFrame frame) {
+	public PanelMinecraftSettings(Creator creator, final JFrame frame) {
 
 		this.creator = creator;
 		this.frame = frame;
@@ -94,6 +96,8 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 				setJsonGeneratedTypeEnabled(true);
 				setJsonUpdateType(ModpackValues.jsonGenerate);
 				createDefaultLibs();
+				btnSelectForge.setEnabled(true);
+				btnSelectForge.setVisible(true);
 			}
 		});
 
@@ -102,6 +106,21 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 			public void actionPerformed(ActionEvent e) {
 				setJsonGeneratedTypeEnabled(false);
 				setJsonUpdateType(ModpackValues.jsonDirectDownload);
+				btnSelectForge.setEnabled(false);
+				btnSelectForge.setVisible(false);
+			}
+		});
+
+		btnSelectForge.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				DialogForgeChooser dialog = new DialogForgeChooser(frame, txtJar.getText());
+				dialog.pack();
+				dialog.setVisible(true);
+				final String version = dialog.getResult();
+				if (version != null) {
+					txtJar.setText(version);
+				}
 			}
 		});
 	}
@@ -182,6 +201,8 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 				rdbtnDownloadJson.setSelected(true);
 				updateJsonGenerated(false);
 
+				btnSelectForge.setEnabled(false);
+				btnSelectForge.setVisible(false);
 				break;
 			case ModpackValues.jarForgeInherit:
 				rdbtnForgeJar.setSelected(true);
@@ -190,6 +211,9 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 				rdbtnJsonAutoCreate.setSelected(true);
 
 				updateJsonGenerated(true);
+
+				btnSelectForge.setEnabled(true);
+				btnSelectForge.setVisible(true);
 				break;
 			default:
 				rdbtnDownloadJar.setSelected(true);
@@ -197,6 +221,9 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 				setJsonGeneratedTypeEnabled(false);
 				rdbtnDownloadJson.setSelected(true);
 				updateJsonGenerated(false);
+
+				btnSelectForge.setEnabled(false);
+				btnSelectForge.setVisible(false);
 				break;
 		}
 	}
@@ -326,7 +353,7 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 	 */
 	private void $$$setupUI$$$() {
 		panel_minecraft_settings = new JPanel();
-		panel_minecraft_settings.setLayout(new GridLayoutManager(8, 7, new Insets(0, 0, 0, 0), -1, -1));
+		panel_minecraft_settings.setLayout(new GridLayoutManager(8, 8, new Insets(0, 0, 0, 0), -1, -1));
 		final JLabel label1 = new JLabel();
 		label1.setText("Version:");
 		label1.setToolTipText("The version.  Can be anything.");
@@ -334,7 +361,7 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 		final Spacer spacer1 = new Spacer();
 		panel_minecraft_settings.add(spacer1, new GridConstraints(7, 0, 1, 6, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
 		txtVersion = new JTextField();
-		panel_minecraft_settings.add(txtVersion, new GridConstraints(0, 1, 1, 6, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+		panel_minecraft_settings.add(txtVersion, new GridConstraints(0, 1, 1, 7, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
 		final JLabel label2 = new JLabel();
 		label2.setText("MC-jar type:");
 		panel_minecraft_settings.add(label2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -343,7 +370,7 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 		rdbtnDownloadJar.setText("Download");
 		panel_minecraft_settings.add(rdbtnDownloadJar, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		final Spacer spacer2 = new Spacer();
-		panel_minecraft_settings.add(spacer2, new GridConstraints(1, 5, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		panel_minecraft_settings.add(spacer2, new GridConstraints(1, 5, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
 		final JLabel label3 = new JLabel();
 		label3.setText("MC-json type:");
 		panel_minecraft_settings.add(label3, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -363,7 +390,7 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 		txtJar = new JTextField();
 		panel_minecraft_settings.add(txtJar, new GridConstraints(3, 1, 1, 6, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
 		txtJson = new JTextField();
-		panel_minecraft_settings.add(txtJson, new GridConstraints(4, 1, 1, 6, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+		panel_minecraft_settings.add(txtJson, new GridConstraints(4, 1, 1, 7, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
 		final JLabel label6 = new JLabel();
 		label6.setText("Modpack Info:");
 		label6.setToolTipText("URL pointing to a website displayed during installation. Leave empty for none.");
@@ -373,7 +400,7 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 		panel_minecraft_settings.add(txtInstallInfo, new GridConstraints(5, 1, 1, 5, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
 		btnEditInstallInfo = new JButton();
 		btnEditInstallInfo.setText("Edit");
-		panel_minecraft_settings.add(btnEditInstallInfo, new GridConstraints(5, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, 1, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		panel_minecraft_settings.add(btnEditInstallInfo, new GridConstraints(5, 6, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, 1, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		final JLabel label7 = new JLabel();
 		label7.setText("Other:");
 		panel_minecraft_settings.add(label7, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -391,6 +418,11 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 		rdbtnJsonAutoCreate.setText("Generate");
 		rdbtnJsonAutoCreate.setToolTipText("Auto-generates version json-file.\nOnly available when using Forge-jar-type.");
 		panel_minecraft_settings.add(rdbtnJsonAutoCreate, new GridConstraints(2, 2, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		btnSelectForge = new JButton();
+		btnSelectForge.setEnabled(false);
+		btnSelectForge.setText("Select");
+		btnSelectForge.setVisible(false);
+		panel_minecraft_settings.add(btnSelectForge, new GridConstraints(3, 7, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		label1.setLabelFor(txtVersion);
 		label4.setLabelFor(txtJar);
 		label5.setLabelFor(txtJson);
