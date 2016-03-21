@@ -6,13 +6,13 @@ import common.nw.core.modpack.ModpackValues;
 import common.nw.core.modpack.RepoMod;
 import common.nw.core.utils.DownloadHelper;
 import common.nw.creator.Creator;
-import common.nw.creator.util.Reference;
+import common.nw.creator.gui.dialog.DialogEditBlacklist;
 import common.nw.creator.gui.dialog.DialogEditMod;
 import common.nw.creator.gui.table.ITableHolder;
 import common.nw.creator.gui.table.TableModelList;
 import common.nw.creator.gui.transfer.FileTransferHandler;
 import common.nw.creator.gui.transfer.IDropFileHandler;
-import common.nw.creator.gui_legacy.pages.dialog.EditBlackListDialog;
+import common.nw.creator.util.Reference;
 
 import javax.swing.*;
 import java.awt.*;
@@ -259,9 +259,8 @@ public class PanelEditMods implements PageHolder.IExtendedPageHandler, IDropFile
 	}
 
 	private void editBlackList() {
-		EditBlackListDialog dialog = new EditBlackListDialog(parentFrame, true, blacklist);
+		DialogEditBlacklist dialog = new DialogEditBlacklist(parentFrame, blacklist);
 		dialog.setVisible(true);
-		//TODO edit blacklist dialog (--> edit mod dialog)
 	}
 
 	@Override

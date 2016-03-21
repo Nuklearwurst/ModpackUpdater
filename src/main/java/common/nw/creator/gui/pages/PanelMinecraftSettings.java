@@ -8,9 +8,9 @@ import common.nw.core.modpack.Library;
 import common.nw.core.modpack.ModpackValues;
 import common.nw.creator.Creator;
 import common.nw.creator.gui.CreatorWindow;
-import common.nw.creator.util.Reference;
+import common.nw.creator.gui.dialog.DialogEditArguments;
 import common.nw.creator.gui.dialog.DialogEditLibraries;
-import common.nw.creator.gui_legacy.pages.dialog.EditArgumentsDialog;
+import common.nw.creator.util.Reference;
 
 import javax.swing.*;
 import java.awt.*;
@@ -220,7 +220,8 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 	 * opens the edit arguments dialog
 	 */
 	private void editArguments() {
-		Dialog d = new EditArgumentsDialog(creator.modpack.minecraft.arguments, frame, true);
+//		Dialog d = new EditArgumentsDialog(creator.modpack.minecraft.arguments, frame, true);
+		Dialog d = new DialogEditArguments(frame, creator.modpack.minecraft.arguments);
 		d.pack();
 		d.setVisible(true);
 	}

@@ -1,6 +1,7 @@
 package common.nw.creator.gui.table;
 
 
+import common.nw.core.utils.IDisplayNameProvider;
 import common.nw.core.utils.log.NwLogger;
 
 import javax.swing.table.AbstractTableModel;
@@ -52,7 +53,11 @@ public class TableModelDataList extends AbstractTableModel {
 		if (rowIndex >= getRowCount() || columnIndex >= getColumnCount()) {
 			return null;
 		}
-		return data.getElement(rowIndex, fieldNames[columnIndex]);
+		Object o = data.getElement(rowIndex, fieldNames[columnIndex]);
+		if (o instanceof IDisplayNameProvider) {
+			return ((IDisplayNameProvider) o).getDisplayName();
+		}
+		return o;
 	}
 
 	@SuppressWarnings("unused")
