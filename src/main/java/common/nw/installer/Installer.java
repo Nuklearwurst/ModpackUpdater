@@ -8,10 +8,7 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
-import common.nw.core.modpack.Library;
-import common.nw.core.modpack.LocalModpack;
-import common.nw.core.modpack.ModpackValues;
-import common.nw.core.modpack.RepoModpack;
+import common.nw.core.modpack.*;
 import common.nw.core.utils.DownloadHelper;
 import common.nw.core.utils.FileUtils;
 import common.nw.core.utils.Utils;
@@ -24,14 +21,20 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Installer {
 
 	private static final String JSON_MC_ARGUMENTS = "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type} --tweakClass common.nw.updater.launch.Launch --tweakClass cpw.mods.fml.common.launcher.FMLTweaker --modpackrepo %s --modpackversion %s";
 	private static final String JSON_TYPE = "release";
 	private static final String JSON_TIME = "2015-12-10T00:05:37-0500";
+
+	private static final String JSON_MC_ARGUMENTS_FORGE = "--tweakClass cpw.mods.fml.common.launcher.FMLTweaker";
+	private static final String JSON_MC_ARGUMENTS_MINECRAFT = "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type} ";
+	private static final String JSON_MC_ARGUMENTS_UPDATER = "--tweakClass common.nw.updater.launch.Launch --modpackrepo %s --modpackversion %s";
 
 	/**
 	 * version Name (mc-launcher)
@@ -221,12 +224,15 @@ public class Installer {
 		JsonRootNode versionJson;
 		HashMap<JsonStringNode, JsonNode> versionDataCopy;
 
+		final JsonStringNode mcArgumentsKey = JsonNodeFactories.string("minecraftArguments");
+
 		if (ModpackValues.jsonGenerate.equals(repo.minecraft.jsonUpdateType)) {
 			//Generate new version-json file
 			versionDataCopy = Maps.newHashMap();
 			versionDataCopy.put(JsonNodeFactories.string("time"), JsonNodeFactories.string(JSON_TIME));
 			versionDataCopy.put(JsonNodeFactories.string("type"), JsonNodeFactories.string(JSON_TYPE));
-			versionDataCopy.put(JsonNodeFactories.string("minecraftArguments"), JsonNodeFactories.string(String.format(JSON_MC_ARGUMENTS, modpackUrl, repo.minecraft.version)));
+//			versionDataCopy.put(JsonNodeFactories.string("minecraftArguments"), JsonNodeFactories.string(String.format(JSON_MC_ARGUMENTS, modpackUrl, repo.minecraft.version)));
+			versionDataCopy.put(mcArgumentsKey, JsonNodeFactories.string(parseMCArguments(String.format(JSON_MC_ARGUMENTS, modpackUrl, repo.minecraft.version), "")));
 
 		} else if (ModpackValues.jsonDirectDownload.equals(repo.minecraft.jsonUpdateType)) {
 			//download version-json file
@@ -234,6 +240,8 @@ public class Installer {
 				String jsonString = DownloadHelper.getString(repo.minecraft.jsonName, null);
 				versionJson = parser.parse(jsonString);
 				versionDataCopy = Maps.newHashMap(versionJson.getFields());
+				final String old = versionDataCopy.get(mcArgumentsKey).getText();
+				versionDataCopy.put(mcArgumentsKey, JsonNodeFactories.string(parseMCArguments(old, old)));
 			} catch (InvalidSyntaxException e) {
 				NwLogger.INSTALLER_LOGGER.error("Error parsing version file!", e);
 				return false;
@@ -318,6 +326,34 @@ public class Installer {
 		//save json file data for later use
 		data = versionJson;
 		return true;
+	}
+
+	private String parseMCArguments(String defaultArg, String jsonArgs) {
+		if (repo.minecraft.arguments == null || repo.minecraft.arguments.isEmpty()) {
+			return defaultArg;
+		}
+		StringBuilder builder = new StringBuilder();
+		for (String s : repo.minecraft.arguments) {
+			switch (s) {
+				case MCArgument.specialArgPredefined:
+					builder.append(jsonArgs).append(" ");
+					break;
+				case MCArgument.specialArgForge:
+					builder.append(JSON_MC_ARGUMENTS_FORGE).append(" ");
+					break;
+				case MCArgument.specialArgMinecraft:
+					builder.append(JSON_MC_ARGUMENTS_MINECRAFT).append(" ");
+					break;
+				case MCArgument.specialArgUpdater:
+					builder.append(String.format(JSON_MC_ARGUMENTS_UPDATER, modpackUrl, repo.minecraft.version)).append(" ");
+					break;
+				default:
+					builder.append(s).append(" ");
+					break;
+			}
+		}
+		return builder.toString().trim();
+
 	}
 
 	/**

@@ -613,11 +613,12 @@ public class Updater {
 				return false;
 			}
 
-			if (listener.showConfirmDialog("You have to select the new Version in the Minecraft Launcher!\nDo you want to continue without updating?", "Question", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-				return false;
-			} else {
+			if (listener.showConfirmDialog("You probably need to restart Minecraft.\nDo you want to continue anyway?", "Question", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
 				quitToLauncher = true;
 				return false;
+			} else {
+				//trying to continue updating
+				return true;
 			}
 		} else if (ans == JOptionPane.NO_OPTION) {
 			int ans2 = listener.showConfirmDialog("Overwrite local version?", "If this is a server you can update the local version information.\nThis will make sure that you won't get asked to update on this version again.", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);

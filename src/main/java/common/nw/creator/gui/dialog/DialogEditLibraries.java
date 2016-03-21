@@ -72,9 +72,9 @@ public class DialogEditLibraries extends JDialog implements ITableHolder<Library
 		}, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
 		//init ui
-//		tableLibraries.setModel(new TableModelList(new String[]{"Name", "Url"}, new String[]{"id", "url"}, libraryList));
 		final String[] dataFields = new String[]{"id", "url"};
-		tableLibraries.setModel(new TableModelDataList(new ListDataTable(dataFields, libraryList), new String[]{"Name", "Url"}, new String[]{"id", "url"}, true));
+		final TableModelDataList tableModelDataList = new TableModelDataList(new ListDataTable(dataFields, libraryList), new String[]{"Name", "Url"}, new String[]{"id", "url"}, true);
+		tableLibraries.setModel(tableModelDataList);
 
 		btnNew.addActionListener(new ActionListener() {
 			@Override
@@ -118,12 +118,13 @@ public class DialogEditLibraries extends JDialog implements ITableHolder<Library
 				updateTable();
 			}
 		});
-	}
 
-	public DialogEditLibraries(List<String> libraries, JFrame frame, Library updater) {
-		this(libraries, frame);
-		addValue(updater);
-		saveChanges();
+		chbxLock.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tableModelDataList.setEditable(!chbxLock.isSelected());
+			}
+		});
 	}
 
 	/**

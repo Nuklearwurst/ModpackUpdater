@@ -5,6 +5,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import common.nw.core.gui.PageHolder;
 import common.nw.core.modpack.Library;
+import common.nw.core.modpack.MCArgument;
 import common.nw.core.modpack.ModpackValues;
 import common.nw.creator.Creator;
 import common.nw.creator.gui.CreatorWindow;
@@ -155,10 +156,11 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 	private void createDefaultLibs() {
 		if (!creator.defaultLibrariesGenerated) {
 			Library updater = Library.createUpdaterLibrary(Reference.DEFAULT_UPDATER_VERSION);
-			JOptionPane.showMessageDialog(frame, "A default library has been added!");
-			Dialog d = new DialogEditLibraries(creator.modpack.minecraft.libraries, frame, updater);
-			d.pack();
-			d.setVisible(true);
+			creator.modpack.minecraft.libraries.add(updater.compileToJson());
+			creator.modpack.minecraft.arguments.add(MCArgument.specialArgMinecraft);
+			creator.modpack.minecraft.arguments.add(MCArgument.specialArgUpdater);
+			creator.modpack.minecraft.arguments.add(MCArgument.specialArgForge);
+			JOptionPane.showMessageDialog(frame, "Default libraries and arguments have been genereated!\nPlease check if everthing is correct!");
 			creator.defaultLibrariesGenerated = true;
 		}
 
@@ -259,6 +261,10 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 		this.setJarUpdateType(creator.modpack.minecraft.jarUpdateType);
 		this.setJsonUpdateType(creator.modpack.minecraft.jsonUpdateType);
 		this.txtInstallInfo.setText(creator.modpack.minecraft.installInfoUrl);
+		if (ModpackValues.jsonGenerate.equals(creator.modpack.minecraft.jsonUpdateType)) {
+			//don't recreate default libs if already happened
+			creator.defaultLibrariesGenerated = true;
+		}
 	}
 
 	@Override
@@ -403,5 +409,4 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 	public JComponent $$$getRootComponent$$$() {
 		return panel_minecraft_settings;
 	}
-
 }
