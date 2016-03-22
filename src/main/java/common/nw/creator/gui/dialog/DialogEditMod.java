@@ -136,10 +136,9 @@ public class DialogEditMod extends JDialog {
 
 	private void download() {
 		final String ans = JOptionPane.showInputDialog(this, "Enter a URL:", Utils.getStringClipboard());
-		if (ans == null) {
+		if (ans == null || ans.isEmpty() || ans.contains(" ")) {
 			return;
 		}
-		//TODO: validate URL
 		int index = ans.lastIndexOf("/");
 		if (index >= 0 && index < ans.length() - 1) {
 			index++;

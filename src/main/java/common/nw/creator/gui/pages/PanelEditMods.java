@@ -15,12 +15,12 @@ import common.nw.creator.gui.transfer.IDropFileHandler;
 import common.nw.creator.util.Reference;
 
 import javax.swing.*;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -45,8 +45,6 @@ public class PanelEditMods implements PageHolder.IExtendedPageHandler, IDropFile
 
 	private List<RepoMod> mods;
 	private List<RepoMod> blacklist;
-
-	private List<RepoMod> hiddenFiles;
 
 
 	/**
@@ -101,7 +99,6 @@ public class PanelEditMods implements PageHolder.IExtendedPageHandler, IDropFile
 			}
 		});
 
-		//TODO: maybe use RowFilters
 		chbxHideMods.setActionCommand("hideMods");
 		chbxHideMods.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -123,49 +120,23 @@ public class PanelEditMods implements PageHolder.IExtendedPageHandler, IDropFile
 
 		tableMods.setTransferHandler(new FileTransferHandler(this));
 		tableMods.setAutoCreateRowSorter(true);
-
-	}
-
-	private void hideFiles() {
-		if (hiddenFiles == null) {
-			hiddenFiles = new ArrayList<>();
-		}
-		//hide mods
-		if (chbxHideMods.isSelected()) {
-			for (int i = mods.size() - 1; i >= 0; i--) {
-				if (mods.get(i).getFileName().startsWith("mods/") && !hiddenFiles.contains(mods.get(i))) {
-					hiddenFiles.add(mods.get(i));
-					mods.remove(i);
-				}
-			}
-		} else {
-			for (int i = hiddenFiles.size() - 1; i >= 0; i--) {
-				if (hiddenFiles.get(i).getFileName().startsWith("mods/")) {
-					if (!mods.contains(hiddenFiles.get(i))) {
-						mods.add(hiddenFiles.get(i));
+		@SuppressWarnings("unchecked") TableRowSorter<TableModelList> rowSorter = (TableRowSorter) tableMods.getRowSorter();
+		rowSorter.setRowFilter(new RowFilter<TableModelList, Integer>() {
+			@Override
+			public boolean include(Entry<? extends TableModelList, ? extends Integer> entry) {
+				int id = entry.getIdentifier();
+				if (id >= 0 && id < mods.size()) {
+					RepoMod mod = mods.get(id);
+					if (chbxHideMods.isSelected() && mod.getFileName().startsWith("mods/")) {
+						return false;
+					} else if (chbxHideConfig.isSelected() && mod.getFileName().startsWith("config/")) {
+						return false;
 					}
-					hiddenFiles.remove(i);
 				}
+				return true;
 			}
-		}
-		//hids config
-		if (chbxHideConfig.isSelected()) {
-			for (int i = mods.size() - 1; i >= 0; i--) {
-				if ((mods.get(i).getFileName().startsWith("config/")) && !hiddenFiles.contains(mods.get(i))) {
-					hiddenFiles.add(mods.get(i));
-					mods.remove(i);
-				}
-			}
-		} else {
-			for (int i = hiddenFiles.size() - 1; i >= 0; i--) {
-				if (hiddenFiles.get(i).getFileName().startsWith("config/")) {
-					if (!mods.contains(hiddenFiles.get(i))) {
-						mods.add(hiddenFiles.get(i));
-					}
-					hiddenFiles.remove(i);
-				}
-			}
-		}
+		});
+
 	}
 
 	/**
@@ -182,7 +153,7 @@ public class PanelEditMods implements PageHolder.IExtendedPageHandler, IDropFile
 	}
 
 	public void updateTable() {
-		hideFiles();
+//		hideFiles();
 		((TableModelList) tableMods.getModel()).updateData();
 		tableMods.revalidate();
 		tableMods.repaint();
@@ -304,9 +275,6 @@ public class PanelEditMods implements PageHolder.IExtendedPageHandler, IDropFile
 
 	@Override
 	public boolean onPageClosed(PageHolder holder, boolean forward) {
-		//insert hidden files
-		this.mods.addAll(hiddenFiles);
-		hiddenFiles.clear();
 		//probably not needed
 		creator.modpack.files = this.mods;
 		creator.modpack.blacklist = this.blacklist;
