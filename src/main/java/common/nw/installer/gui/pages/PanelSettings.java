@@ -84,8 +84,8 @@ public class PanelSettings implements PageHolder.IExtendedPageHandler {
 		txtProfile.setEnabled(b);
 		btnProfileSettings.setEnabled(b);
 
-		if (txtProfile.getText() == null
-				|| txtProfile.getText().isEmpty()) {
+		if (b && (txtProfile.getText() == null
+				|| txtProfile.getText().isEmpty())) {
 			txtProfile.setText(window.modpack.modpackName);
 
 			if (!readExsistingProfile(window, window.modpack.modpackName)) {
@@ -93,7 +93,11 @@ public class PanelSettings implements PageHolder.IExtendedPageHandler {
 						|| window.profile_gameDirectory.isEmpty()) {
 					//Insert default value
 
-					window.profile_gameDirectory = Utils.getMinecraftDir();
+					if (txtMinecraft.getText() != null && !txtMinecraft.getText().isEmpty()) {
+						window.profile_gameDirectory = txtMinecraft.getText();
+					} else {
+						window.profile_gameDirectory = Utils.getMinecraftDir();
+					}
 					if (window.profile_gameDirectory == null) {
 						//.minecraft dir not found
 						window.openProfileSettingsDialog();
