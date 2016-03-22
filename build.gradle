@@ -194,6 +194,8 @@ artifacts {
     archives shrinkInstallerPreset
     archives shrinkUpdater
     archives shrinkCreator
+
+    archives thinUpdater
 }
 
 task wrapper(type: Wrapper) {

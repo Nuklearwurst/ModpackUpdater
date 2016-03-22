@@ -11,6 +11,7 @@ import joptsimple.OptionSet;
 import net.minecraft.launchwrapper.ITweaker;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 
+import java.awt.*;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -47,6 +48,12 @@ public class Launch implements ITweaker {
 	                          String versionName) {
 
 		Updater.logger.info("Starting modpack updater!");
+
+		if (useGui && GraphicsEnvironment.isHeadless()) {
+			//Check for headless mode
+			Updater.logger.info("Headless mode enabled!");
+			useGui = false;
+		}
 		if (useGui) {
 			SwingUtils.setOSLookAndFeel();
 		}

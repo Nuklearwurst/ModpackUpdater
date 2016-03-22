@@ -14,6 +14,7 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -333,9 +334,12 @@ public class Updater {
 				if (serverOption.value(options)) {
 					logger.info("Applying server specific settings!");
 					flags |= FLAG_SERVER;
+				} else if (GraphicsEnvironment.isHeadless()) {
+					logger.warn("Running in a headless environment, but serverOption is set to false!");
+					logger.warn("Please check programm arguments!");
 				}
 			} else {
-				if (versionName == null) {
+				if (versionName == null || GraphicsEnvironment.isHeadless()) {
 					//assume that we are on a server
 					//as we have no profile and none of the passed parameters indicate a client
 					flags |= FLAG_SERVER;
