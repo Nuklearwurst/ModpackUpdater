@@ -113,6 +113,7 @@ public class PanelEditMods implements PageHolder.IExtendedPageHandler, IDropFile
 			}
 		});
 
+		//TODO switch to a better table model
 		tableMods.setModel(new TableModelList(new String[]{"Name", "Version",
 				"URL"}, new String[]{"name", "version", "downloadUrl"},
 				creator.modpack.files));

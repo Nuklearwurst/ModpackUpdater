@@ -71,10 +71,16 @@ public class ModInfo {
 		this.remoteInfo = remoteMod;
 	}
 
+	/**
+	 * @return the filename using the File.seperator of the current system
+	 */
 	public String getFileNameSystem() {
 		return fileName.replace("/", File.separator);
 	}
 
+	/**
+	 * @return the filename of this mod (should be using '/' as File.seperator)
+	 */
 	public String getFileName() {
 		return fileName;
 	}
@@ -91,8 +97,9 @@ public class ModInfo {
 	}
 
 	/**
-	 * sets the remote data of a local mod (check first wether they are both the
-	 * same using equals!) and validates the VersionData
+	 * sets the remote data of a local mod and validates the VersionData
+	 *
+	 * note: this will not check if the given RemoteMod is equal to this instance!
 	 *
 	 * @param mod remote mod
 	 */
@@ -102,16 +109,17 @@ public class ModInfo {
 	}
 
 	/**
-	 * uses correct version information
+	 * uses correct version information (uses the defined versiontype of remote)
+	 * <p>
+	 *      This will use any read version data (eg. forge's mod.info file) or fallback to MD5 or filename, if specified in remoteInfo
+	 * </p>
 	 */
 	private void updateVersionInformation() {
 		if (remoteInfo != null) {
 			if (remoteInfo.versionType != null) {
-				if (remoteInfo.versionType.equals(ModpackValues.versionTypeMD5) && file != null
-						&& file.exists()) {
+				if (remoteInfo.versionType.equals(ModpackValues.versionTypeMD5) && file != null && file.exists()) {
 					version = DownloadHelper.getHash(file);
-				} else if (remoteInfo.versionType.equals(ModpackValues.versionTypeFileName)
-						&& this.hasVersionFile) {
+				} else if (remoteInfo.versionType.equals(ModpackValues.versionTypeFileName) && this.hasVersionFile) {
 					version = getFileName();
 				}
 			}
@@ -136,65 +144,77 @@ public class ModInfo {
 
 			// scan version, update remote , fall back to other version typews
 
-			// read .litemod version file
-			/*if (getFileName().endsWith(".litemod")) {
-				String versionFile = getVersionFileFromZip(file, "litemod.json");
-				if (versionFile != null && !versionFile.isEmpty()) {
-					if (versionFile.trim().startsWith("{")) {
-						HashMap<String, String> entryMap = null;
-						try {
-							entryMap = (new Gson().fromJson(versionFile,
-									HashMap.class));
-						} catch (JsonSyntaxException jsx) {
-							jsx.printStackTrace();
-						}
-						if (entryMap != null) {
-							//TODO: read litemod files
-						}
-					} else {
-						version = versionFile;
-						hasVersionFile = true;
-					}
-				}
-			} else*/
-			if (getFileName().endsWith(".jar")) {
-				//TODO move this to an external class
-				String versionFile = getVersionFileFromZip(file, "*mod.info");
-				if (versionFile != null && !versionFile.isEmpty()) {
-					JdomParser parser = new JdomParser();
-					JsonNode versionData;
-					try {
-						versionData = parser.parse(versionFile);
-						if (versionData.hasElements()) {
-							//Old mcmod.info file format
-							List<JsonNode> modinfo = versionData.getElements();
-							parseModInfoList(modinfo);
-						} else if (versionData.hasFields()) {
-							if ("2".equals(versionData.getNumberValue("modListVersion"))) {
-								List<JsonNode> modinfo = versionData.getArrayNode("modList");
-								parseModInfoList(modinfo);
-							} else {
-								NwLogger.NW_LOGGER.error("Error reading forge version file! Unknown fileformat!");
-							}
-						} else {
-							NwLogger.NW_LOGGER.error("Error reading forge version file! Unknown fileformat!");
-						}
-					} catch (InvalidSyntaxException | IllegalStateException | IllegalArgumentException e) {
-						NwLogger.NW_LOGGER.error("Error reading forge version file", e);
-					}
-				}
+			if (getFileName().endsWith(".litemod")) {
+				readLitemodVersionData();
+			} else if (getFileName().endsWith(".jar")) {
+				readForgeVersionData();
 			}
-			if (remoteInfo != null) {
-				updateVersionInformation(); // update version info according to the
-				// version type specified in remoteMods
-				// config
-			}
+			// update version info according to the
+			// version type specified in remoteMods
+			updateVersionInformation();
 		} else {
 			// no local file found
 			version = null;
 		}
 	}
 
+	private void readLitemodVersionData() {
+//		String versionFile = getVersionFileFromZip(file, "litemod.json");
+//		if (versionFile != null && !versionFile.isEmpty()) {
+//			if (versionFile.trim().startsWith("{")) {
+//				HashMap<String, String> entryMap = null;
+//				try {
+//					entryMap = (new Gson().fromJson(versionFile,
+//							HashMap.class));
+//				} catch (JsonSyntaxException jsx) {
+//					jsx.printStackTrace();
+//				}
+//				if (entryMap != null) {
+//					//TODO: read litemod files
+//				}
+//			} else {
+//				version = versionFile;
+//				hasVersionFile = true;
+//			}
+//		}
+	}
+
+	/**
+	 * reads forge's mod.info files from the jar file
+	 */
+	private void readForgeVersionData() {
+		String versionFile = getVersionFileFromZip(file, "*mod.info");
+		if (versionFile != null && !versionFile.isEmpty()) {
+			JdomParser parser = new JdomParser();
+			JsonNode versionData;
+			try {
+				versionData = parser.parse(versionFile);
+				if (versionData.hasElements()) {
+					//Old mcmod.info file format
+					List<JsonNode> modinfo = versionData.getElements();
+					parseModInfoList(modinfo);
+				} else if (versionData.hasFields()) {
+					if ("2".equals(versionData.getNumberValue("modListVersion"))) {
+						List<JsonNode> modinfo = versionData.getArrayNode("modList");
+						parseModInfoList(modinfo);
+					} else {
+						NwLogger.NW_LOGGER.error("Error reading forge version file! Unknown fileformat!");
+					}
+				} else {
+					NwLogger.NW_LOGGER.error("Error reading forge version file! Unknown fileformat!");
+				}
+			} catch (InvalidSyntaxException | IllegalStateException | IllegalArgumentException e) {
+				NwLogger.NW_LOGGER.error("Error reading forge version file", e);
+			}
+		}
+	}
+
+	/**
+	 * parse the modinfo list that is contained in a mod.info file
+	 *
+	 * @param modinfo JsonNode array of modinfo data
+	 * @throws IllegalArgumentException if list does not contain needed information (modid and version)
+	 */
 	private void parseModInfoList(List<JsonNode> modinfo) throws IllegalArgumentException {
 		if (!modinfo.isEmpty()) {
 			name = modinfo.get(0).getStringValue("modid");

@@ -392,7 +392,6 @@ public class Installer {
 	@SuppressWarnings({"unchecked", "BooleanMethodIsAlwaysInverted"})
 	public boolean createJar(boolean allowGui, Component parentWindow) {
 		//delete old file
-		//FIXME: this might create errors with forge installs and maybe should be removed
 		File file = new File(ourDir, name + ".jar");
 		if (file.exists()) {
 			if (!file.delete()) {
