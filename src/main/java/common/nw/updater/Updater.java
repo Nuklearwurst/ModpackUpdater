@@ -717,16 +717,16 @@ public class Updater {
 			modNumber++;
 			//fallback to default downloadtype
 			if (mod.getRemoteInfo().downloadType == null) {
-				mod.getRemoteInfo().downloadType = ModpackValues.modDirectDownload;
+				mod.getRemoteInfo().downloadType = ModpackValues.DownloadTypes.modDirectDownload;
 			}
 			switch (mod.getRemoteInfo().downloadType) {
-				case ModpackValues.modDirectDownload:
+				case ModpackValues.DownloadTypes.modDirectDownload:
 					if (!performDirectModDownload(mod, modNumber, modValue)) {
 						warningMessage += "\nFailed downloading Mod: " + mod;
 						return false;
 					}
 					break;
-				case ModpackValues.modExtractDownload:
+				case ModpackValues.DownloadTypes.modExtractDownload:
 					if (!performDirectModDownload(mod, modNumber, modValue)) {
 						warningMessage += "\nFailed downloading Mod: " + mod;
 						return false;
@@ -737,13 +737,13 @@ public class Updater {
 					}
 					//keep zip file for version tracking
 					break;
-				case ModpackValues.modUserDownload:
+				case ModpackValues.DownloadTypes.modUserDownload:
 					warningMessage += "\nUnsupported downloadType: " + mod.getRemoteInfo().downloadType + " \nConsider updating your updater.jar to the newest version!";
 					errored = true;
 					return false;
 				default:
 					//defaulting to direct download
-					warningMessage += "\nUnsupported downloadType: " + mod.getRemoteInfo().downloadType + " \nDefaulting to " + ModpackValues.modDirectDownload + "\nConsider updating your updater.jar to the newest version!";
+					warningMessage += "\nUnsupported downloadType: " + mod.getRemoteInfo().downloadType + " \nDefaulting to " + ModpackValues.DownloadTypes.modDirectDownload + "\nConsider updating your updater.jar to the newest version!";
 					if (!performDirectModDownload(mod, modNumber, modValue)) {
 						warningMessage += "\nFailed downloading Mod with unsupported downloadType: " + mod;
 						warningMessage += "\nTry reinstalling the modpack, otherwise contact your modpack author!";

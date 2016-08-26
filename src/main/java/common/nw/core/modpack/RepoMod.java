@@ -7,7 +7,13 @@ public class RepoMod {
 	public String name;
 	public String nameType; // currently not supported
 	public String version;
-	public String versionType; // currently not supported
+
+	/**
+	 * How the {@link #version} attribute should get interpreted
+	 *
+	 * @see ModpackValues
+	 */
+	public String versionType;
 
 	/**
 	 * the download url of the mod
@@ -17,7 +23,7 @@ public class RepoMod {
 	/**
 	 * how the mod should be downloaded
 	 *
-	 * @see {@link ModpackValues}
+	 * @see ModpackValues
 	 */
 	public String downloadType;
 

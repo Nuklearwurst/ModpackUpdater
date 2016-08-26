@@ -124,7 +124,7 @@ public class Creator {
 
 		//replace whitespaces in URL
 		mod.downloadUrl = dir + file.getName().replace(" ", "%20");
-		mod.downloadType = ModpackValues.modDirectDownload;
+		mod.downloadType = ModpackValues.DownloadTypes.modDirectDownload;
 
 		mod.md5 = DownloadHelper.getHash(file);
 

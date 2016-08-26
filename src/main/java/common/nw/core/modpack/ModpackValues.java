@@ -3,38 +3,54 @@ package common.nw.core.modpack;
 @SuppressWarnings("unused")
 public class ModpackValues {
 
-	private final static String directDownload = "directDownload";
-	private final static String userDownload = "userDownload";
-	private final static String localFile = "localFile";
-	private final static String extractArchive = "extractArchive";
-	private final static String minecraft = "minecraft";
-	private final static String minecraft_inherit = "minecraft_inherit";
-	private final static String forge_inherit = "forge_inherit";
-	private final static String auto_generate = "auto_generate";
+	public static class DownloadTypes {
 
-	public final static String jarDirectDownload = directDownload;
-	public final static String jarUserDownload = userDownload;
-	public final static String jarLocalFile = localFile;
-	/**
-	 * does not create an own jar, instead the version.json has to be configured to inherit from the mc-jar</br>
-	 * Can be used to inherit of custom loader mods other than mc-forge
-	 * TODO: allow auto insertion to inherit from another version
-	 */
-	public final static String jarMinecraftInherit = minecraft_inherit;
+		private final static String directDownload = "directDownload";
+		private final static String userDownload = "userDownload";
+		private final static String localFile = "localFile";
+		private final static String extractArchive = "extractArchive";
+		private final static String minecraft = "minecraft";
+		private final static String minecraft_inherit = "minecraft_inherit";
+		private final static String forge_inherit = "forge_inherit";
+		private final static String auto_generate = "auto_generate";
 
-	/**
-	 * same as jarMinecraftInherit, but downloads the speified forge version
-	 */
-	public final static String jarForgeInherit = forge_inherit;
 
-	public final static String jsonDirectDownload = directDownload;
-	public final static String jsonGenerate = auto_generate;
-	public final static String jsonUserDownload = userDownload;
-	public final static String jsonLocalFile = localFile;
+		//////////////////
+		// JAR-Download //
+		//////////////////
 
-	public final static String modDirectDownload = directDownload;
-	public final static String modUserDownload = userDownload;
-	public final static String modExtractDownload = extractArchive;
+		public final static String jarDirectDownload = directDownload;
+		public final static String jarUserDownload = userDownload;
+		public final static String jarLocalFile = localFile;
+		/**
+		 * does not create an own jar, instead the version.json has to be configured to inherit from the mc-jar</br>
+		 * Can be used to inherit of custom loader mods other than mc-forge
+		 * TODO: allow auto insertion to inherit from another version
+		 */
+		public final static String jarMinecraftInherit = minecraft_inherit;
+
+		/**
+		 * same as jarMinecraftInherit, but downloads the speified forge version
+		 */
+		public final static String jarForgeInherit = forge_inherit;
+
+		///////////////////
+		// JSON-Download //
+		///////////////////
+
+		public final static String jsonDirectDownload = directDownload;
+		public final static String jsonGenerate = auto_generate;
+		public final static String jsonUserDownload = userDownload;
+		public final static String jsonLocalFile = localFile;
+
+		//////////////////
+		// Mod-Download //
+		//////////////////
+
+		public final static String modDirectDownload = directDownload;
+		public final static String modUserDownload = userDownload;
+		public final static String modExtractDownload = extractArchive;
+	}
 
 
 	/**
