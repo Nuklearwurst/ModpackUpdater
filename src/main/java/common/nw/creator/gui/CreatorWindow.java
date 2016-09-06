@@ -4,11 +4,7 @@ import common.nw.core.gui.PageHolder;
 import common.nw.core.utils.SwingUtils;
 import common.nw.core.utils.log.NwLogger;
 import common.nw.creator.Creator;
-import common.nw.creator.gui.pages.PanelEditMods;
-import common.nw.creator.gui.pages.PanelInit;
-import common.nw.creator.gui.pages.PanelMinecraftSettings;
-import common.nw.creator.gui.pages.PanelSettings;
-import common.nw.creator.gui.pages.PanelFinish;
+import common.nw.creator.gui.pages.*;
 import common.nw.creator.properties.CreatorProperties;
 import common.nw.creator.util.Reference;
 
@@ -16,8 +12,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -48,16 +42,13 @@ public class CreatorWindow {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					SwingUtils.setOSLookAndFeel();
-					CreatorWindow window = new CreatorWindow();
-					window.window.setVisible(true);
-				} catch (Exception e) {
-					NwLogger.CREATOR_LOGGER.error("Error starting creator GUI", e);
-				}
+		EventQueue.invokeLater(() -> {
+			try {
+				SwingUtils.setOSLookAndFeel();
+				CreatorWindow window1 = new CreatorWindow();
+				window1.window.setVisible(true);
+			} catch (Exception e) {
+				NwLogger.CREATOR_LOGGER.error("Error starting creator GUI", e);
 			}
 		});
 	}
@@ -135,12 +126,7 @@ public class CreatorWindow {
 		panelButtons.setLayout(gbl_panelButtons);
 
 		JButton btnCancel = new JButton("Cancel");
-		btnCancel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				quitWindow();
-			}
-		});
+		btnCancel.addActionListener(e -> quitWindow());
 		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
 		gbc_btnCancel.insets = new Insets(0, 0, 0, 5);
 		gbc_btnCancel.gridx = 0;
@@ -148,12 +134,7 @@ public class CreatorWindow {
 		panelButtons.add(btnCancel, gbc_btnCancel);
 
 		btnBack = new JButton("Back");
-		btnBack.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				previousPage();
-			}
-		});
+		btnBack.addActionListener(e -> previousPage());
 		//disable back button
 		btnBack.setEnabled(false);
 		GridBagConstraints gbc_btnBack = new GridBagConstraints();
@@ -163,12 +144,7 @@ public class CreatorWindow {
 		panelButtons.add(btnBack, gbc_btnBack);
 
 		btnNext = new JButton("Next");
-		btnNext.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				nextPage();
-			}
-		});
+		btnNext.addActionListener(arg0 -> nextPage());
 		GridBagConstraints gbc_btnNext = new GridBagConstraints();
 		gbc_btnNext.gridx = 3;
 		gbc_btnNext.gridy = 0;

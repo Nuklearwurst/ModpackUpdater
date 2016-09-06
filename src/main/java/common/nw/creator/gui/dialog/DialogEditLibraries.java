@@ -10,7 +10,9 @@ import common.nw.creator.gui.table.TableModelDataList;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 public class DialogEditLibraries extends JDialog implements ITableHolder<Library> {
@@ -44,17 +46,9 @@ public class DialogEditLibraries extends JDialog implements ITableHolder<Library
 		setBounds(frame.getX() + 40, frame.getY() + 40, 400, 160);
 		setTitle("Edit libraries");
 
-		buttonOK.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				onOK();
-			}
-		});
+		buttonOK.addActionListener(e -> onOK());
 
-		buttonCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				onCancel();
-			}
-		});
+		buttonCancel.addActionListener(e -> onCancel());
 
 // call onCancel() when cross is clicked
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -65,66 +59,44 @@ public class DialogEditLibraries extends JDialog implements ITableHolder<Library
 		});
 
 // call onCancel() on ESCAPE
-		contentPane.registerKeyboardAction(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				onCancel();
-			}
-		}, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
 		//init ui
 		final String[] dataFields = new String[]{"id", "url"};
 		final TableModelDataList tableModelDataList = new TableModelDataList(new ListDataTable(dataFields, libraryList), new String[]{"Name", "Url"}, new String[]{"id", "url"}, true);
 		tableLibraries.setModel(tableModelDataList);
 
-		btnNew.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				showEditDialog(true);
-			}
-		});
+		btnNew.addActionListener(e -> showEditDialog(true));
 
-		btnEdit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				showEditDialog(false);
-			}
-		});
+		btnEdit.addActionListener(e -> showEditDialog(false));
 
-		btnRemove.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int[] index = tableLibraries.getSelectedRows();
-				if (index.length < 0) {
+		btnRemove.addActionListener(e -> {
+			int[] index = tableLibraries.getSelectedRows();
+			if (index.length < 0) {
+				return;
+			}
+			if (index.length > 1) {
+				final String msg;
+				if (getValue(index[0]).isVital()) {
+					msg = "Are you sure you want to remove this library from the list?\nThis lilbrary seems to be important!";
+				} else {
+					msg = "Are you sure you want to remove this library from the list?";
+				}
+				if (JOptionPane.showConfirmDialog(DialogEditLibraries.this, msg,
+						"Are you sure?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
 					return;
 				}
-				if (index.length > 1) {
-					final String msg;
-					if (getValue(index[0]).isVital()) {
-						msg = "Are you sure you want to remove this library from the list?\nThis lilbrary seems to be important!";
-					} else {
-						msg = "Are you sure you want to remove this library from the list?";
-					}
-					if (JOptionPane.showConfirmDialog(DialogEditLibraries.this, msg,
-							"Are you sure?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
-						return;
-					}
-				}
-				for (int i = index.length - 1; i >= 0; i--) {
-					if (i < libraryList.size()) {
-						libraryList.remove(tableLibraries.getRowSorter().convertRowIndexToModel(index[i]));
-					}
-				}
-				tableLibraries.clearSelection();
-				updateTable();
 			}
+			for (int i = index.length - 1; i >= 0; i--) {
+				if (i < libraryList.size()) {
+					libraryList.remove(tableLibraries.getRowSorter().convertRowIndexToModel(index[i]));
+				}
+			}
+			tableLibraries.clearSelection();
+			updateTable();
 		});
 
-		chbxLock.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				tableModelDataList.setEditable(!chbxLock.isSelected());
-			}
-		});
+		chbxLock.addActionListener(e -> tableModelDataList.setEditable(!chbxLock.isSelected()));
 	}
 
 	/**

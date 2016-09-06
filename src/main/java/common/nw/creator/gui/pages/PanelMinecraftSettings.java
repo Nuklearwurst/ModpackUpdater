@@ -16,8 +16,6 @@ import common.nw.creator.util.Reference;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 /**
@@ -55,19 +53,9 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 		this.creator = creator;
 		this.frame = frame;
 
-		btnEditLibraries.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				editLibraries();
-			}
-		});
+		btnEditLibraries.addActionListener(e -> editLibraries());
 
-		btnEditArguments.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				editArguments();
-			}
-		});
+		btnEditArguments.addActionListener(e -> editArguments());
 
 		rdbtnDownloadJson.setActionCommand(ModpackValues.DownloadTypes.jsonDirectDownload);
 		rdbtnJsonAutoCreate.setActionCommand(ModpackValues.DownloadTypes.jsonGenerate);
@@ -75,52 +63,35 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 		rdbtnDownloadJar.setActionCommand(ModpackValues.DownloadTypes.jarDirectDownload);
 		rdbtnForgeJar.setActionCommand(ModpackValues.DownloadTypes.jarForgeInherit);
 
-		rdbtnDownloadJson.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				updateJsonGenerated(false);
-			}
+		rdbtnDownloadJson.addActionListener(e -> updateJsonGenerated(false));
+
+		rdbtnJsonAutoCreate.addActionListener(e -> {
+			updateJsonGenerated(true);
+			createDefaultLibs();
 		});
 
-		rdbtnJsonAutoCreate.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				updateJsonGenerated(true);
-				createDefaultLibs();
-			}
+		rdbtnForgeJar.addActionListener(e -> {
+			setJsonGeneratedTypeEnabled(true);
+			setJsonUpdateType(ModpackValues.DownloadTypes.jsonGenerate);
+			createDefaultLibs();
+			btnSelectForge.setEnabled(true);
+			btnSelectForge.setVisible(true);
 		});
 
-		rdbtnForgeJar.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setJsonGeneratedTypeEnabled(true);
-				setJsonUpdateType(ModpackValues.DownloadTypes.jsonGenerate);
-				createDefaultLibs();
-				btnSelectForge.setEnabled(true);
-				btnSelectForge.setVisible(true);
-			}
+		rdbtnDownloadJar.addActionListener(e -> {
+			setJsonGeneratedTypeEnabled(false);
+			setJsonUpdateType(ModpackValues.DownloadTypes.jsonDirectDownload);
+			btnSelectForge.setEnabled(false);
+			btnSelectForge.setVisible(false);
 		});
 
-		rdbtnDownloadJar.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setJsonGeneratedTypeEnabled(false);
-				setJsonUpdateType(ModpackValues.DownloadTypes.jsonDirectDownload);
-				btnSelectForge.setEnabled(false);
-				btnSelectForge.setVisible(false);
-			}
-		});
-
-		btnSelectForge.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				DialogForgeChooser dialog = new DialogForgeChooser(frame, txtJar.getText());
-				dialog.pack();
-				dialog.setVisible(true);
-				final String version = dialog.getResult();
-				if (version != null) {
-					txtJar.setText(version);
-				}
+		btnSelectForge.addActionListener(e -> {
+			DialogForgeChooser dialog = new DialogForgeChooser(frame, txtJar.getText());
+			dialog.pack();
+			dialog.setVisible(true);
+			final String version = dialog.getResult();
+			if (version != null) {
+				txtJar.setText(version);
 			}
 		});
 	}

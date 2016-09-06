@@ -4,13 +4,15 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import common.nw.core.modpack.MCArgument;
+import common.nw.core.utils.ObjectToDisplayName;
 import common.nw.core.utils.SpecialComboboxRenderer;
 import common.nw.creator.gui.table.ITableHolder;
-import common.nw.core.utils.ObjectToDisplayName;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class DialogEditArgument extends JDialog {
 	private JPanel contentPane;
@@ -35,17 +37,9 @@ public class DialogEditArgument extends JDialog {
 		setModal(true);
 		getRootPane().setDefaultButton(buttonOK);
 
-		buttonOK.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				onOK();
-			}
-		});
+		buttonOK.addActionListener(e -> onOK());
 
-		buttonCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				onCancel();
-			}
-		});
+		buttonCancel.addActionListener(e -> onCancel());
 
 // call onCancel() when cross is clicked
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -56,11 +50,7 @@ public class DialogEditArgument extends JDialog {
 		});
 
 // call onCancel() on ESCAPE
-		contentPane.registerKeyboardAction(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				onCancel();
-			}
-		}, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
 		//init
 
@@ -68,12 +58,7 @@ public class DialogEditArgument extends JDialog {
 		setMinimumSize(new Dimension(400, 120));
 		setTitle(create ? "Add argument" : "Edit argument");
 
-		cmboxType.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				updateValue();
-			}
-		});
+		cmboxType.addActionListener(e -> updateValue());
 		cmboxArgument.setModel(new DefaultComboBoxModel<>(MCArgument.specialArgumentDisplayList));
 		cmboxArgument.setRenderer(new SpecialComboboxRenderer());
 
@@ -81,12 +66,7 @@ public class DialogEditArgument extends JDialog {
 		cmboxType.setRenderer(new SpecialComboboxRenderer());
 
 		btnRemove.setVisible(!create);
-		btnRemove.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				remove();
-			}
-		});
+		btnRemove.addActionListener(e -> remove());
 
 		cmboxType.setEnabled(create);
 

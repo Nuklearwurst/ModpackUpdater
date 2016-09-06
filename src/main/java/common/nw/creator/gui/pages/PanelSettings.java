@@ -4,14 +4,12 @@ import common.nw.core.gui.PageHolder;
 import common.nw.core.utils.SwingUtils;
 import common.nw.creator.Creator;
 import common.nw.creator.gui.CreatorWindow;
-import common.nw.creator.util.Reference;
 import common.nw.creator.properties.CreatorProperties;
+import common.nw.creator.util.Reference;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 /**
@@ -40,18 +38,15 @@ public class PanelSettings implements PageHolder.IExtendedPageHandler {
 
 		this.creator = creator;
 
-		chbxRead.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (chbxRead.isSelected()) {
-					btnOpenFiles.setEnabled(true);
-					txtFiles.setEnabled(true);
-					txtUrl.setEnabled(true);
-				} else {
-					btnOpenFiles.setEnabled(false);
-					txtFiles.setEnabled(false);
-					txtUrl.setEnabled(false);
-				}
+		chbxRead.addActionListener(e -> {
+			if (chbxRead.isSelected()) {
+				btnOpenFiles.setEnabled(true);
+				txtFiles.setEnabled(true);
+				txtUrl.setEnabled(true);
+			} else {
+				btnOpenFiles.setEnabled(false);
+				txtFiles.setEnabled(false);
+				txtUrl.setEnabled(false);
 			}
 		});
 		chbxRead.setActionCommand("readStructure");
@@ -70,25 +65,19 @@ public class PanelSettings implements PageHolder.IExtendedPageHandler {
 
 		txtUrl.setEnabled(false);
 
-		btnOpenOutput.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String file = SwingUtils.openFileOrDirectoryWithDefaultFileName(
-						panel_settings, null, "modpack.json");
-				if (file != null) {
-					txtOutput.setText(file);
-				}
+		btnOpenOutput.addActionListener(e -> {
+			String file = SwingUtils.openFileOrDirectoryWithDefaultFileName(
+					panel_settings, null, "modpack.json");
+			if (file != null) {
+				txtOutput.setText(file);
 			}
 		});
 		btnOpenOutput.setActionCommand("Output");
 
-		btnOpenFiles.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String file = SwingUtils.openFolder(panel_settings, null);
-				if (file != null) {
-					txtFiles.setText(file);
-				}
+		btnOpenFiles.addActionListener(e -> {
+			String file = SwingUtils.openFolder(panel_settings, null);
+			if (file != null) {
+				txtFiles.setText(file);
 			}
 		});
 		btnOpenFiles.setEnabled(false);

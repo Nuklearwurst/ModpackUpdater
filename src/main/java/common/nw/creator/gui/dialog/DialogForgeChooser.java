@@ -10,7 +10,9 @@ import common.nw.core.utils.log.NwLogger;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,17 +43,9 @@ public class DialogForgeChooser extends JDialog {
 		setBounds(window.getX() + 40, window.getY() + 40, 400, 160);
 		setTitle("Select forge version");
 
-		buttonOK.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				onOK();
-			}
-		});
+		buttonOK.addActionListener(e -> onOK());
 
-		buttonCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				onCancel();
-			}
-		});
+		buttonCancel.addActionListener(e -> onCancel());
 
 // call onCancel() when cross is clicked
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -62,18 +56,9 @@ public class DialogForgeChooser extends JDialog {
 		});
 
 // call onCancel() on ESCAPE
-		contentPane.registerKeyboardAction(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				onCancel();
-			}
-		}, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-		cmboxMcVersion.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				createForgeVersions();
-			}
-		});
+		cmboxMcVersion.addActionListener(e -> createForgeVersions());
 
 		new DownloadForgeJsonTask().execute();
 	}
@@ -117,7 +102,7 @@ public class DialogForgeChooser extends JDialog {
 			for (JsonNode node : versions) {
 				forgeVersions.add(forgeVersionData.getStringValue("number", node.getText(), "version"));
 			}
-			cmboxForgeVersion.setModel(new DefaultComboBoxModel<String>(forgeVersions.toArray(new String[forgeVersions.size()])));
+			cmboxForgeVersion.setModel(new DefaultComboBoxModel<>(forgeVersions.toArray(new String[forgeVersions.size()])));
 			cmboxForgeVersion.setSelectedIndex(cmboxForgeVersion.getItemCount() - 1);
 		} catch (Exception e) {
 			NwLogger.CREATOR_LOGGER.error("Error reading forge versions!", e);

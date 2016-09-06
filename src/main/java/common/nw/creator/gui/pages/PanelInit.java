@@ -5,14 +5,13 @@ import common.nw.core.gui.PageHolder;
 import common.nw.core.modpack.RepoModpack;
 import common.nw.core.utils.SwingUtils;
 import common.nw.creator.Creator;
-import common.nw.creator.util.Reference;
 import common.nw.creator.gui.transfer.IDropFileHandler;
 import common.nw.creator.properties.CreatorProperties;
+import common.nw.creator.util.Reference;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileReader;
@@ -116,18 +115,15 @@ public class PanelInit implements PageHolder.IExtendedPageHandler, IDropFileHand
 	}
 
 	private void createUIComponents() {
-		ActionListener checkBoxListener = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (e.getActionCommand().equals("create")) {
-					txtLoadFrom.setEnabled(false);
-					btnLoadOpen.setEnabled(false);
-					CreatorProperties.LOAD = false;
-				} else {
-					txtLoadFrom.setEnabled(true);
-					btnLoadOpen.setEnabled(true);
-					CreatorProperties.LOAD = true;
-				}
+		ActionListener checkBoxListener = e -> {
+			if (e.getActionCommand().equals("create")) {
+				txtLoadFrom.setEnabled(false);
+				btnLoadOpen.setEnabled(false);
+				CreatorProperties.LOAD = false;
+			} else {
+				txtLoadFrom.setEnabled(true);
+				btnLoadOpen.setEnabled(true);
+				CreatorProperties.LOAD = true;
 			}
 		};
 
@@ -146,14 +142,11 @@ public class PanelInit implements PageHolder.IExtendedPageHandler, IDropFileHand
 		txtLoadFrom.setComponentPopupMenu(SwingUtils.createTextPopupMenu(txtLoadFrom));
 
 		btnLoadOpen = new JButton("Open");
-		btnLoadOpen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				String file = SwingUtils.openFile(panel_init, new File(txtLoadFrom.getText()));
-				if (file != null) {
-					txtLoadFrom.setText(file);
-					CreatorProperties.LAST_OPENED_MODPACK = file;
-				}
+		btnLoadOpen.addActionListener(arg0 -> {
+			String file = SwingUtils.openFile(panel_init, new File(txtLoadFrom.getText()));
+			if (file != null) {
+				txtLoadFrom.setText(file);
+				CreatorProperties.LAST_OPENED_MODPACK = file;
 			}
 		});
 		btnLoadOpen.setEnabled(CreatorProperties.LOAD);

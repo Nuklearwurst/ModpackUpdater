@@ -143,7 +143,7 @@ public class DownloadHelper {
 	public static UpdateResult getMod(IProgressWatcher listener, ModInfo mod,
 	                                  int modNumber, float modValue, File baseDir, boolean ignoreDuplicates) {
 
-		/** mod file */
+		/* mod file */
 		String file = baseDir + File.separator + mod.getFileNameSystem();
 
 		// create dirs

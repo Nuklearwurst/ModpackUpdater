@@ -9,8 +9,6 @@ import common.nw.creator.gui.table.TableModelList;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 public class DialogEditBlacklist extends JDialog implements ITableHolder<RepoMod> {
@@ -42,33 +40,13 @@ public class DialogEditBlacklist extends JDialog implements ITableHolder<RepoMod
 		tableBlacklist.setFillsViewportHeight(true);
 		tableBlacklist.setAutoCreateRowSorter(true);
 
-		btnAdd.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				openEditDialog(true);
-			}
-		});
+		btnAdd.addActionListener(e -> openEditDialog(true));
 
-		btnEdit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				openEditDialog(false);
-			}
-		});
+		btnEdit.addActionListener(e -> openEditDialog(false));
 
-		btnRemove.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				removeButton();
-			}
-		});
+		btnRemove.addActionListener(e -> removeButton());
 
-		btnFinish.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				finish();
-			}
-		});
+		btnFinish.addActionListener(e -> finish());
 
 		updateTable();
 	}

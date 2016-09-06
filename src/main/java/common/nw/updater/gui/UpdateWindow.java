@@ -4,8 +4,6 @@ import common.nw.updater.Updater;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
@@ -38,12 +36,7 @@ public class UpdateWindow implements IProgressWatcher, WindowListener {
 		frmUpdater.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmUpdater.setContentPane(contentPanel);
 
-		btnCancel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				cancel();
-			}
-		});
+		btnCancel.addActionListener(arg0 -> cancel());
 	}
 
 	public UpdateWindow(Updater updater) {

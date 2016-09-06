@@ -44,7 +44,7 @@ public class Updater {
 	/**
 	 * configuration flags of outr instance (are we on a server/client/etc.)<br>
 	 *
-	 * @see {@link RepoMod#fileType}
+	 * @see RepoMod#fileType
 	 */
 	private int flags = 0;
 

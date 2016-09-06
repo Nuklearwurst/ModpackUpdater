@@ -11,8 +11,6 @@ import common.nw.creator.gui.table.TableModelDataList;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashSet;
 import java.util.List;
 
@@ -51,47 +49,17 @@ public class DialogEditArguments extends JDialog implements ITableHolder<MCArgum
 		table.setDefaultRenderer(Object.class, tableCellRenderer);
 
 
-		btnAdd.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				showEditDialog(true);
-			}
-		});
+		btnAdd.addActionListener(e -> showEditDialog(true));
 
-		btnEdit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				showEditDialog(false);
-			}
-		});
+		btnEdit.addActionListener(e -> showEditDialog(false));
 
-		btnRemove.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				remove();
-			}
-		});
+		btnRemove.addActionListener(e -> remove());
 
-		btnUp.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				moveArgUp();
-			}
-		});
+		btnUp.addActionListener(e -> moveArgUp());
 
-		btnDown.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				moveArgDown();
-			}
-		});
+		btnDown.addActionListener(e -> moveArgDown());
 
-		btnFinish.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				finish();
-			}
-		});
+		btnFinish.addActionListener(e -> finish());
 	}
 
 	private void remove() {

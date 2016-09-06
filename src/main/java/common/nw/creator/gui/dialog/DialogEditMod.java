@@ -17,7 +17,9 @@ import common.nw.creator.util.DownloadModTask;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.text.DateFormat;
 import java.util.Date;
@@ -77,42 +79,19 @@ public class DialogEditMod extends JDialog {
 		rdbtnDownloadFolder.setActionCommand(ModpackValues.DownloadTypes.modUserDownload);
 		rdbtnDownloadExtract.setActionCommand(ModpackValues.DownloadTypes.modExtractDownload);
 
-		btnOk.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				onOK();
-			}
-		});
+		btnOk.addActionListener(e -> onOK());
 
-		btnCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				onCancel();
-			}
-		});
+		btnCancel.addActionListener(e -> onCancel());
 
 
-		btnOpen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				openFile();
-			}
-		});
+		btnOpen.addActionListener(e -> openFile());
 //		btnOpen.setVisible(mode);
 
-		btnDownload.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				download();
-			}
-		});
+		btnDownload.addActionListener(e -> download());
 //		btnDownload.setVisible(mode);
 
 
-		btnRemove.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				remove();
-			}
-		});
+		btnRemove.addActionListener(e -> remove());
 		btnRemove.setVisible(!mode);
 
 // call onCancel() when cross is clicked
@@ -124,11 +103,7 @@ public class DialogEditMod extends JDialog {
 		});
 
 // call onCancel() on ESCAPE
-		contentPane.registerKeyboardAction(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				onCancel();
-			}
-		}, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
 
 		init();
@@ -148,18 +123,15 @@ public class DialogEditMod extends JDialog {
 		DialogProgress d = new DialogProgress(this);
 		d.pack();
 
-		DownloadModTask downloadModTask = new DownloadModTask(d, new DownloadModTask.DownloadFinishedHandler() {
-			@Override
-			public void onDownloadFinished(File file, UpdateResult result) {
-				if (result == UpdateResult.Good) {
-					openFile(file);
-					txtUrl.setText(ans);
-				} else {
-					JOptionPane.showMessageDialog(contentPane, "Error Downloading File\nResult: " + result, "Error", JOptionPane.ERROR_MESSAGE);
-				}
-				//noinspection ResultOfMethodCallIgnored
-				file.delete();
+		DownloadModTask downloadModTask = new DownloadModTask(d, (file, result) -> {
+			if (result == UpdateResult.Good) {
+				openFile(file);
+				txtUrl.setText(ans);
+			} else {
+				JOptionPane.showMessageDialog(contentPane, "Error Downloading File\nResult: " + result, "Error", JOptionPane.ERROR_MESSAGE);
 			}
+			//noinspection ResultOfMethodCallIgnored
+			file.delete();
 		}, new File("" + File.separator + ans.substring(index)), DownloadModTask.createModInfoFromUrl(ans));
 		downloadModTask.start();
 		d.setVisible(true);

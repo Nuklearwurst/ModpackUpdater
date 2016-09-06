@@ -17,8 +17,6 @@ import common.nw.creator.util.Reference;
 import javax.swing.*;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.text.DateFormat;
 import java.util.Date;
@@ -55,63 +53,38 @@ public class PanelEditMods implements PageHolder.IExtendedPageHandler, IDropFile
 		this.parentFrame = parentFrame;
 		this.creator = creator;
 
-		btnRemove.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int[] index = tableMods.getSelectedRows();
-				if (index.length < 0) {
+		btnRemove.addActionListener(e -> {
+			int[] index = tableMods.getSelectedRows();
+			if (index.length < 0) {
+				return;
+			}
+			if (index.length > 1) {
+				if (JOptionPane.showConfirmDialog(panel_editmods,
+						"Are you sure you want to remove these files from the list?",
+						"Are you sure", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
 					return;
 				}
-				if (index.length > 1) {
-					if (JOptionPane.showConfirmDialog(panel_editmods,
-							"Are you sure you want to remove these files from the list?",
-							"Are you sure", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
-						return;
-					}
+			}
+			for (int i = index.length - 1; i >= 0; i--) {
+				if (i < mods.size()) {
+					mods.remove(tableMods.getRowSorter().convertRowIndexToModel(index[i]));
 				}
-				for (int i = index.length - 1; i >= 0; i--) {
-					if (i < mods.size()) {
-						mods.remove(tableMods.getRowSorter().convertRowIndexToModel(index[i]));
-					}
-				}
-				tableMods.clearSelection();
-				updateTable();
 			}
+			tableMods.clearSelection();
+			updateTable();
 		});
 
-		btnEdit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				showEditDialog(false);
-			}
-		});
+		btnEdit.addActionListener(e -> showEditDialog(false));
 
-		btnNew.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				showEditDialog(true);
-			}
-		});
+		btnNew.addActionListener(arg0 -> showEditDialog(true));
 
-		btnEditBlacklist.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				editBlackList();
-			}
-		});
+		btnEditBlacklist.addActionListener(arg0 -> editBlackList());
 
 		chbxHideMods.setActionCommand("hideMods");
-		chbxHideMods.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				updateTable();
-			}
-		});
+		chbxHideMods.addActionListener(e -> updateTable());
 
 		chbxHideConfig.setActionCommand("hideConfig");
-		chbxHideConfig.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				updateTable();
-			}
-		});
+		chbxHideConfig.addActionListener(arg0 -> updateTable());
 
 		//TODO switch to a better table model
 		tableMods.setModel(new TableModelList(new String[]{"Name", "Version",
@@ -167,11 +140,11 @@ public class PanelEditMods implements PageHolder.IExtendedPageHandler, IDropFile
 		}
 		String absolutePath = file.getAbsolutePath();
 
-		/** path within the minecraft installation */
+		// path within the minecraft installation
 		String mcRelativePath = absolutePath;
-		/** base dir */
+		// base dir
 		String baseDirPath = "";
-		/** added base dir */
+		// added base dir
 		String baseDirToAdd = "";
 
 		//split absolutePath in two parts

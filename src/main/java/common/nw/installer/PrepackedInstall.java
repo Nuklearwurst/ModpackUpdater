@@ -19,23 +19,20 @@ public final class PrepackedInstall {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				// look and feel
-				try {
-					UIManager.setLookAndFeel(UIManager
-							.getSystemLookAndFeelClassName());
-				} catch (Throwable t) {
-					NwLogger.INSTALLER_LOGGER.error("Error when setting Look and Feel!", t);
-				}
-				try {
-					InstallerWindow window = new InstallerWindow(MODPACK_URL);
-					window.mainFrame.pack();
-					window.mainFrame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+			// look and feel
+			try {
+				UIManager.setLookAndFeel(UIManager
+						.getSystemLookAndFeelClassName());
+			} catch (Throwable t) {
+				NwLogger.INSTALLER_LOGGER.error("Error when setting Look and Feel!", t);
+			}
+			try {
+				InstallerWindow window = new InstallerWindow(MODPACK_URL);
+				window.mainFrame.pack();
+				window.mainFrame.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		});
 	}

@@ -124,7 +124,7 @@ public class MCArgument implements IDataTableElement {
 		 */
 		DYNAMIC("auto-generated");
 
-		private String displayName;
+		private final String displayName;
 
 		Type(String displayName) {
 			this.displayName = displayName;

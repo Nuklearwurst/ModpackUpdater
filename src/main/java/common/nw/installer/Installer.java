@@ -216,7 +216,7 @@ public class Installer {
 	 * <p/>
 	 * note: does not write json file to disk
 	 *
-	 * @see {@link #writeJson()}
+	 * @see #writeJson()
 	 */
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean createJson() {

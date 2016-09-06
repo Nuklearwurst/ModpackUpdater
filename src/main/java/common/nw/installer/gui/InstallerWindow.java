@@ -13,8 +13,6 @@ import common.nw.installer.gui.pages.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * @author Nuklearwurst
@@ -315,24 +313,9 @@ public class InstallerWindow {
 		pageHolder.addPage(page4);
 
 
-		btnNext.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				nextPage();
-			}
-		});
-		btnBack.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				previousPage();
-			}
-		});
-		btnCancel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				exit();
-			}
-		});
+		btnNext.addActionListener(e -> nextPage());
+		btnBack.addActionListener(e -> previousPage());
+		btnCancel.addActionListener(arg0 -> exit());
 
 		updatePage();
 
@@ -449,23 +432,20 @@ public class InstallerWindow {
 
 	// Main entry point
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				// look and feel
-				try {
-					UIManager.setLookAndFeel(UIManager
-							.getSystemLookAndFeelClassName());
-				} catch (Throwable t) {
-					NwLogger.INSTALLER_LOGGER.error("Error when setting Look and Feel!", t);
-				}
-				try {
-					InstallerWindow window = new InstallerWindow(null);
-					window.mainFrame.pack();
-					window.mainFrame.setVisible(true);
-				} catch (Exception e) {
-					NwLogger.INSTALLER_LOGGER.error("Error when starting GUI!", e);
-				}
+		EventQueue.invokeLater(() -> {
+			// look and feel
+			try {
+				UIManager.setLookAndFeel(UIManager
+						.getSystemLookAndFeelClassName());
+			} catch (Throwable t) {
+				NwLogger.INSTALLER_LOGGER.error("Error when setting Look and Feel!", t);
+			}
+			try {
+				InstallerWindow window = new InstallerWindow(null);
+				window.mainFrame.pack();
+				window.mainFrame.setVisible(true);
+			} catch (Exception e) {
+				NwLogger.INSTALLER_LOGGER.error("Error when starting GUI!", e);
 			}
 		});
 	}

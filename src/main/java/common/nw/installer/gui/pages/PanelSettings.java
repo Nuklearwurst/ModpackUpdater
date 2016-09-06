@@ -13,13 +13,11 @@ import common.nw.core.gui.PageHolder;
 import common.nw.core.utils.SwingUtils;
 import common.nw.core.utils.Utils;
 import common.nw.core.utils.log.NwLogger;
-import common.nw.installer.gui.dialog.DialogProfileSettings;
 import common.nw.installer.gui.InstallerWindow;
+import common.nw.installer.gui.dialog.DialogProfileSettings;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,40 +40,22 @@ public class PanelSettings implements PageHolder.IExtendedPageHandler {
 
 	public PanelSettings(final InstallerWindow window) {
 		txtpnInstallerSettings.setBackground(SystemColor.menu);
-		chbxCreateProfile.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				updateCreateProfileCheckBox(window);
+		chbxCreateProfile.addActionListener(arg0 -> updateCreateProfileCheckBox(window));
+
+		btnOpen.addActionListener(e -> {
+			File folder = new File(txtMinecraft.getText());
+			if (!folder.exists()) {
+				folder = new File(Utils.getMinecraftDir());
+			}
+			String s = SwingUtils.openFolder(panel_settings, folder);
+			if (s != null) {
+				txtMinecraft.setText(s);
 			}
 		});
 
-		btnOpen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				File folder = new File(txtMinecraft.getText());
-				if (!folder.exists()) {
-					folder = new File(Utils.getMinecraftDir());
-				}
-				String s = SwingUtils.openFolder(panel_settings, folder);
-				if (s != null) {
-					txtMinecraft.setText(s);
-				}
-			}
-		});
+		btnModpackName.addActionListener(e -> txtVersionName.setText(window.modpack.modpackName));
 
-		btnModpackName.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				txtVersionName.setText(window.modpack.modpackName);
-			}
-		});
-
-		btnProfileSettings.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				window.openProfileSettingsDialog();
-			}
-		});
+		btnProfileSettings.addActionListener(e -> window.openProfileSettingsDialog());
 	}
 
 	private void updateCreateProfileCheckBox(final InstallerWindow window) {

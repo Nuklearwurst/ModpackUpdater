@@ -160,9 +160,7 @@ public class Launch implements ITweaker {
 		}
 
 		Launch launch = new Launch(useGui);
-		/**
-		 * launch updater using the working directory as gameFolder
-		 */
+		// launch updater using the working directory as gameFolder
 		launch.acceptOptions(Arrays.asList(args),
 				new File(gameDir),
 				new File(assetDir),

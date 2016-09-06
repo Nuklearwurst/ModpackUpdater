@@ -18,8 +18,6 @@ import common.nw.installer.gui.InstallerWindow;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,57 +53,30 @@ public class DialogProfileSettings extends JDialog {
 		getRootPane().setDefaultButton(btnOk);
 
 
-		btnReset.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				resetName();
+		btnReset.addActionListener(e -> resetName());
+
+		btnOpen.addActionListener(arg0 -> {
+			String s;
+			if (txtDirectory.getText() == null
+					|| txtDirectory.getText().isEmpty()) {
+				s = Utils.getMinecraftDir();
+			} else {
+				s = txtDirectory.getText();
+			}
+			s = SwingUtils.openFolder(contentPane,
+					new File(s));
+			if (s != null) {
+				txtDirectory.setText(s);
 			}
 		});
 
-		btnOpen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				String s;
-				if (txtDirectory.getText() == null
-						|| txtDirectory.getText().isEmpty()) {
-					s = Utils.getMinecraftDir();
-				} else {
-					s = txtDirectory.getText();
-				}
-				s = SwingUtils.openFolder(contentPane,
-						new File(s));
-				if (s != null) {
-					txtDirectory.setText(s);
-				}
-			}
-		});
+		btnOk.addActionListener(e -> finish());
 
-		btnOk.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				finish();
-			}
-		});
+		btnUseProfile.addActionListener(arg0 -> chooseExistingProfile());
 
-		btnUseProfile.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				chooseExistingProfile();
-			}
-		});
+		btnCancel.addActionListener(e -> cancel());
 
-		btnCancel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				cancel();
-			}
-		});
-
-		btnReset.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				txtJavaOptions.setText(DEFAULT_JAVA_OPTIONS);
-			}
-		});
+		btnReset.addActionListener(arg0 -> txtJavaOptions.setText(DEFAULT_JAVA_OPTIONS));
 
 		init();
 	}

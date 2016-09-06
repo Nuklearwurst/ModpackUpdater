@@ -7,7 +7,9 @@ import common.nw.core.gui.IDownloadProgressListener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class DialogProgress extends JDialog implements IDownloadProgressListener {
 	private JPanel contentPane;
@@ -30,11 +32,7 @@ public class DialogProgress extends JDialog implements IDownloadProgressListener
 		setContentPane(contentPane);
 		getRootPane().setDefaultButton(buttonCancel);
 
-		buttonCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				onCancel();
-			}
-		});
+		buttonCancel.addActionListener(e -> onCancel());
 
 // call onCancel() when cross is clicked
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -45,11 +43,7 @@ public class DialogProgress extends JDialog implements IDownloadProgressListener
 		});
 
 // call onCancel() on ESCAPE
-		contentPane.registerKeyboardAction(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				onCancel();
-			}
-		}, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
 		progressBar.setIndeterminate(indeterminate);
 	}

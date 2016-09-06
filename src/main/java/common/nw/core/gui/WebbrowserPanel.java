@@ -24,7 +24,7 @@ import static javafx.concurrent.Worker.State.FAILED;
  */
 public class WebbrowserPanel extends JPanel {
 
-	public static String[] downloadableExtensions = {
+	public static final String[] downloadableExtensions = {
 			".jar", ".zip", ".json", ".txt", ".properties", ".prop", ".gif", ".png", ".litemod", ".cfg", ".config", ".conf"
 	};
 
