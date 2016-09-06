@@ -46,6 +46,7 @@ public class ModInfo {
 	 * is the name read of the zip file?
 	 */
 	public boolean hasName = false;
+
 	/**
 	 * is the version read of the zip file?
 	 */
@@ -98,7 +99,7 @@ public class ModInfo {
 
 	/**
 	 * sets the remote data of a local mod and validates the VersionData
-	 *
+	 * <p>
 	 * note: this will not check if the given RemoteMod is equal to this instance!
 	 *
 	 * @param mod remote mod
@@ -111,15 +112,15 @@ public class ModInfo {
 	/**
 	 * uses correct version information (uses the defined versiontype of remote)
 	 * <p>
-	 *      This will use any read version data (eg. forge's mod.info file) or fallback to MD5 or filename, if specified in remoteInfo
+	 * This will use any read version data (eg. forge's mod.info file) or fallback to MD5 or filename, if specified in remoteInfo
 	 * </p>
 	 */
 	private void updateVersionInformation() {
 		if (remoteInfo != null) {
 			if (remoteInfo.versionType != null) {
-				if (remoteInfo.versionType.equals(ModpackValues.versionTypeMD5) && file != null && file.exists()) {
+				if (remoteInfo.versionType.equals(ModpackValues.Version.versionTypeMD5) && file != null && file.exists()) {
 					version = DownloadHelper.getHash(file);
-				} else if (remoteInfo.versionType.equals(ModpackValues.versionTypeFileName) && this.hasVersionFile) {
+				} else if (remoteInfo.versionType.equals(ModpackValues.Version.versionTypeFileName) && this.hasVersionFile) {
 					version = getFileName();
 				}
 			}
@@ -136,6 +137,9 @@ public class ModInfo {
 		loadInfoFromFile(new File(baseDir, getFileNameSystem()));
 	}
 
+	/**
+	 * reads the mod information of the given file
+	 */
 	@SuppressWarnings("unchecked")
 	public void loadInfoFromFile(File file) {
 		// loading file
@@ -229,6 +233,7 @@ public class ModInfo {
 	 *
 	 * @param file zip file
 	 * @param name name of the file inside the zip
+	 * @return null if no version file could be extracted
 	 */
 	@SuppressWarnings({"SameParameterValue", "WeakerAccess"})
 	public static String getVersionFileFromZip(File file, String name) {
@@ -237,6 +242,7 @@ public class ModInfo {
 			ZipFile modZip = new ZipFile(file);
 			ZipEntry entry = null;
 			if (name.startsWith("*")) {
+				//search for file ending with given name
 				name = name.substring(1);
 				Enumeration<? extends ZipEntry> enumeration = modZip.entries();
 				while (enumeration.hasMoreElements()) {
@@ -288,7 +294,19 @@ public class ModInfo {
 	}
 
 	/**
+	 * @return true if this mod should be tracked
+	 * @see ModpackValues.Version#versionTypeTracked
+	 */
+	public boolean shouldBeTracked() {
+		return remoteInfo != null && ModpackValues.Version.versionTypeTracked.equals(remoteInfo.versionType);
+	}
+
+	/**
 	 * check versions
+	 * <p>
+	 * will return {@code false} if this mod has no remote represantation
+	 * <p>
+	 * returns {@code true} if this mod is not yet available locally
 	 *
 	 * @return whether this mod needs an update
 	 */
@@ -321,10 +339,10 @@ public class ModInfo {
 	public boolean equals(RepoMod mod) {
 		if (mod.nameType != null) {
 			//mod nameType conflict resolution
-			if (mod.nameType.equals(ModpackValues.nameTypeFileName) && this.hasName) {
+			if (mod.nameType.equals(ModpackValues.Name.nameTypeFileName) && this.hasName) {
 				//local version was read from zip-version file but remote is managed by filename
 				return this.getFileName().equals(mod.name);
-			} else if (mod.nameType.equals(ModpackValues.nameTypeZipEntry)) {
+			} else if (mod.nameType.equals(ModpackValues.Name.nameTypeZipEntry)) {
 				if (!this.hasName) {
 					//We could not read a zip name, this is a different mod1
 					return false;

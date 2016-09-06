@@ -186,17 +186,17 @@ public class PanelEditMods implements PageHolder.IExtendedPageHandler, IDropFile
 		repo.md5 = DownloadHelper.getHash(file);
 
 		if (mod.hasName) {
-			repo.nameType = ModpackValues.nameTypeZipEntry;
+			repo.nameType = ModpackValues.Name.nameTypeZipEntry;
 		} else {
-			repo.nameType = ModpackValues.nameTypeFileName;
+			repo.nameType = ModpackValues.Name.nameTypeFileName;
 		}
 		if (mod.hasVersionFile) {
-			repo.versionType = ModpackValues.versionTypeZipEntry;
+			repo.versionType = ModpackValues.Version.versionTypeZipEntry;
 		} else if (mod.getFileNameSystem().startsWith("config" + File.separator)) {
 			repo.version = DateFormat.getDateInstance().format(new Date(System.currentTimeMillis()));
-			repo.versionType = ModpackValues.versionTypeTracked;
+			repo.versionType = ModpackValues.Version.versionTypeTracked;
 		} else {
-			repo.versionType = ModpackValues.versionTypeFileName;
+			repo.versionType = ModpackValues.Version.versionTypeFileName;
 		}
 		this.mods.add(repo);
 		updateTable();

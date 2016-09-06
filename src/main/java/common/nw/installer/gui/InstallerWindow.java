@@ -178,7 +178,7 @@ public class InstallerWindow {
 					return;
 				}
 			}
-			setProgress(modpack.minecraft.jarUpdateType.equals(ModpackValues.DownloadTypes.jarForgeInherit) ? "Downloading and executing MinecraftForge, this may take a while..." : "Downloading Minecraft Jar", 40);
+			setProgress(modpack.minecraft.jarUpdateType.equals(ModpackValues.Download.jarForgeInherit) ? "Downloading and executing MinecraftForge, this may take a while..." : "Downloading Minecraft Jar", 40);
 			if (!installer.createJar(true, content_panel)) {
 				if (JOptionPane.showConfirmDialog(mainFrame,
 						"Failed creating version.jar file! "

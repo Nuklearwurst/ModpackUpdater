@@ -3,7 +3,7 @@ package common.nw.core.modpack;
 @SuppressWarnings("unused")
 public class ModpackValues {
 
-	public static class DownloadTypes {
+	public static class Download {
 
 		private final static String directDownload = "directDownload";
 		private final static String userDownload = "userDownload";
@@ -52,37 +52,45 @@ public class ModpackValues {
 		public final static String modExtractDownload = extractArchive;
 	}
 
+	public static class Name {
+		/**
+		 * use filename as name
+		 */
+		public final static String nameTypeFileName = "file";
+		/**
+		 * use forge/.litemod name
+		 */
+		public final static String nameTypeZipEntry = "zipEntry";
+	}
 
-	/**
-	 * use filename as name
-	 */
-	public final static String nameTypeFileName = "file";
-	/**
-	 * use forge/.litemod name
-	 */
-	public final static String nameTypeZipEntry = "zipEntry";
+	public static class Version {
+		/**
+		 * use filename as version
+		 */
+		public final static String versionTypeFileName = "file";
+		/**
+		 * use forge/.litemod version
+		 */
+		public final static String versionTypeZipEntry = "zipEntry";
+		/**
+		 * use file-md5 as version
+		 */
+		public final static String versionTypeMD5 = "md5";
+		/**
+		 * tracks last updates and update on version String change
+		 */
+		public final static String versionTypeTracked = "tracked";
+	}
 
-	/**
-	 * use filename as version
-	 */
-	public final static String versionTypeFileName = "file";
-	/**
-	 * use forge/.litemod version
-	 */
-	public final static String versionTypeZipEntry = "zipEntry";
-	/**
-	 * use file-md5 as version
-	 */
-	public final static String versionTypeMD5 = "md5";
-	/**
-	 * tracks last updates and update on version String change
-	 */
-	public final static String versionTypeTracked = "tracked";
+	public static class File {
+		public final static int fileTypeServer = 1; //0b001
+		public final static int fileTypeClient = 2; //0b010
+		public final static int fileTypeAdmin = 4; //0b100
 
-	public final static int fileTypeServer = 1; //0b1
-	public final static int fileTypeClient = 2; //0b10
-	public final static int fileTypeAdmin = 4; //0b100
+	}
 
-	public final static String URL_FORGE_INSTALLER = "http://files.minecraftforge.net/maven/net/minecraftforge/forge/";
-	public final static String URL_FORGE_VERSION_JSON = "http://files.minecraftforge.net/maven/net/minecraftforge/forge/json";
+	public static class URL {
+		public final static String forgeInstaller = "http://files.minecraftforge.net/maven/net/minecraftforge/forge/";
+		public final static String forgeVersionJson = "http://files.minecraftforge.net/maven/net/minecraftforge/forge/json";
+	}
 }

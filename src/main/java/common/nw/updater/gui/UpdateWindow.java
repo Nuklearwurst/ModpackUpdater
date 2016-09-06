@@ -1,6 +1,6 @@
 package common.nw.updater.gui;
 
-import common.nw.updater.Updater;
+import common.nw.core.utils.log.NwLogger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,11 +37,6 @@ public class UpdateWindow implements IProgressWatcher, WindowListener {
 		frmUpdater.setContentPane(contentPanel);
 
 		btnCancel.addActionListener(arg0 -> cancel());
-	}
-
-	public UpdateWindow(Updater updater) {
-		this();
-		updater.setListener(this);
 	}
 
 
@@ -95,6 +90,11 @@ public class UpdateWindow implements IProgressWatcher, WindowListener {
 	}
 
 	@Override
+	public void showMessageDialog(String message, String title, int messageType) {
+		JOptionPane.showMessageDialog(frmUpdater, message, title, messageType);
+	}
+
+	@Override
 	public String showInputDialog(String message) {
 		return JOptionPane.showInputDialog(frmUpdater, message);
 	}
@@ -107,7 +107,7 @@ public class UpdateWindow implements IProgressWatcher, WindowListener {
 
 	@Override
 	public void setDownloadProgress(String msg) {
-		Updater.logger.info("Download Progress: " + msg);
+		NwLogger.UPDATER_LOGGER.info("Download Progress: " + msg);
 		lblDownloadProgress.setText(msg);
 	}
 
@@ -135,7 +135,7 @@ public class UpdateWindow implements IProgressWatcher, WindowListener {
 
 	@Override
 	public void setOverallProgress(String msg, int progress) {
-		Updater.logger.info("Overall Progress: " + msg + ", @" + progress + "%");
+		NwLogger.UPDATER_LOGGER.info("Overall Progress: " + msg + ", @" + progress + "%");
 		lblOverallProgress.setText(msg);
 		setOverallProgress(progress);
 	}
@@ -160,6 +160,11 @@ public class UpdateWindow implements IProgressWatcher, WindowListener {
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public void show() {
+		setVisible(true);
 	}
 
 	@Override

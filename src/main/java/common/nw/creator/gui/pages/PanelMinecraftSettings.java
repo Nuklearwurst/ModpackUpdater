@@ -57,11 +57,11 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 
 		btnEditArguments.addActionListener(e -> editArguments());
 
-		rdbtnDownloadJson.setActionCommand(ModpackValues.DownloadTypes.jsonDirectDownload);
-		rdbtnJsonAutoCreate.setActionCommand(ModpackValues.DownloadTypes.jsonGenerate);
+		rdbtnDownloadJson.setActionCommand(ModpackValues.Download.jsonDirectDownload);
+		rdbtnJsonAutoCreate.setActionCommand(ModpackValues.Download.jsonGenerate);
 
-		rdbtnDownloadJar.setActionCommand(ModpackValues.DownloadTypes.jarDirectDownload);
-		rdbtnForgeJar.setActionCommand(ModpackValues.DownloadTypes.jarForgeInherit);
+		rdbtnDownloadJar.setActionCommand(ModpackValues.Download.jarDirectDownload);
+		rdbtnForgeJar.setActionCommand(ModpackValues.Download.jarForgeInherit);
 
 		rdbtnDownloadJson.addActionListener(e -> updateJsonGenerated(false));
 
@@ -72,7 +72,7 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 
 		rdbtnForgeJar.addActionListener(e -> {
 			setJsonGeneratedTypeEnabled(true);
-			setJsonUpdateType(ModpackValues.DownloadTypes.jsonGenerate);
+			setJsonUpdateType(ModpackValues.Download.jsonGenerate);
 			createDefaultLibs();
 			btnSelectForge.setEnabled(true);
 			btnSelectForge.setVisible(true);
@@ -80,7 +80,7 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 
 		rdbtnDownloadJar.addActionListener(e -> {
 			setJsonGeneratedTypeEnabled(false);
-			setJsonUpdateType(ModpackValues.DownloadTypes.jsonDirectDownload);
+			setJsonUpdateType(ModpackValues.Download.jsonDirectDownload);
 			btnSelectForge.setEnabled(false);
 			btnSelectForge.setVisible(false);
 		});
@@ -99,7 +99,7 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 	private String getJsonUpdateType() {
 		String s = btnGroupJson.getSelection().getActionCommand();
 		if (s == null || s.isEmpty()) {
-			return ModpackValues.DownloadTypes.jsonDirectDownload;
+			return ModpackValues.Download.jsonDirectDownload;
 		}
 		return s;
 	}
@@ -107,7 +107,7 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 	private String getJarUpdateType() {
 		String s = btnGroupJar.getSelection().getActionCommand();
 		if (s == null || s.isEmpty()) {
-			return ModpackValues.DownloadTypes.jarDirectDownload;
+			return ModpackValues.Download.jarDirectDownload;
 		}
 		return s;
 	}
@@ -117,14 +117,14 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 	 */
 	private void setJsonUpdateType(String type) {
 		if (type == null || type.isEmpty()) {
-			type = ModpackValues.DownloadTypes.jsonDirectDownload;
+			type = ModpackValues.Download.jsonDirectDownload;
 		}
 		switch (type) {
-			case ModpackValues.DownloadTypes.jsonDirectDownload:
+			case ModpackValues.Download.jsonDirectDownload:
 				rdbtnDownloadJson.setSelected(true);
 				updateJsonGenerated(false);
 				break;
-			case ModpackValues.DownloadTypes.jsonGenerate:
+			case ModpackValues.Download.jsonGenerate:
 				rdbtnJsonAutoCreate.setSelected(true);
 				updateJsonGenerated(true);
 				break;
@@ -162,10 +162,10 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 	@SuppressWarnings("Duplicates")
 	private void setJarUpdateType(String type) {
 		if (type == null || type.isEmpty()) {
-			type = ModpackValues.DownloadTypes.jarDirectDownload;
+			type = ModpackValues.Download.jarDirectDownload;
 		}
 		switch (type) {
-			case ModpackValues.DownloadTypes.jarDirectDownload:
+			case ModpackValues.Download.jarDirectDownload:
 				rdbtnDownloadJar.setSelected(true);
 
 				setJsonGeneratedTypeEnabled(false);
@@ -175,7 +175,7 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 				btnSelectForge.setEnabled(false);
 				btnSelectForge.setVisible(false);
 				break;
-			case ModpackValues.DownloadTypes.jarForgeInherit:
+			case ModpackValues.Download.jarForgeInherit:
 				rdbtnForgeJar.setSelected(true);
 
 				setJsonGeneratedTypeEnabled(true);
@@ -259,7 +259,7 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 		this.setJarUpdateType(creator.modpack.minecraft.jarUpdateType);
 		this.setJsonUpdateType(creator.modpack.minecraft.jsonUpdateType);
 		this.txtInstallInfo.setText(creator.modpack.minecraft.installInfoUrl);
-		if (ModpackValues.DownloadTypes.jsonGenerate.equals(creator.modpack.minecraft.jsonUpdateType)) {
+		if (ModpackValues.Download.jsonGenerate.equals(creator.modpack.minecraft.jsonUpdateType)) {
 			//don't recreate default libs if already happened
 			creator.defaultLibrariesGenerated = true;
 		}
@@ -287,7 +287,7 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 			creator.modpack.minecraft.jarUpdateType = this.getJarUpdateType();
 			creator.modpack.minecraft.jsonUpdateType = this.getJsonUpdateType();
 			creator.modpack.minecraft.versionName = this.txtJar.getText();
-			if (creator.modpack.minecraft.jsonUpdateType.equals(ModpackValues.DownloadTypes.jsonGenerate)) {
+			if (creator.modpack.minecraft.jsonUpdateType.equals(ModpackValues.Download.jsonGenerate)) {
 				creator.modpack.minecraft.jsonName = null;
 			} else {
 				creator.modpack.minecraft.jsonName = this.txtJson.getText();

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Updater {
+public class Updater extends Thread {
 
 	private static final int FLAG_SERVER = 1;
 
@@ -31,10 +31,12 @@ public class Updater {
 	 * arguments
 	 */
 	private final List<String> args;
+
 	/**
 	 * the minecraft profile name
 	 */
 	private final String versionName;
+
 	/**
 	 * the minecraft game directory to update into
 	 */
@@ -52,10 +54,12 @@ public class Updater {
 	 * should we quit to launcher (--> error)
 	 */
 	private boolean quitToLauncher = false;
+
 	/**
 	 * is the update finished
 	 */
 	private boolean finished = false;
+
 	/**
 	 * retry the whole update?
 	 */
@@ -67,20 +71,17 @@ public class Updater {
 	private IProgressWatcher listener;
 
 	/**
-	 * error message, if not empty error gets displayed to the user
+	 * error messages
 	 */
-	private String warningMessage = "";
-	private boolean errored = false;
+	private List<String> warnings = new ArrayList<>();
 
-	/**
-	 * ModpackUpdater Logger
-	 */
-	public static final NwLogger logger = NwLogger.UPDATER_LOGGER;
+	private boolean errored = false;
 
 	/**
 	 * local modpack data
 	 */
 	private LocalModpack local;
+
 	/**
 	 * remote modpack data
 	 */
@@ -91,12 +92,13 @@ public class Updater {
 	 */
 	private List<ModInfo> mods;
 
-	private UpdateThread updateThread = null;
-
 	public Updater(List<String> args, File gameDir, String versionName) {
 		this.args = args;
 		this.gameDir = gameDir;
 		this.versionName = versionName;
+
+		setDaemon(true);
+		setName("Modpack Update Thread");
 	}
 
 	/**
@@ -114,14 +116,6 @@ public class Updater {
 	}
 
 	/**
-	 * starts the update in a new Thread
-	 */
-	public void beginUpdate() {
-		updateThread = new UpdateThread();
-		updateThread.start();
-	}
-
-	/**
 	 * sets the update listener
 	 */
 	public void setListener(IProgressWatcher listener) {
@@ -132,29 +126,19 @@ public class Updater {
 		return retry;
 	}
 
-	/**
-	 * thread to run the update
-	 */
-	private class UpdateThread extends Thread {
-
-		UpdateThread() {
-			setDaemon(true);
-			setName("Modpack Update Thread");
+	@Override
+	public void run() {
+		try {
+			// run update
+			Updater.this.doUpdate();
+		} catch (Exception ex) {
+			//handle unknown errors
+			NwLogger.UPDATER_LOGGER.error("Unknown Error updating!", ex);
+			addErrorMessage("Error:  " + ex.getMessage() + "\nData: " + ex.toString());
+			errored = true;
 		}
-
-		@Override
-		public void run() {
-			try {
-				// run update
-				Updater.this.doUpdate();
-			} catch (Exception ex) {
-				NwLogger.UPDATER_LOGGER.error("Unknown Error updating!", ex);
-				Updater.this.warningMessage += "\nError:  " + ex.getMessage() + "\nData: " + ex.toString(); //handle unknown errors
-				errored = true;
-			}
-			Updater.this.onUpdateFinished();
-			Updater.this.finished = true;
-		}
+		Updater.this.onUpdateFinished();
+		Updater.this.finished = true;
 	}
 
 	/**
@@ -168,14 +152,14 @@ public class Updater {
 		//listener
 		if (listener == null) {
 			listener = new ConsoleListener();
-			logger.warning("No listener specified!");
+			NwLogger.UPDATER_LOGGER.warning("No listener specified!");
 		}
 
 		// checking local stuff
 		listener.setOverallProgress("Reading local modpack info!", 0);
 		if (!readLocalModpack()) { // read modpack
 			//do not set error flag, respect cancelling
-			warningMessage = warningMessage + "\nError: no modpack found!";
+			addErrorMessage("Error: no modpack found!");
 			return;
 		}
 
@@ -185,7 +169,7 @@ public class Updater {
 		listener.setOverallProgress(2);
 		if (!readLocalData()) {
 			errored = true;
-			warningMessage = warningMessage + "\nError reading local data!";
+			addErrorMessage("Error reading local data!");
 		}
 		listener.setDownloadProgress("", 0);
 
@@ -199,7 +183,6 @@ public class Updater {
 		if (!readRemoteData()) { // read remote mod info
 			errored = true;
 			listener.setOverallProgress("Could not download modpack.json!", 0);
-			logger.warning(warningMessage);
 			return; // don't continue or save when internet connection failes
 		}
 
@@ -219,14 +202,14 @@ public class Updater {
 
 				listener.setOverallProgress("Updating minecraft", 6);
 				if (!updateVersion()) {
-					warningMessage = warningMessage + "\nFailed updating minecraft!";
+					addErrorMessage("Failed updating minecraft!");
 					//no need to set the errored flag, this is handled by updateVersion
 					//not really needed as we should always cancel further updating, after having updated minecraft
 					return;
 				}
 			}
 		} else {
-			logger.info("Skipping version update check: We are on a server!");
+			NwLogger.UPDATER_LOGGER.info("Skipping version update check: We are on a server!");
 		}
 
 
@@ -240,7 +223,7 @@ public class Updater {
 		listener.setOverallProgress("Adding remote information!", 7);
 		if (!addRemoteInformation()) {
 			errored = true;
-			warningMessage = warningMessage + "\nUnknown error! This is a Bug!";
+			addErrorMessage("Unknown error! This is a Bug!");
 		}
 		waitForUi();
 		if (listener.isCancelled()) {
@@ -250,8 +233,7 @@ public class Updater {
 		//delete old mods
 		listener.setOverallProgress("Deleting old mods!", 8);
 		if (!deleteOldMods()) {
-			warningMessage = warningMessage
-					+ "\nError deleting mods. Is an other instance running? \nPlease check Permissions!";
+			addErrorMessage("Error deleting mods. Is an other instance running? \nPlease check Permissions!");
 			errored = true;
 		}
 		waitForUi();
@@ -262,7 +244,7 @@ public class Updater {
 		//update mods
 		listener.setOverallProgress("Updating Mods!", 10);
 		if (!updateMods()) {
-			warningMessage = warningMessage + "\nError updating mods!";
+			addErrorMessage("Error updating mods!");
 			errored = true;
 		}
 		waitForUi();
@@ -277,13 +259,11 @@ public class Updater {
 					JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
 			if (ans == JOptionPane.YES_OPTION) {
 				if (!save()) {
-					warningMessage = warningMessage
-							+ "\nError while saving modpack.json!";
+					addErrorMessage("Error while saving modpack.json!");
 					errored = true;
 				}
 			} else {
-				warningMessage = warningMessage
-						+ "\nError while saving modpack.json!";
+				addErrorMessage("Error while saving modpack.json!");
 				errored = true;
 			}
 		}
@@ -295,7 +275,7 @@ public class Updater {
 	 */
 	private void onUpdateFinished() {
 		if (errored) {
-			int ans = listener.showErrorDialog("Error during update", "Following Errors occurred:\n" + warningMessage);
+			int ans = listener.showErrorDialog("Error during update", "Following Errors occurred:\n" + getErrorMessageString());
 			if (ans == JOptionPane.YES_OPTION) {
 				retry = true;
 			} else if (ans == JOptionPane.NO_OPTION) {
@@ -332,11 +312,11 @@ public class Updater {
 			/////////////////
 			if (options.has(serverOption)) {
 				if (serverOption.value(options)) {
-					logger.info("Applying server specific settings!");
+					NwLogger.UPDATER_LOGGER.info("Applying server specific settings!");
 					flags |= FLAG_SERVER;
 				} else if (GraphicsEnvironment.isHeadless()) {
-					logger.warn("Running in a headless environment, but serverOption is set to false!");
-					logger.warn("Please check programm arguments!");
+					NwLogger.UPDATER_LOGGER.warn("Running in a headless environment, but serverOption is set to false!");
+					NwLogger.UPDATER_LOGGER.warn("Please check programm arguments!");
 				}
 			} else {
 				if (versionName == null || GraphicsEnvironment.isHeadless()) {
@@ -353,12 +333,12 @@ public class Updater {
 				String modPackName = modPackOption.value(options);
 				String modPackRepo = modPackRepoOption.value(options);
 				String modPackVersion = modPackVersionOption.value(options);
-				logger.info("parsing command line. Repo: " + modPackRepo + ", Version: " + modPackVersion + ", Name: " + modPackName);
+				NwLogger.UPDATER_LOGGER.info("parsing command line. Repo: " + modPackRepo + ", Version: " + modPackVersion + ", Name: " + modPackName);
 				return new LocalModpack(modPackName, modPackRepo, modPackVersion);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.severe("Error parsing commandline modpack!");
+			NwLogger.UPDATER_LOGGER.severe("Error parsing commandline modpack!");
 		}
 		return null;
 	}
@@ -371,18 +351,18 @@ public class Updater {
 		File modpackJson = new File(gameDir, "modpack.json");
 		local = null;
 		if (modpackJson.exists()) {
-			logger.info("modpack.json found, parsing...");
+			NwLogger.UPDATER_LOGGER.info("modpack.json found, parsing...");
 			try {
 				local = new Gson().fromJson(new FileReader(modpackJson),
 						LocalModpack.class);
 			} catch (Exception e) {
-				logger.severe("Error parsing modpack.json, try to use commandline modpack", e);
+				NwLogger.UPDATER_LOGGER.severe("Error parsing modpack.json, try to use commandline modpack", e);
 			}
 		}
 		LocalModpack commandLine = parseCommandLineModpack();
 		if (local == null) {
 			local = commandLine;
-			logger.info("Using commandlineModpack!");
+			NwLogger.UPDATER_LOGGER.info("Using commandlineModpack!");
 		} else {
 			if (commandLine != null) {
 				if (commandLine.name != null && !commandLine.name.isEmpty() && !commandLine.name.equals(local.name)) {
@@ -418,10 +398,10 @@ public class Updater {
 			if (ans != null) {
 				local = new LocalModpack(null, ans, null);
 			}
-			logger.info("Configuring modpack!!!");
+			NwLogger.UPDATER_LOGGER.info("Configuring modpack!!!");
 		}
 		if (local == null) {
-			warningMessage = warningMessage + "\nNo modpack could be found!";
+			addErrorMessage("No modpack could be found!");
 			errored = true;
 			return false;
 		}
@@ -438,7 +418,7 @@ public class Updater {
 		// no mods found
 		//continue updating
 		if (local.files == null) {
-			logger.info("No Files Found! Updating...");
+			NwLogger.UPDATER_LOGGER.info("No Files Found! Updating...");
 			return true;
 		}
 		listener.setDownloadProgress("Checking Local files...", 0, local.files.size());
@@ -454,7 +434,7 @@ public class Updater {
 				mods.add(info);
 			}
 		} catch (Exception e) {
-			logger.warning("error reading local info!");
+			NwLogger.UPDATER_LOGGER.warning("error reading local info!");
 			e.printStackTrace();
 			return false;
 		}
@@ -489,8 +469,8 @@ public class Updater {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			warningMessage = "error downloading modpack.json from: " + local.url;
+			NwLogger.UPDATER_LOGGER.error("Error downloading!", e);
+			addErrorMessage("error downloading modpack.json from: " + local.url);
 			errored = true;
 			return false;
 		}
@@ -502,16 +482,16 @@ public class Updater {
 	 */
 	private boolean checkUpdate() {
 		if (VersionInfo.REPO_MODPACK_REVISION < remote.updaterRevision) {
-			logger.info("New Updater necessary!!");
+			NwLogger.UPDATER_LOGGER.info("New Updater necessary!!");
 			return true;
 		}
 		if ((local.version != null && local.version
 				.equals(remote.minecraft.version))
 				|| remote.minecraft.version == null) {
-			logger.info("minecraft up to date!");
+			NwLogger.UPDATER_LOGGER.info("minecraft up to date!");
 			return false;
 		}
-		logger.info("New version found! Local is: " + local.version
+		NwLogger.UPDATER_LOGGER.info("New version found! Local is: " + local.version
 				+ " Remote is: " + remote.minecraft.version);
 		return true;
 	}
@@ -565,8 +545,7 @@ public class Updater {
 			if (selection != null) {
 				mcDir = selection.getAbsolutePath();
 			} else {
-				warningMessage = warningMessage
-						+ "\nUser cancelled modpack update!";
+				addErrorMessage("User cancelled modpack update!");
 				return false;
 			}
 
@@ -574,35 +553,31 @@ public class Updater {
 
 			listener.setDownloadProgress("Creating directories...", 10);
 			if (!installer.createDirs()) {
-				warningMessage = warningMessage + "\nError when creating dirs.";
+				addErrorMessage("Error when creating dirs.");
 				errored = true;
 				return false;
 			}
 			listener.setDownloadProgress("Creating version .json...", 20);
 			if (!installer.createJson()) {
-				warningMessage = warningMessage
-						+ "\nError when creating version.json file.";
+				addErrorMessage("Error when creating version.json file.");
 				errored = true;
 				return false;
 			}
 			listener.setDownloadProgress("Writing version .json...", 40);
 			if (!installer.writeJson()) {
-				warningMessage = warningMessage
-						+ "\nError when creating version.json file.";
+				addErrorMessage("Error when creating version.json file.");
 				errored = true;
 				return false;
 			}
 			listener.setDownloadProgress("Creating jar...", 50);
 			if (!installer.createJar(listener.hasGui(), listener.getGui())) {
-				warningMessage = warningMessage
-						+ "\nError when creating version.jar file.";
+				addErrorMessage("Error when creating version.jar file.");
 				errored = true;
 				return false;
 			}
 			listener.setDownloadProgress("Updating updater...", 80);
 			if (!installer.downloadLibraries()) {
-				warningMessage = warningMessage
-						+ "\nError when downloading updater.\nRun the installer manually if you experience problems";
+				addErrorMessage("Error when downloading updater.\nRun the installer manually if you experience problems");
 				errored = true;
 				//do not return as error is not critical
 			}
@@ -613,7 +588,7 @@ public class Updater {
 			listener.setDownloadProgress("Installation Complete!", 100);
 
 			if (!save()) {
-				warningMessage += "error during saving modpack.json!";
+				addErrorMessage("error during saving modpack.json!");
 				return false;
 			}
 
@@ -659,7 +634,7 @@ public class Updater {
 			}
 		}
 
-		logger.info("Found " + modsToDelete.size() + " files to Delete!");
+		NwLogger.UPDATER_LOGGER.info("Found " + modsToDelete.size() + " files to Delete!");
 		boolean success = true;
 
 		// delete old or blacklisted mods
@@ -669,7 +644,7 @@ public class Updater {
 				if (fileToDelete.exists()) {
 					if (!fileToDelete.delete()) {
 						success = false;
-						logger.severe("Mod " + mod.getFileNameSystem()
+						NwLogger.UPDATER_LOGGER.severe("Mod " + mod.getFileNameSystem()
 								+ "could not be deleted!");
 					}
 				}
@@ -689,7 +664,7 @@ public class Updater {
 				modsToUpdate.add(mod);
 			}
 		}
-		logger.info("Found " + modsToUpdate.size() + " files to Update!");
+		NwLogger.UPDATER_LOGGER.info("Found " + modsToUpdate.size() + " files to Update!");
 
 		if (modsToUpdate.size() < 1) {
 			listener.setOverallProgress("All mods up to date", 100);
@@ -709,7 +684,7 @@ public class Updater {
 				return true;
 			}
 
-			logger.info(String.format("Starting update for %s mod %s [%s] to version [%s] from %s",
+			NwLogger.UPDATER_LOGGER.info(String.format("Starting update for %s mod %s [%s] to version [%s] from %s",
 					mod.isMissing() ? "MISSING" : "OUTDATED", mod.name, mod.version,
 					mod.getRemoteInfo().version,
 					mod.getRemoteInfo().downloadUrl));
@@ -717,36 +692,36 @@ public class Updater {
 			modNumber++;
 			//fallback to default downloadtype
 			if (mod.getRemoteInfo().downloadType == null) {
-				mod.getRemoteInfo().downloadType = ModpackValues.DownloadTypes.modDirectDownload;
+				mod.getRemoteInfo().downloadType = ModpackValues.Download.modDirectDownload;
 			}
 			switch (mod.getRemoteInfo().downloadType) {
-				case ModpackValues.DownloadTypes.modDirectDownload:
+				case ModpackValues.Download.modDirectDownload:
 					if (!performDirectModDownload(mod, modNumber, modValue)) {
-						warningMessage += "\nFailed downloading Mod: " + mod;
+						addErrorMessage("Failed downloading Mod: " + mod);
 						return false;
 					}
 					break;
-				case ModpackValues.DownloadTypes.modExtractDownload:
+				case ModpackValues.Download.modExtractDownload:
 					if (!performDirectModDownload(mod, modNumber, modValue)) {
-						warningMessage += "\nFailed downloading Mod: " + mod;
+						addErrorMessage("Failed downloading Mod: " + mod);
 						return false;
 					}
 					if (!DownloadHelper.extractArchive(mod.file, mod.file.getParentFile())) {
-						warningMessage += "\nFailed extracting Archive from: " + mod.file + ", to: " + mod.file.getParentFile();
+						addErrorMessage("Failed extracting Archive from: " + mod.file + ", to: " + mod.file.getParentFile());
 						return false;
 					}
 					//keep zip file for version tracking
 					break;
-				case ModpackValues.DownloadTypes.modUserDownload:
-					warningMessage += "\nUnsupported downloadType: " + mod.getRemoteInfo().downloadType + " \nConsider updating your updater.jar to the newest version!";
+				case ModpackValues.Download.modUserDownload:
+					addErrorMessage("Unsupported downloadType: " + mod.getRemoteInfo().downloadType + " \nConsider updating your updater.jar to the newest version!");
 					errored = true;
 					return false;
 				default:
 					//defaulting to direct download
-					warningMessage += "\nUnsupported downloadType: " + mod.getRemoteInfo().downloadType + " \nDefaulting to " + ModpackValues.DownloadTypes.modDirectDownload + "\nConsider updating your updater.jar to the newest version!";
+					addErrorMessage("Unsupported downloadType: " + mod.getRemoteInfo().downloadType + " \nDefaulting to " + ModpackValues.Download.modDirectDownload + "\nConsider updating your updater.jar to the newest version!");
 					if (!performDirectModDownload(mod, modNumber, modValue)) {
-						warningMessage += "\nFailed downloading Mod with unsupported downloadType: " + mod;
-						warningMessage += "\nTry reinstalling the modpack, otherwise contact your modpack author!";
+						addErrorMessage("Failed downloading Mod with unsupported downloadType: " + mod);
+						addErrorMessage("Try reinstalling the modpack, otherwise contact your modpack author!");
 						errored = true;
 						return false;
 					}
@@ -772,21 +747,31 @@ public class Updater {
 
 			waitForUi();
 			if (listener.isCancelled()) {
-				logger.severe("User cancelled update!");
+				NwLogger.UPDATER_LOGGER.severe("User cancelled update!");
 				return true;
 			}
 
 			//display dialog when download finally failed
 			//giving user the opportunity to retry the download
 			if ((result != UpdateResult.Good) && (!retry)) {
-				int dialogResult = listener.showConfirmDialog("Downloading mod \"" + mod.name + "\" version: \"" + mod.version + "\" failed!\nDo you want to retry?", "Retry?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-				if (dialogResult != JOptionPane.YES_OPTION) {
-					warningMessage += "\nFailed updating mod: " + mod.getFileNameSystem() + "\nError when downloading: " + result;
-					errored = true;
-					logger.severe(warningMessage);
-					return false;
-				} else {
-					retry = true;
+				final int dialogResult = listener.showErrorDialog("Retry?", "Downloading mod \"" + mod.name + "\" version: \"" + mod.version + "\" failed!\nDo you want to retry?");
+				switch (dialogResult) {
+					case JOptionPane.YES_OPTION:
+						retry = true;
+						break;
+					case JOptionPane.CANCEL_OPTION:
+						addErrorMessage("Failed updating mod: " + mod.getFileNameSystem());
+						addErrorMessage("Error when downloading: " + result);
+						addErrorMessage("Skipping download...");
+						errored = true;
+						return true;
+					case JOptionPane.NO_OPTION:
+					default:
+						addErrorMessage("Failed updating mod: " + mod.getFileNameSystem());
+						addErrorMessage("Error when downloading: " + result);
+						errored = true;
+						return false;
+
 				}
 			}
 			if (result == UpdateResult.Good) {
@@ -809,40 +794,50 @@ public class Updater {
 
 		for (ModInfo mod : mods) {
 			if (!mod.shouldBeDeleted()) {
+				//add mod to local file list
 				local.files.add(mod.getFileNameSystem());
-				if (mod.getRemoteInfo() != null && mod.getRemoteInfo().versionType != null && mod.getRemoteInfo().versionType.equals(ModpackValues.versionTypeTracked)) {
-					//save local tracked versions to disk 
+				if (mod.shouldBeTracked()) {
+					//save local tracked versions to disk
 					local.trackedFileVersions.put(mod.getFileNameSystem(), mod.version);
 				}
 			}
 		}
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		try {
-			FileWriter fileWriter = new FileWriter(new File(gameDir,
-					"modpack.json"));
+			FileWriter fileWriter = new FileWriter(new File(gameDir, "modpack.json"));
 			gson.toJson(local, fileWriter);
 			fileWriter.close();
 		} catch (IOException ex) {
-			logger.severe("Error writing modpack.json", ex);
-			warningMessage += "\nCould not save modpack.json!";
+			NwLogger.UPDATER_LOGGER.severe("Error writing modpack.json", ex);
+			addErrorMessage("Could not save modpack.json!");
 			return false;
 		}
 		return true;
 	}
 
-	private void waitForUi() {
-		//noinspection SynchronizeOnNonFinalField
-		synchronized (updateThread) {
-			while (listener.isPaused()) {
-				try {
-					updateThread.wait(100);
-				} catch (InterruptedException e) {
-					logger.error("Error occurred when waiting for ui!", e);
-					warningMessage += "\nCritical error when waiting for UI to catch up!";
-					break;
-				}
+	private synchronized void waitForUi() {
+		while (listener.isPaused()) {
+			try {
+				this.wait(100);
+			} catch (InterruptedException e) {
+				NwLogger.UPDATER_LOGGER.error("Error occurred when waiting for ui!", e);
+				addErrorMessage("Critical error when waiting for UI to catch up!");
+				break;
 			}
 		}
+	}
+
+	private void addErrorMessage(final String msg) {
+		NwLogger.UPDATER_LOGGER.warn(msg);
+		warnings.add(msg);
+	}
+
+	private String getErrorMessageString() {
+		StringBuilder builder = new StringBuilder();
+		for (String s : warnings) {
+			builder.append(s).append("\n");
+		}
+		return builder.toString();
 	}
 
 	// read local modpack error? exit

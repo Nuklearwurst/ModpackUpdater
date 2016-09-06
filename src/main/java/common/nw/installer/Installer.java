@@ -226,7 +226,7 @@ public class Installer {
 
 		final JsonStringNode mcArgumentsKey = JsonNodeFactories.string("minecraftArguments");
 
-		if (ModpackValues.DownloadTypes.jsonGenerate.equals(repo.minecraft.jsonUpdateType)) {
+		if (ModpackValues.Download.jsonGenerate.equals(repo.minecraft.jsonUpdateType)) {
 			//Generate new version-json file
 			versionDataCopy = Maps.newHashMap();
 			versionDataCopy.put(JsonNodeFactories.string("time"), JsonNodeFactories.string(JSON_TIME));
@@ -234,7 +234,7 @@ public class Installer {
 //			versionDataCopy.put(JsonNodeFactories.string("minecraftArguments"), JsonNodeFactories.string(String.format(JSON_MC_ARGUMENTS, modpackUrl, repo.minecraft.version)));
 			versionDataCopy.put(mcArgumentsKey, JsonNodeFactories.string(parseMCArguments(String.format(JSON_MC_ARGUMENTS, modpackUrl, repo.minecraft.version), "")));
 
-		} else if (ModpackValues.DownloadTypes.jsonDirectDownload.equals(repo.minecraft.jsonUpdateType)) {
+		} else if (ModpackValues.Download.jsonDirectDownload.equals(repo.minecraft.jsonUpdateType)) {
 			//download version-json file
 			try {
 				String jsonString = DownloadHelper.getString(repo.minecraft.jsonName, null);
@@ -277,7 +277,7 @@ public class Installer {
 
 
 		//Add inheritance if needed
-		if (repo.minecraft.jarUpdateType.equals(ModpackValues.DownloadTypes.jarForgeInherit)) {
+		if (repo.minecraft.jarUpdateType.equals(ModpackValues.Download.jarForgeInherit)) {
 			String forgeVersion = null;
 			try {
 				//noinspection StatementWithEmptyBody
@@ -288,7 +288,7 @@ public class Installer {
 					forgeVersion = repo.minecraft.versionName;
 				} else {
 					//parse as build number
-					String s = DownloadHelper.getString(ModpackValues.URL_FORGE_VERSION_JSON, null);
+					String s = DownloadHelper.getString(ModpackValues.URL.forgeVersionJson, null);
 					JdomParser forgeParser = new JdomParser();
 					JsonRootNode forgeVersionData = forgeParser.parse(s);
 					JsonNode build = forgeVersionData.getNode("number", repo.minecraft.versionName);
@@ -400,7 +400,7 @@ public class Installer {
 		}
 		if (repo.minecraft.versionName != null && !repo.minecraft.versionName.isEmpty()) {
 			if (repo.minecraft.jarUpdateType != null) {
-				if (repo.minecraft.jarUpdateType.equals(ModpackValues.DownloadTypes.jarForgeInherit)) {
+				if (repo.minecraft.jarUpdateType.equals(ModpackValues.Download.jarForgeInherit)) {
 					NwLogger.INSTALLER_LOGGER.info("Starting Minecraft Forge Installation.");
 					try {
 						URL url;
@@ -409,10 +409,10 @@ public class Installer {
 							url = new URL(repo.minecraft.versionName);
 						} else if (repo.minecraft.versionName.contains("-")) {
 							//parse as full version name
-							url = new URL(ModpackValues.URL_FORGE_INSTALLER + repo.minecraft.versionName + "/forge-" + repo.minecraft.versionName + "-installer.jar");
+							url = new URL(ModpackValues.URL.forgeInstaller + repo.minecraft.versionName + "/forge-" + repo.minecraft.versionName + "-installer.jar");
 						} else {
 							//parse as build number
-							String s = DownloadHelper.getString(ModpackValues.URL_FORGE_VERSION_JSON, null);
+							String s = DownloadHelper.getString(ModpackValues.URL.forgeVersionJson, null);
 							JdomParser parser = new JdomParser();
 							JsonRootNode versionData = parser.parse(s);
 							JsonNode build = versionData.getNode("number", repo.minecraft.versionName);
@@ -440,7 +440,7 @@ public class Installer {
 								}
 							}
 
-							url = new URL(ModpackValues.URL_FORGE_INSTALLER + mcversion + "-" + forgeversion + branch + "/forge-" + mcversion + "-" + forgeversion + branch + "-installer.jar");
+							url = new URL(ModpackValues.URL.forgeInstaller + mcversion + "-" + forgeversion + branch + "/forge-" + mcversion + "-" + forgeversion + branch + "-installer.jar");
 						}
 
 						//Class loading

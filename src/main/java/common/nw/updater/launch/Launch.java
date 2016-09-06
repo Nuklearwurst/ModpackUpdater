@@ -4,6 +4,7 @@ import common.nw.core.utils.SwingUtils;
 import common.nw.core.utils.log.NwLogger;
 import common.nw.updater.ConsoleListener;
 import common.nw.updater.Updater;
+import common.nw.updater.gui.IProgressWatcher;
 import common.nw.updater.gui.UpdateWindow;
 import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.OptionParser;
@@ -11,6 +12,7 @@ import joptsimple.OptionSet;
 import net.minecraft.launchwrapper.ITweaker;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.util.Arrays;
@@ -47,56 +49,58 @@ public class Launch implements ITweaker {
 	public void acceptOptions(List<String> args, File gameDir, File assetsDir,
 	                          String versionName) {
 
-		Updater.logger.info("Starting modpack updater!");
+		NwLogger.UPDATER_LOGGER.info("Starting modpack updater!");
 
 		if (useGui && GraphicsEnvironment.isHeadless()) {
 			//Check for headless mode
-			Updater.logger.info("Headless mode enabled!");
+			NwLogger.UPDATER_LOGGER.info("Headless mode enabled!");
 			useGui = false;
 		}
 		if (useGui) {
 			SwingUtils.setOSLookAndFeel();
 		}
 
-		// init updater
-		Updater updater = new Updater(args, gameDir, versionName);
-
-		UpdateWindow window = null;
 		// init gui
+		IProgressWatcher userInterface;
 		if (useGui) {
-			window = new UpdateWindow(updater);
-			window.setVisible(true);
+			userInterface = new UpdateWindow();
 		} else {
-			updater.setListener(new ConsoleListener());
+			userInterface = new ConsoleListener();
 		}
+		userInterface.show();
+
+		boolean quitToLauncher = true;
 		try {
-			do {
+			boolean retry = true;
+			while (retry) {
 				// begin update
-				updater.beginUpdate();
+				final Updater updater = new Updater(args, gameDir, versionName);
+				updater.setListener(userInterface);
+				updater.start();
 				// wait until update is finished
 				while (!updater.isFinished()) {
 					Thread.sleep(100L);
 				}
-			} while (updater.shouldRetry());
+				retry = updater.shouldRetry();
+				quitToLauncher = updater.quitToLauncher();
+			}
 		} catch (Exception e) {
 			NwLogger.UPDATER_LOGGER.error("Unknown error occurred!", e);
+			userInterface.showMessageDialog(e.getMessage(), "Unknown error occured!", JOptionPane.ERROR_MESSAGE);
 		}
 
-		Updater.logger.info("Update finished!");
+		NwLogger.UPDATER_LOGGER.info("Update finished!");
 
 		// close gui before process is terminated
-		if (useGui) {
-			//noinspection ConstantConditions
-			window.close();
-		}
+		userInterface.close();
 
 		// close minecraft if needed
-		if (updater.quitToLauncher()) {
-			Updater.logger.info("Quitting to launcher...");
-			Updater.logger.info("If you have minecraftforge installed this will error...");
+		if (quitToLauncher) {
+			NwLogger.UPDATER_LOGGER.info("Quitting to launcher...");
+			NwLogger.UPDATER_LOGGER.info("If you have minecraftforge installed this will error...");
 			Runtime.getRuntime().exit(0);
 		} else {
-			Updater.logger.info("Starting minecraft...");
+			NwLogger.UPDATER_LOGGER.info("Starting minecraft...");
 		}
 	}
 
@@ -156,7 +160,7 @@ public class Launch implements ITweaker {
 				versionName = versionNameOption.value(options);
 			}
 		} catch (Exception e) {
-			Updater.logger.severe("Error parsing commandline!", e);
+			NwLogger.UPDATER_LOGGER.severe("Error parsing commandline!", e);
 		}
 
 		Launch launch = new Launch(useGui);

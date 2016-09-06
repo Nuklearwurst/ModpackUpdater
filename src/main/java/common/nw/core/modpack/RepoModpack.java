@@ -2,6 +2,9 @@ package common.nw.core.modpack;
 
 import java.util.List;
 
+/**
+ * Represantation of the remote modpack file
+ */
 public class RepoModpack {
 
 	/**

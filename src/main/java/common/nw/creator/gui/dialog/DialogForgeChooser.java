@@ -177,7 +177,7 @@ public class DialogForgeChooser extends JDialog {
 		@Override
 		protected Void doInBackground() throws Exception {
 			//parse as build number
-			String s = DownloadHelper.getString(ModpackValues.URL_FORGE_VERSION_JSON, null);
+			String s = DownloadHelper.getString(ModpackValues.URL.forgeVersionJson, null);
 			if (s != null) {
 				try {
 					JdomParser forgeParser = new JdomParser();

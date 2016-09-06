@@ -25,7 +25,7 @@ public class ConsoleListener implements IProgressWatcher {
 
 	@Override
 	public void setDownloadProgress(String msg) {
-		Updater.logger.info("Download Progress: " + msg);
+		NwLogger.UPDATER_LOGGER.info("Download Progress: " + msg);
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class ConsoleListener implements IProgressWatcher {
 
 	@Override
 	public void setOverallProgress(String msg, int progress) {
-		Updater.logger.info("Overall Progress: " + msg);
+		NwLogger.UPDATER_LOGGER.info("Overall Progress: " + msg);
 	}
 
 	@Override
@@ -68,6 +68,16 @@ public class ConsoleListener implements IProgressWatcher {
 			return new File(ret);
 		}
 		return null;
+	}
+
+	@Override
+	public void show() {
+
+	}
+
+	@Override
+	public void close() {
+
 	}
 
 	@Override
@@ -105,6 +115,12 @@ public class ConsoleListener implements IProgressWatcher {
 	public String showInputDialog(String message) {
 		NwLogger.UPDATER_LOGGER.info("[Message - input] " + message);
 		return readLine();
+	}
+
+	@Override
+	public void showMessageDialog(String message, String title, int messageType) {
+		NwLogger.UPDATER_LOGGER.info("[" + getStringForMessageType(messageType) + "] " + title);
+		NwLogger.UPDATER_LOGGER.info(message);
 	}
 
 	@Override

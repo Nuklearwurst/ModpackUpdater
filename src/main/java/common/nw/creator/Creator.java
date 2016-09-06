@@ -100,19 +100,19 @@ public class Creator {
 		mod.version = info.version;
 
 		if (info.hasName) {
-			mod.nameType = ModpackValues.nameTypeZipEntry;
+			mod.nameType = ModpackValues.Name.nameTypeZipEntry;
 		} else {
-			mod.nameType = ModpackValues.nameTypeFileName;
+			mod.nameType = ModpackValues.Name.nameTypeFileName;
 		}
 
 		if (info.hasVersionFile) {
-			mod.versionType = ModpackValues.versionTypeZipEntry;
+			mod.versionType = ModpackValues.Version.versionTypeZipEntry;
 		} else if (mod.getFileName().startsWith("config/") || mod.getFileName().endsWith(".conf") || mod.getFileName().endsWith(".cfg")) {
 			//handle config files
-			mod.versionType = ModpackValues.versionTypeTracked;
+			mod.versionType = ModpackValues.Version.versionTypeTracked;
 			mod.version = DateFormat.getDateInstance().format(new Date());
 		} else {
-			mod.versionType = ModpackValues.versionTypeFileName;
+			mod.versionType = ModpackValues.Version.versionTypeFileName;
 		}
 
 		// handle download url
@@ -124,7 +124,7 @@ public class Creator {
 
 		//replace whitespaces in URL
 		mod.downloadUrl = dir + file.getName().replace(" ", "%20");
-		mod.downloadType = ModpackValues.DownloadTypes.modDirectDownload;
+		mod.downloadType = ModpackValues.Download.modDirectDownload;
 
 		mod.md5 = DownloadHelper.getHash(file);
 

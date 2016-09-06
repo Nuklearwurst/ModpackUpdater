@@ -3,7 +3,6 @@ package common.nw.core.utils;
 import common.nw.core.gui.IDownloadProgressListener;
 import common.nw.core.modpack.ModInfo;
 import common.nw.core.utils.log.NwLogger;
-import common.nw.updater.Updater;
 import common.nw.updater.gui.IProgressWatcher;
 
 import java.io.*;
@@ -160,13 +159,13 @@ public class DownloadHelper {
 
 		if (!ignoreDuplicates) {
 			if (modFile.exists()) {
-				Updater.logger.fine("ModFile " + mod.getFileNameSystem() + " does already exist, checking md5!");
+				NwLogger.UPDATER_LOGGER.fine("ModFile " + mod.getFileNameSystem() + " does already exist, checking md5!");
 				String hash = getHash(modFile);
 				if (hash != null && !hash.isEmpty() && hash.equals(mod.getRemoteInfo().md5)) {
-					Updater.logger.info("Using already existing modFile! Skipping Download...");
+					NwLogger.UPDATER_LOGGER.info("Using already existing modFile! Skipping Download...");
 					return UpdateResult.Good;
 				} else {
-					Updater.logger.fine("MD5 does NOT match, trying to download new mod.");
+					NwLogger.UPDATER_LOGGER.fine("MD5 does NOT match, trying to download new mod.");
 				}
 			}
 		}
@@ -174,7 +173,7 @@ public class DownloadHelper {
 		//tmp file
 		File tempFile = new File(file + ".tmp");
 
-		Updater.logger.fine("Creating HTTP client for " + mod.name + " from " + mod.getRemoteInfo().downloadUrl + ". Using temp file " + tempFile);
+		NwLogger.UPDATER_LOGGER.fine("Creating HTTP client for " + mod.name + " from " + mod.getRemoteInfo().downloadUrl + ". Using temp file " + tempFile);
 		listener.setDownloadProgress("Starting Download: " + mod.name + " from " + mod.getRemoteInfo().downloadUrl + ".", 0);
 		if (listener.isCancelled()) {
 			return UpdateResult.Cancelled;
@@ -182,7 +181,7 @@ public class DownloadHelper {
 		//download the mod
 		UpdateResult result = downloadMod(tempFile, mod, listener);
 		if (result == UpdateResult.Good) {
-			Updater.logger.fine("HTTP fetch request for " + mod.name + " completed with success!");
+			NwLogger.UPDATER_LOGGER.fine("HTTP fetch request for " + mod.name + " completed with success!");
 
 			if (!checkHash(mod.getRemoteInfo().md5, tempFile)) {
 				NwLogger.NW_LOGGER.severe("Downloading mod: " + mod.name + " failed!");
@@ -199,9 +198,9 @@ public class DownloadHelper {
 			listener.setOverallProgress((int) (10.0F + modNumber * modValue));
 
 			if (modFile.exists()) {
-				Updater.logger.fine("Modfile " + modFile.getAbsolutePath().replace(File.separator, "/") + "already exists. Deleting...");
+				NwLogger.UPDATER_LOGGER.fine("Modfile " + modFile.getAbsolutePath().replace(File.separator, "/") + "already exists. Deleting...");
 				if (!modFile.delete()) {
-					Updater.logger.warning("Modfile " + modFile.getAbsolutePath().replace(File.separator, "/") + "could not be deleted!");
+					NwLogger.UPDATER_LOGGER.warning("Modfile " + modFile.getAbsolutePath().replace(File.separator, "/") + "could not be deleted!");
 				}
 			}
 
@@ -210,7 +209,7 @@ public class DownloadHelper {
 			if ((oldModFile != null) && (oldModFile.exists())) {
 				listener.setDownloadProgress("Deleting old mod file...");
 				if (!oldModFile.delete()) {
-					Updater.logger.warning("Deleting legacy file failed.");
+					NwLogger.UPDATER_LOGGER.warning("Deleting legacy file failed.");
 				}
 			}
 
@@ -234,7 +233,7 @@ public class DownloadHelper {
 	 */
 	public static boolean checkHash(String md5, File tempFile) {
 		String localMD5 = getHash(tempFile);
-		Updater.logger.info("Remote MD5 is " + md5 + " local MD5 is "
+		NwLogger.UPDATER_LOGGER.info("Remote MD5 is " + md5 + " local MD5 is "
 				+ localMD5);
 		return md5.equals(localMD5);
 	}
@@ -301,7 +300,7 @@ public class DownloadHelper {
 					return UpdateResult.Good;
 				}
 
-				Updater.logger.info("Deleting " + tempFile
+				NwLogger.UPDATER_LOGGER.info("Deleting " + tempFile
 						+ " as it does not match what we currently have ("
 						+ contentLength + " vs our " + receivedBytes + ").");
 				if (!tempFile.delete()) {
@@ -326,11 +325,11 @@ public class DownloadHelper {
 
 		} catch (MalformedURLException e) {
 			listener.setDownloadProgress("Error during download of " + mod.getFileNameSystem() + ": " + e.getMessage());
-			Updater.logger.severe("Failed downloading " + mod.getFileNameSystem().replace(File.separator, "/") + "!", e);
+			NwLogger.UPDATER_LOGGER.severe("Failed downloading " + mod.getFileNameSystem().replace(File.separator, "/") + "!", e);
 			return UpdateResult.INVALID_URL;
 		} catch (IOException e) {
 			listener.setDownloadProgress("Error during download of " + mod.getFileNameSystem() + ": " + e.getMessage());
-			Updater.logger.severe("Failed downloading " + mod.getFileNameSystem().replace(File.separator, "/") + "!", e);
+			NwLogger.UPDATER_LOGGER.severe("Failed downloading " + mod.getFileNameSystem().replace(File.separator, "/") + "!", e);
 		} finally {
 			try {
 				if (httpInputStream != null) {
