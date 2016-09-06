@@ -2,38 +2,47 @@ package common.nw.installer.gui.pages;
 
 
 import common.nw.core.gui.PageHolder;
+import common.nw.core.gui.WebbrowserPanel;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import java.awt.*;
-import java.io.IOException;
-import java.net.URISyntaxException;
 
 /**
  * @author Nuklearwurst
  */
 public class PanelOverview implements PageHolder.IExtendedPageHandler {
 	private JPanel panel_overview;
-	public JEditorPane txtpnModpackInfo;
+	private WebbrowserPanel webView;
 
 	public PanelOverview() {
-		txtpnModpackInfo.addHyperlinkListener(new HyperlinkListener() {
-			@Override
-			public void hyperlinkUpdate(HyperlinkEvent e) {
-				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-					if (Desktop.isDesktopSupported()) {
-						try {
-							Desktop.getDesktop().browse(e.getURL().toURI());
-						} catch (IOException | URISyntaxException e1) {
-							e1.printStackTrace();
-						}
-					}
-				}
-			}
-		});
+		webView.setHideAdress(true);
+		webView.setHideTitle(true);
+		webView.loadContent("<html><body><div style=\"text-align: center;\"><b>Loading...</b></div></body></html>");
+//		txtpnModpackInfo.addHyperlinkListener(new HyperlinkListener() {
+//			@Override
+//			public void hyperlinkUpdate(HyperlinkEvent e) {
+//				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+//					if (Desktop.isDesktopSupported()) {
+//						try {
+//							Desktop.getDesktop().browse(e.getURL().toURI());
+//						} catch (IOException | URISyntaxException e1) {
+//							e1.printStackTrace();
+//						}
+//					}
+//				}
+//			}
+//		});
 	}
 
+	public void openPage(String info) {
+		if (info.startsWith("http://")
+				|| info.startsWith("https://")
+				|| info.startsWith("www.")) {
+			webView.open(info);
+		} else {
+			webView.loadContent(info);
+		}
+	}
 
 	@Override
 	public Object getProperty(String s) {
@@ -72,13 +81,8 @@ public class PanelOverview implements PageHolder.IExtendedPageHandler {
 	private void $$$setupUI$$$() {
 		panel_overview = new JPanel();
 		panel_overview.setLayout(new BorderLayout(0, 0));
-		final JScrollPane scrollPane1 = new JScrollPane();
-		panel_overview.add(scrollPane1, BorderLayout.CENTER);
-		txtpnModpackInfo = new JEditorPane();
-		txtpnModpackInfo.setContentType("text/html");
-		txtpnModpackInfo.setEditable(false);
-		txtpnModpackInfo.setText("<html>\r\n  <head>\r\n    \r\n  </head>\r\n  <body>\r\n    <p style=\"margin-top: 0\">\r\n      Loading modpack info-page...\r\n    </p>\r\n  </body>\r\n</html>\r\n");
-		scrollPane1.setViewportView(txtpnModpackInfo);
+		webView = new WebbrowserPanel();
+		panel_overview.add(webView, BorderLayout.CENTER);
 	}
 
 	/**
@@ -87,5 +91,4 @@ public class PanelOverview implements PageHolder.IExtendedPageHandler {
 	public JComponent $$$getRootComponent$$$() {
 		return panel_overview;
 	}
-
 }

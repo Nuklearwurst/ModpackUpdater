@@ -15,7 +15,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 /**
  * @author Nuklearwurst
@@ -99,21 +98,7 @@ public class InstallerWindow {
 				if (info == null) {
 					nextPage();
 				} else {
-					if (info.startsWith("http://")
-							|| info.startsWith("https://")
-							|| info.startsWith("www.")) {
-						try {
-							if (info.startsWith("www.")) {
-								info = "http://" + info;
-							}
-							page1.txtpnModpackInfo.setPage(info);
-						} catch (IOException e) {
-							NwLogger.INSTALLER_LOGGER.error("Error: invalid modpackinfo url!", e);
-							page1.txtpnModpackInfo.setText("Error, modpack info could not be downloadded!");
-						}
-					} else {
-						page1.txtpnModpackInfo.setText(info);
-					}
+					page1.openPage(info);
 					updatePage();
 				}
 			} else {

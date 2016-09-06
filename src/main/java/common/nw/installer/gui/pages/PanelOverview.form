@@ -7,21 +7,10 @@
     <properties/>
     <border type="none"/>
     <children>
-      <scrollpane id="5a6ec">
+      <component id="f9fce" class="common.nw.core.gui.WebbrowserPanel" binding="webView">
         <constraints border-constraint="Center"/>
         <properties/>
-        <border type="none"/>
-        <children>
-          <component id="4872c" class="javax.swing.JEditorPane" binding="txtpnModpackInfo">
-            <constraints/>
-            <properties>
-              <contentType value="text/html"/>
-              <editable value="false"/>
-              <text value="&lt;html&gt;&#13;&#10;  &lt;head&gt;&#13;&#10;    &#13;&#10;  &lt;/head&gt;&#13;&#10;  &lt;body&gt;&#13;&#10;    &lt;p style=&quot;margin-top: 0&quot;&gt;&#13;&#10;      Loading modpack info-page...&#13;&#10;    &lt;/p&gt;&#13;&#10;  &lt;/body&gt;&#13;&#10;&lt;/html&gt;&#13;&#10;"/>
-            </properties>
-          </component>
-        </children>
-      </scrollpane>
+      </component>
     </children>
   </grid>
 </form>

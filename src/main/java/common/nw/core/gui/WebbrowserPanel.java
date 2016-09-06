@@ -28,8 +28,9 @@ public class WebbrowserPanel extends JPanel {
 			".jar", ".zip", ".json", ".txt", ".properties", ".prop", ".gif", ".png", ".litemod", ".cfg", ".config", ".conf"
 	};
 
-	private final boolean editableAddress = true;
-	private final boolean hideAdress = false;
+	private boolean editableAddress = true;
+	private boolean hideAdress = false;
+	private boolean hideTitle = false;
 
 	private JPanel contentPanel;
 
@@ -43,6 +44,7 @@ public class WebbrowserPanel extends JPanel {
 	private WebEngine webEngine;
 
 	private DownloadHandler downloadHandler;
+	private ErrorHandler errorHandler;
 
 	public WebbrowserPanel() {
 		super();
@@ -56,11 +58,9 @@ public class WebbrowserPanel extends JPanel {
 		this.add(contentPanel, BorderLayout.CENTER);
 
 		//init adress
-		txtUrl.setEditable(editableAddress);
 		btnUrl.addActionListener(e -> open(txtUrl.getText()));
 
-		txtUrl.setVisible(!hideAdress);
-		btnUrl.setVisible(!hideAdress && editableAddress);
+		updateComponentVisibility();
 
 		//init jfx
 		Platform.runLater(() -> {
@@ -69,7 +69,9 @@ public class WebbrowserPanel extends JPanel {
 			webEngine = webView.getEngine();
 
 			//title listener
-			webEngine.titleProperty().addListener((observable, oldValue, newValue) -> lblTitle.setText(newValue != null ? newValue : "Loading"));
+			webEngine.titleProperty().addListener((observable, oldValue, newValue) -> {
+				if (newValue != null) lblTitle.setText(newValue);
+			});
 
 			//pb status
 			webEngine.getLoadWorker().workDoneProperty().addListener((observable, oldValue, newValue) -> {
@@ -78,15 +80,18 @@ public class WebbrowserPanel extends JPanel {
 			});
 
 			webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
-				lblTitle.setText("Loading");
 
 				String location = webEngine.getLocation();
 				switch (webEngine.getLoadWorker().getState()) {
+					case SCHEDULED:
+					case RUNNING:
+						lblTitle.setText("Loading");
+						break;
 					case CANCELLED:
 					case FAILED:
 						if (downloadHandler != null && downloadHandler.acceptsUrl(location)) {
 							downloadHandler.download(location);
-							handleDownload();
+							loadDownloadInfo();
 						} else {
 							handleError();
 						}
@@ -110,22 +115,24 @@ public class WebbrowserPanel extends JPanel {
 				}
 			});
 
-			webEngine.setOnError(event -> {
-				handleError();
-			});
+			webEngine.setOnError(event -> handleError());
 
 			webbrowserPanel.setScene(new Scene(webView));
 		});
 	}
 
 	private void handleError() {
-		lblTitle.setText("Error loading page!");
-		webEngine.loadContent("<html><body><center><b>Error when loading website!</b></center></body></html>");
+		if (errorHandler != null) {
+			errorHandler.handleError(this);
+		} else {
+			webEngine.loadContent("<html><body><div style=\"text-align: center;\"><b>Error when loading website!</b></div></body></html>");
+			lblTitle.setText("Error loading page!");
+		}
 	}
 
-	private void handleDownload() {
+	private void loadDownloadInfo() {
+		webEngine.loadContent("<html><body><div style=\"text-align: center;\"><b>Downloading...</b></div></body></html>");
 		lblTitle.setText("Downloading");
-		webEngine.loadContent("<html><body><center><b>Downloading...</b></center></body></html>");
 	}
 
 	public void open(final String urlString) {
@@ -145,6 +152,37 @@ public class WebbrowserPanel extends JPanel {
 				}
 			}
 		});
+	}
+
+	public void open(final URL url) {
+		Platform.runLater(() -> webEngine.load(url.toExternalForm()));
+	}
+
+	public void loadContent(String content) {
+		Platform.runLater(() -> webEngine.loadContent(content));
+	}
+
+	public void setHideAdress(boolean hideAdress) {
+		this.hideAdress = hideAdress;
+		updateComponentVisibility();
+
+	}
+
+	public void setEditableAddress(boolean editableAddress) {
+		this.editableAddress = editableAddress;
+		updateComponentVisibility();
+	}
+
+	public void setHideTitle(boolean hideTitle) {
+		this.hideTitle = hideTitle;
+		updateComponentVisibility();
+	}
+
+	private void updateComponentVisibility() {
+		txtUrl.setEditable(editableAddress);
+		txtUrl.setVisible(!hideAdress);
+		btnUrl.setVisible(!hideAdress && editableAddress);
+		lblTitle.setVisible(!hideTitle);
 	}
 
 	public static void main(String[] args) {
@@ -181,6 +219,10 @@ public class WebbrowserPanel extends JPanel {
 
 	public void setDownloadHandler(DownloadHandler downloadHandler) {
 		this.downloadHandler = downloadHandler;
+	}
+
+	public void setErrorHandler(ErrorHandler errorHandler) {
+		this.errorHandler = errorHandler;
 	}
 
 	{
@@ -248,5 +290,9 @@ public class WebbrowserPanel extends JPanel {
 		}
 
 		void download(String url);
+	}
+
+	public interface ErrorHandler {
+		void handleError(WebbrowserPanel panel);
 	}
 }
