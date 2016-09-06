@@ -130,15 +130,15 @@ public class Updater extends Thread {
 	public void run() {
 		try {
 			// run update
-			Updater.this.doUpdate();
+			doUpdate();
 		} catch (Exception ex) {
 			//handle unknown errors
 			NwLogger.UPDATER_LOGGER.error("Unknown Error updating!", ex);
 			addErrorMessage("Error:  " + ex.getMessage() + "\nData: " + ex.toString());
 			errored = true;
 		}
-		Updater.this.onUpdateFinished();
-		Updater.this.finished = true;
+		onUpdateFinished();
+		finished = true;
 	}
 
 	/**
@@ -152,14 +152,14 @@ public class Updater extends Thread {
 		//listener
 		if (listener == null) {
 			listener = new ConsoleListener();
-			NwLogger.UPDATER_LOGGER.warning("No listener specified!");
+			NwLogger.UPDATER_LOGGER.warning("No listener specified! Defaulting to Console output");
 		}
 
 		// checking local stuff
-		listener.setOverallProgress("Reading local modpack info!", 0);
+		listener.setOverallProgress("Reading local modpack info...", 0);
 		if (!readLocalModpack()) { // read modpack
-			//do not set error flag, respect cancelling
 			addErrorMessage("Error: no modpack found!");
+			errored = true;
 			return;
 		}
 
@@ -323,6 +323,8 @@ public class Updater extends Thread {
 					//assume that we are on a server
 					//as we have no profile and none of the passed parameters indicate a client
 					flags |= FLAG_SERVER;
+					NwLogger.UPDATER_LOGGER.info("Detected headless mode!");
+					NwLogger.UPDATER_LOGGER.info("You can force disable headless mode by specifying the \"serverMode\" argument");
 				}
 			}
 
@@ -353,8 +355,7 @@ public class Updater extends Thread {
 		if (modpackJson.exists()) {
 			NwLogger.UPDATER_LOGGER.info("modpack.json found, parsing...");
 			try {
-				local = new Gson().fromJson(new FileReader(modpackJson),
-						LocalModpack.class);
+				local = new Gson().fromJson(new FileReader(modpackJson), LocalModpack.class);
 			} catch (Exception e) {
 				NwLogger.UPDATER_LOGGER.severe("Error parsing modpack.json, try to use commandline modpack", e);
 			}
@@ -364,26 +365,45 @@ public class Updater extends Thread {
 			local = commandLine;
 			NwLogger.UPDATER_LOGGER.info("Using commandlineModpack!");
 		} else {
+			//check if commandline data is equal to local stored data
+			//usually this should be the case
+			//when updating however, the commandline args might be different
+			//this could also happen when reusing an installation for another modpack
 			if (commandLine != null) {
+				//compare url
+				if (commandLine.url != null && !commandLine.url.isEmpty() && !commandLine.url.equals(local.url)) {
+					// error
+					int ans = listener.showConfirmDialog(
+							"An url was set in the program-arguments, but it is different from the local file!\nDo you want to overwrite saved data?\nArgument: "
+									+ commandLine.url
+									+ "\nSaved data: " + local.url,
+							"Warning", JOptionPane.YES_NO_OPTION,
+							JOptionPane.WARNING_MESSAGE);
+					if (ans == JOptionPane.YES_OPTION) {
+						local.url = commandLine.url;
+					}
+				}
+				//compare name
 				if (commandLine.name != null && !commandLine.name.isEmpty() && !commandLine.name.equals(local.name)) {
 					// error
 					int ans = listener.showConfirmDialog(
 							"A name was set in the program-arguments, but it is different from the local file!\nDo you want to overwrite saved data?\nArgument: "
 									+ commandLine.name
 									+ "\nSaved data: " + local.name,
-							"Waring", JOptionPane.YES_NO_OPTION,
+							"Warning", JOptionPane.YES_NO_OPTION,
 							JOptionPane.WARNING_MESSAGE);
 					if (ans == JOptionPane.YES_OPTION) {
 						local.name = commandLine.name;
 					}
 				}
+				//compare version
 				if (commandLine.version != null && !commandLine.version.isEmpty() && !commandLine.version.equals(local.version)) {
 					// error
 					int ans = listener.showConfirmDialog(
 							"A version was set in the program-arguments, but it is different from the local file!\nDo you want to overwrite saved data?\nArgument: "
 									+ commandLine.version
 									+ "\nSaved data: " + local.version,
-							"Waring", JOptionPane.YES_NO_OPTION,
+							"Warning", JOptionPane.YES_NO_OPTION,
 							JOptionPane.WARNING_MESSAGE);
 					if (ans == JOptionPane.YES_OPTION) {
 						local.version = commandLine.version;
@@ -392,9 +412,7 @@ public class Updater extends Thread {
 			}
 		}
 		if (local == null) {
-			// TODO modpack editing dialog
-			String ans = listener.showInputDialog(
-					"No Modpack found!\nPlease enter the Modpack-URL!");
+			String ans = listener.showInputDialog("No Modpack found!\nPlease enter the Modpack-URL!");
 			if (ans != null) {
 				local = new LocalModpack(null, ans, null);
 			}
@@ -402,7 +420,6 @@ public class Updater extends Thread {
 		}
 		if (local == null) {
 			addErrorMessage("No modpack could be found!");
-			errored = true;
 			return false;
 		}
 		return true;
@@ -458,8 +475,7 @@ public class Updater extends Thread {
 				local.version = remote.minecraft.version;
 			}
 
-			if (local.name != null && remote.modpackName != null
-					&& !local.name.equals(remote.modpackName)) {
+			if (local.name != null && remote.modpackName != null && !local.name.equals(remote.modpackName)) {
 				int ans = listener.showConfirmDialog(
 						"Local name is different from remote!\nShould it be set to remote?\nOnly do this if you are sure you are downloading the correct modpack.",
 						"Warning!", JOptionPane.YES_NO_OPTION,
@@ -529,8 +545,7 @@ public class Updater extends Thread {
 	private boolean updateVersion() {
 		//update jar and json
 
-		String[] options = {"Install", "Continue without installing",
-				"Quit to launcher"};
+		String[] options = {"Install", "Continue without installing", "Quit to launcher"};
 		int ans = listener.showOptionDialog(
 				"A new Modpack version is available. Do you want to install it?\nCurrent Version: " + local.version
 						+ ", New Version: " + remote.minecraft.version + "\nThis is not required on the server!!",
