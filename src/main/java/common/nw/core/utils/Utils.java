@@ -8,7 +8,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Locale;
 
 public class Utils {
@@ -17,7 +17,7 @@ public class Utils {
 	 * calculate the time passed since the given date(in Days)
 	 */
 	@SuppressWarnings("unused")
-	public static int getDaysSimceUpdate(Date date) {
+	public static int getDaysSinceUpdate(Date date) {
 		long time = System.currentTimeMillis() - date.getTime();
 		double days = time / 86400000D;
 		return (int) Math.floor(days);
@@ -27,8 +27,7 @@ public class Utils {
 	 * get the default minecraft directory for different operating systems
 	 */
 	public static String getMinecraftDir() {
-		String osType = System.getProperty("os.name").toLowerCase(
-				Locale.ENGLISH);
+		String osType = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
 		String homeDir = System.getProperty("user.home", ".");
 		String out;
 		if ((osType.contains("win")) && (System.getenv("APPDATA") != null)) {
@@ -82,12 +81,6 @@ public class Utils {
 	@SuppressWarnings("SameParameterValue")
 	public static String parseIntWithMinLength(int number, int length) {
 		return String.format("%0" + length + "d", number);
-//		String str = String.valueOf(number);
-//		String prefix = "";
-//		for (int i = 0; i < length - str.length(); i++) {
-//			prefix += "0";
-//		}
-//		return prefix + str;
 	}
 
 	/**
