@@ -285,8 +285,15 @@ public class Updater extends Thread {
 	}
 
 	/**
-	 * creates a modpack from commandline parameters (used when no modpack.json
-	 * file is found)
+	 * creates a modpack from commandline parameters (used when no modpack.json file is found)
+	 * <p>
+	 * Allowed arguments:
+	 * <ul>
+	 * <li>modpack [string] - name of the modpack</li>
+	 * <li>modpackrepo [string] - url of the modpack</li>
+	 * <li>modpackversion [string] - version of the modpack</li>
+	 * <li>serverMode [true/false] - whether to run in serverMode and skip launcher profile updates</li>
+	 * </ul>
 	 */
 	private LocalModpack parseCommandLineModpack() {
 		try {
@@ -304,8 +311,7 @@ public class Updater extends Thread {
 					.accepts("serverMode").withOptionalArg().ofType(Boolean.class).defaultsTo(true);
 
 			optionParser.allowsUnrecognizedOptions();
-			OptionSet options = optionParser.parse(args.toArray(new String[args
-					.size()]));
+			OptionSet options = optionParser.parse(args.toArray(new String[args.size()]));
 
 			/////////////////
 			// Parse flags //

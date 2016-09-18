@@ -126,6 +126,20 @@ public class Launch implements ITweaker {
 	}
 
 
+	/**
+	 * Main entry point
+	 * <p>
+	 * Allowed arguments:
+	 * <ul>
+	 * <li>nogui [true/false] - disabled/enables gui</li>
+	 * <li>gamedir [dir] - specify working directory</li>
+	 * <li>assetdir [dir] - specify directory used for assets (unused)</li>
+	 * <li>versionName [string] - minecraft-launcher version name</li>
+	 * <li>all arguments used by the updater</li>
+	 * </ul>
+	 *
+	 * @see Updater#parseCommandLineModpack()
+	 */
 	public static void main(String[] args) {
 		boolean useGui = true;
 		String gameDir = "./";
