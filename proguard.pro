@@ -2,7 +2,6 @@
 
 -dontoptimize
 -dontobfuscate
--dontpreverify
 -dontwarn **
 -dontwarn javax.annotation.**
 -dontwarn javax.inject.**
