@@ -13,6 +13,8 @@ import common.nw.installer.gui.pages.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Nuklearwurst
@@ -119,118 +121,133 @@ public class InstallerWindow {
 	 */
 	private class InstallThread extends Thread {
 
+		@SuppressWarnings("Duplicates")
 		@Override
 		public void run() {
-			// Install
-			setProgress("Starting installation...", 0);
-			Installer installer = new Installer(modpack,
-					page2.txtVersionName.getText(), page2.txtMinecraft.getText(), page0.txtUrl.getText(),
-					page2.chbxCreateProfile.isSelected(),
-					page0.chbxDownloadLibraries.isSelected());
+			try {
+				// Install
+				setProgress("Starting installation...", 0);
+				Installer installer = new Installer(modpack,
+						page2.txtVersionName.getText(), page2.txtMinecraft.getText(), page0.txtUrl.getText(),
+						page2.chbxCreateProfile.isSelected(),
+						page0.chbxDownloadLibraries.isSelected());
 
-			setProgress("Validating settings...", 5);
-			if (!installer.validateEntries()) {
-				JOptionPane.showMessageDialog(mainFrame,
-						"Some Values are not filled in correctly!", "Error",
-						JOptionPane.ERROR_MESSAGE);
-				installing = false;
-				previousPage();
-				return;
-			}
+				setProgress("Validating settings...", 5);
+				if (!installer.validateEntries()) {
+					JOptionPane.showMessageDialog(mainFrame,
+							"Some Values are not filled in correctly!", "Error",
+							JOptionPane.ERROR_MESSAGE);
+					installing = false;
+					previousPage();
+					return;
+				}
 
-			setProgress("Preparing Minecraft directories", 10);
-			if (!installer.createDirs()) {
-				errorMessage += "\nAn error occurred while creating directories! \nPlease check if you have permission!";
-				finishInstallation();
-				return;
-			}
-			setProgress("Downloading Minecraft Version file", 20);
-			if (!installer.createJson()) {
-				if (JOptionPane.showConfirmDialog(mainFrame,
-						"Failed creating version.json file! \nDo you want to try again?",
-						"Error", JOptionPane.YES_NO_OPTION,
-						JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION) {
-					if (!installer.createJson()) {
-						errorMessage += "\nAn error occurred while creating version.json file! \nPlease  check your internet connection!";
-						finishInstallation();
-						return;
-					}
-				} else {
-					errorMessage += "\nAn error occurred while creating version.json file! \nPlease  check your internet connection!";
+				setProgress("Preparing Minecraft directories", 10);
+				if (!installer.createDirs()) {
+					warnings.add("An error occurred while creating directories! \nPlease check if you have permission!");
 					finishInstallation();
 					return;
 				}
-			}
-			setProgress("Writing Minecraft Version file", 35);
-			if (!installer.writeJson()) {
-				if (JOptionPane.showConfirmDialog(mainFrame,
-						"Failed saving version.json file! \nDo you want to try again?",
-						"Error", JOptionPane.YES_NO_OPTION,
-						JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION) {
-					if (!installer.writeJson()) {
-						errorMessage += "\nAn error occurred while saving version.json file! \nPlease check if you have permission!";
-						finishInstallation();
-						return;
-					}
-				} else {
-					errorMessage += "\nAn error occurred while creating version.json file! \nPlease check if you have permission!";
-					finishInstallation();
-					return;
-				}
-			}
-			setProgress(modpack.minecraft.jarUpdateType.equals(ModpackValues.Download.jarForgeInherit) ? "Downloading and executing MinecraftForge, this may take a while..." : "Downloading Minecraft Jar", 40);
-			if (!installer.createJar(true, content_panel)) {
-				if (JOptionPane.showConfirmDialog(mainFrame,
-						"Failed creating version.jar file! "
-								+ "\nDo you want to try again?", "Error",
-						JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION) {
-					if (!installer.createJar(true, content_panel)) {
-						errorMessage += "\nAn error occurred while creating version.jar file! "
-								+ "\nPlease check if you have permission! "
-								+ "\nPlease  check your internet connection!";
-						finishInstallation();
-						return;
-					}
-				} else {
-					errorMessage += "\nAn error occurred while creating version.jar file! "
-							+ "\nPlease check if you have permission! "
-							+ "\nPlease  check your internet connection!";
-					finishInstallation();
-					return;
-				}
-			}
-			setProgress("Downloading updater...", 75);
-			if (!installer.downloadLibraries()) {
-				if (JOptionPane.showConfirmDialog(mainFrame,
-						"Failed downloading libraries! "
-								+ "\nDo you want to try again?", "Error",
-						JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION) {
-					if (!installer.downloadLibraries()) {
-						errorMessage += "\nAn error occurred while downloading libraries! "
-								+ "\nPlease check if you have permission! "
-								+ "\nPlease  check your internet connection!";
-						if (JOptionPane.showConfirmDialog(mainFrame,
-								"Failed downloading libraries! "
-										+ "\nDo you want to continue anyway?",
-								"Error", JOptionPane.YES_NO_OPTION,
-								JOptionPane.ERROR_MESSAGE) != JOptionPane.YES_OPTION) {
+				setProgress("Downloading Minecraft Version file", 20);
+				if (!installer.createJson()) {
+					if (JOptionPane.showConfirmDialog(mainFrame,
+							"Failed creating version.json file! \nDo you want to try again?",
+							"Error", JOptionPane.YES_NO_OPTION,
+							JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION) {
+						if (!installer.createJson()) {
+							warnings.add("An error occurred while creating version.json file!");
+							warnings.add("Please check your internet connection!");
 							finishInstallation();
 							return;
 						}
+					} else {
+						warnings.add("An error occurred while creating version.json file!");
+						warnings.add("Please  check your internet connection!");
+						finishInstallation();
+						return;
 					}
-				} else {
-					errorMessage += "\nAn error occurred while downloading libraries! \nPlease check if you have permission! \nPlease  check your internet connection!";
+				}
+				setProgress("Writing Minecraft Version file", 35);
+				if (!installer.writeJson()) {
+					if (JOptionPane.showConfirmDialog(mainFrame,
+							"Failed saving version.json file! \nDo you want to try again?",
+							"Error", JOptionPane.YES_NO_OPTION,
+							JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION) {
+						if (!installer.writeJson()) {
+							warnings.add("An error occurred while saving version.json file!");
+							warnings.add("Please check if you have permission!");
+							finishInstallation();
+							return;
+						}
+					} else {
+						warnings.add("An error occurred while creating version.json file!");
+						warnings.add("Please check if you have permission!");
+						finishInstallation();
+						return;
+					}
+				}
+				setProgress(modpack.minecraft.jarUpdateType.equals(ModpackValues.Download.jarForgeInherit) ? "Downloading and executing MinecraftForge, this may take a while..." : "Downloading Minecraft Jar", 40);
+				if (!installer.createJar(true, content_panel)) {
+					if (JOptionPane.showConfirmDialog(mainFrame,
+							"Failed creating version.jar file! "
+									+ "\nDo you want to try again?", "Error",
+							JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION) {
+						if (!installer.createJar(true, content_panel)) {
+							warnings.add("An error occurred while creating version.jar file!");
+							warnings.add("Please check if you have permission!");
+							warnings.add("Please  check your internet connection!");
+							finishInstallation();
+							return;
+						}
+					} else {
+						warnings.add("An error occurred while creating version.jar file!");
+						warnings.add("Please check if you have permission!");
+						warnings.add("Please  check your internet connection!");
+						finishInstallation();
+						return;
+					}
+				}
+				setProgress("Downloading updater...", 75);
+				if (!installer.downloadLibraries()) {
+					if (JOptionPane.showConfirmDialog(mainFrame,
+							"Failed downloading libraries! "
+									+ "\nDo you want to try again?", "Error",
+							JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION) {
+						if (!installer.downloadLibraries()) {
+							warnings.add("An error occurred while downloading libraries!");
+							warnings.add("Please check if you have permission!");
+							warnings.add("Please  check your internet connection!");
+							if (JOptionPane.showConfirmDialog(mainFrame,
+									"Failed downloading libraries! "
+											+ "\nDo you want to continue anyway?",
+									"Error", JOptionPane.YES_NO_OPTION,
+									JOptionPane.ERROR_MESSAGE) != JOptionPane.YES_OPTION) {
+								finishInstallation();
+								return;
+							}
+						}
+					} else {
+						warnings.add("An error occurred while downloading libraries!");
+						warnings.add("Please check if you have permission!");
+						warnings.add("Please  check your internet connection!");
+						finishInstallation();
+						return;
+					}
+				}
+				setProgress("Creating profile...", 90);
+				if (!installer.createProfile(page2.txtProfile.getText(), profile_javaOptions, profile_gameDirectory, profile_updateFrequency)) {
+					warnings.add("Failed to create profile!");
+					warnings.add("Make sure the minecraft launcher is not running!");
 					finishInstallation();
 					return;
 				}
+				setProgress("Installation Complete!", 100);
+			} catch (Exception e) {
+				NwLogger.INSTALLER_LOGGER.error("Unknown error during installation!", e);
+				warnings.add("An unknown error occurred!");
+				warnings.add("Error:" + e.getLocalizedMessage());
+				setProgress("Installation failed!", 100);
 			}
-			setProgress("Creating profile...", 90);
-			if (!installer.createProfile(page2.txtProfile.getText(), profile_javaOptions, profile_gameDirectory, profile_updateFrequency)) {
-				errorMessage += "Failed to create profile! \nMake sure the minecraft launcher is not running!";
-				finishInstallation();
-				return;
-			}
-			setProgress("Installation Complete!", 100);
 			finishInstallation();
 		}
 
@@ -285,9 +302,9 @@ public class InstallerWindow {
 	private boolean installing = false;
 
 	/**
-	 * error log
+	 * error messages
 	 */
-	private String errorMessage = "";
+	private List<String> warnings = new ArrayList<>();
 
 	public InstallerWindow(String url) {
 		//Initialize UI
@@ -361,8 +378,7 @@ public class InstallerWindow {
 				}
 				break;
 			case 3:
-
-				errorMessage = "";
+				warnings.clear();
 				installing = true;
 				new InstallThread().start();
 				break;
@@ -370,10 +386,15 @@ public class InstallerWindow {
 				btnBack.setEnabled(true);
 				btnNext.setEnabled(true);
 				btnNext.setText("Finish");
-				if (errorMessage == null || errorMessage.isEmpty()) {
+				if (warnings.isEmpty()) {
 					page4.setNoErrors();
 				} else {
-					page4.setInstallErrorred(errorMessage);
+					//display error message
+					StringBuilder builder = new StringBuilder();
+					for (String s : warnings) {
+						builder.append(s).append("\n");
+					}
+					page4.setInstallErrorred(builder.toString());
 				}
 				break;
 		}

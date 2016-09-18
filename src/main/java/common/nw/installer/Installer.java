@@ -264,10 +264,12 @@ public class Installer {
 		if (libraryNode == null) {
 			libraryList = new ArrayList<>();
 		} else {
+			//init with values of the downloaded version file
 			libraryList = new ArrayList<>(libraryNode.getElements());
 		}
 
 		try {
+			//add custom modpack libs, as specified in modpack.json
 			libraryList.addAll(Library.parseJsonListFromStrings(repo.minecraft.libraries));
 		} catch (InvalidSyntaxException e) {
 			NwLogger.INSTALLER_LOGGER.error("Error reading modpack libraries!", e);
