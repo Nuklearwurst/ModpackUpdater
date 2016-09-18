@@ -264,7 +264,7 @@ public class Installer {
 		if (libraryNode == null) {
 			libraryList = new ArrayList<>();
 		} else {
-			libraryList = libraryNode.getElements();
+			libraryList = new ArrayList<>(libraryNode.getElements());
 		}
 
 		try {
