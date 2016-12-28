@@ -21,10 +21,8 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class Installer {
 
@@ -294,12 +292,7 @@ public class Installer {
 					JdomParser forgeParser = new JdomParser();
 					JsonRootNode forgeVersionData = forgeParser.parse(s);
 					JsonNode build = forgeVersionData.getNode("number", repo.minecraft.versionName);
-					String branch = build.getStringValue("branch");
-					if (branch == null) {
-						branch = "";
-					} else {
-						branch = "-" + branch;
-					}
+					String branch = build.isStringValue("branch") ? "-" + build.getStringValue("branch") : "";
 					String mcversion = build.getStringValue("mcversion");
 					String forgeversion = build.getStringValue("version");
 					forgeVersion = mcversion + "-Forge" + forgeversion + branch;
@@ -418,12 +411,7 @@ public class Installer {
 							JdomParser parser = new JdomParser();
 							JsonRootNode versionData = parser.parse(s);
 							JsonNode build = versionData.getNode("number", repo.minecraft.versionName);
-							String branch = build.getStringValue("branch");
-							if (branch == null) {
-								branch = "";
-							} else {
-								branch = "-" + branch;
-							}
+							String branch = build.isStringValue("branch") ? "-" + build.getStringValue("branch") : "";
 							String mcversion = build.getStringValue("mcversion");
 							String forgeversion = build.getStringValue("version");
 
@@ -445,25 +433,59 @@ public class Installer {
 							url = new URL(ModpackValues.URL.forgeInstaller + mcversion + "-" + forgeversion + branch + "/forge-" + mcversion + "-" + forgeversion + branch + "-installer.jar");
 						}
 
-						//Class loading
-						NwLogger.INSTALLER_LOGGER.fine("Loading MC-Forge Installer...");
-						URLClassLoader child = new URLClassLoader(new URL[]{url}, Installer.class.getClassLoader().getParent());
-						Class forgeClientInstall = Class.forName("net.minecraftforge.installer.ClientInstall", true, child);
-						Method runMethod = forgeClientInstall.getDeclaredMethod("run", File.class);
-						Object instance = forgeClientInstall.newInstance();
+						try {
 
-						//Invoking Run Method
-						NwLogger.INSTALLER_LOGGER.fine("Starting Client Installation...");
-						Object result = runMethod.invoke(instance, minecraftDirectory);
-						if ((Boolean) result) {
-							NwLogger.INSTALLER_LOGGER.info("Minecraft Forge Installation finished.");
-							return true;
-						} else {
-							NwLogger.INSTALLER_LOGGER.error("Minecraft Forge Installation has encountered an error!");
-							return false;
+							//Class loading
+							NwLogger.INSTALLER_LOGGER.fine("Loading MC-Forge Installer...");
+							URLClassLoader child = new URLClassLoader(new URL[]{url}, Installer.class.getClassLoader().getParent());
+							Class forgeClientInstall = Class.forName("net.minecraftforge.installer.ClientInstall", true, child);
+
+							Object result;
+							try {
+								Method runMethod = forgeClientInstall.getDeclaredMethod("run", File.class);
+								Object instance = forgeClientInstall.newInstance();
+
+								//Invoking Run Method
+								NwLogger.INSTALLER_LOGGER.fine("Starting Client Installation...");
+								result = runMethod.invoke(instance, minecraftDirectory);
+							} catch (Exception e) {
+								NwLogger.INSTALLER_LOGGER.warn("Error Initializing Minecraft Forge Installer...", e);
+								Method runMethod = Arrays.stream(forgeClientInstall.getDeclaredMethods())
+										.filter((m) -> m.getName().equals("run"))
+										.findAny().orElseThrow(NoSuchMethodException::new);
+								Object instance = forgeClientInstall.newInstance();
+
+								//Invoking Run Method
+								NwLogger.INSTALLER_LOGGER.fine("Starting Client Installation...");
+								Object pred = Class.forName("com.google.common.base.Predicates", true, child).getDeclaredMethod("alwaysTrue").invoke(null);
+								result = runMethod.invoke(instance, minecraftDirectory, pred);
+							}
+							if ((Boolean) result) {
+								NwLogger.INSTALLER_LOGGER.info("Minecraft Forge Installation finished.");
+								return true;
+							} else {
+								NwLogger.INSTALLER_LOGGER.error("Minecraft Forge Installation has encountered an error!");
+								return false;
+							}
+						} catch (Exception e) {
+							NwLogger.INSTALLER_LOGGER.error("Error Executing Minecraft Forge Installer...", e);
+							if (allowGui) {
+								int result = JOptionPane.showConfirmDialog(parentWindow, "Do you want to manually execute the installer?", "MinecraftForge Installation failed!", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+								if (result == JOptionPane.YES_OPTION) {
+									try {
+										NwLogger.INSTALLER_LOGGER.fine("Loading MC-Forge Installer for manual installation...");
+										URLClassLoader child = new URLClassLoader(new URL[]{url}, Installer.class.getClassLoader().getParent());
+										Class mainClass = Class.forName("net.minecraftforge.installer.SimpleInstaller", true, child);
+										Method main = mainClass.getDeclaredMethod("main", String[].class);
+										main.invoke(null, new Object[]{new String[0]});
+										return true;
+									} catch (Exception ex) {
+										NwLogger.INSTALLER_LOGGER.error("Minecraft Forge Installation has encountered an error!", ex);
+										return false;
+									}
+								}
+							}
 						}
-					} catch (ClassNotFoundException e) {
-						NwLogger.INSTALLER_LOGGER.error("Error Loading Minecraft Forge Installer...", e);
 					} catch (MalformedURLException e) {
 						NwLogger.INSTALLER_LOGGER.error("Error parsing Minecraft Forge Installer version...", e);
 					} catch (IOException e) {

@@ -93,7 +93,7 @@ public class WebbrowserPanel extends JPanel {
 							downloadHandler.download(location);
 							loadDownloadInfo();
 						} else {
-							handleError();
+							handleError(location);
 						}
 						break;
 					case SUCCEEDED:
@@ -111,22 +111,22 @@ public class WebbrowserPanel extends JPanel {
 
 			webEngine.getLoadWorker().exceptionProperty().addListener((observable, oldValue, newValue) -> {
 				if (webEngine.getLoadWorker().getState() == FAILED) {
-					handleError();
+					handleError(webEngine.getLocation());
 				}
 			});
 
-			webEngine.setOnError(event -> handleError());
+			webEngine.setOnError(event -> handleError(webEngine.getLocation()));
 
 			webbrowserPanel.setScene(new Scene(webView));
 		});
 	}
 
-	private void handleError() {
+	private void handleError(String target) {
 		if (errorHandler != null) {
-			errorHandler.handleError(this);
+			errorHandler.handleError(this, target);
 		} else {
-			webEngine.loadContent("<html><body><div style=\"text-align: center;\"><b>Error when loading website!</b></div></body></html>");
-			lblTitle.setText("Error loading page!");
+			webEngine.loadContent(String.format("<html><body><div style=\"text-align: center;\"><b>Error when loading website: %s</b></div></body></html>", target));
+			lblTitle.setText("Error loading page: " + target);
 		}
 	}
 
@@ -293,6 +293,6 @@ public class WebbrowserPanel extends JPanel {
 	}
 
 	public interface ErrorHandler {
-		void handleError(WebbrowserPanel panel);
+		void handleError(WebbrowserPanel panel, String target);
 	}
 }

@@ -132,6 +132,7 @@ public class DialogEditMod extends JDialog {
 			}
 			//noinspection ResultOfMethodCallIgnored
 			file.delete();
+			d.dispose();
 		}, new File("" + File.separator + ans.substring(index)), DownloadModTask.createModInfoFromUrl(ans));
 		downloadModTask.start();
 		d.setVisible(true);

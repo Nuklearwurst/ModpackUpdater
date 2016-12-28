@@ -26,8 +26,8 @@ targetCompatibility = 1.8
 
 ext {
     updaterVersion = '2.2.2'
-    installerVersion = '2.4.0'
-    creatorVersion = '2.4.3'
+    installerVersion = '2.5.0'
+    creatorVersion = '2.4.4'
 }
 
 dependencies {

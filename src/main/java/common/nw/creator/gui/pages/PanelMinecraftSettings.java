@@ -254,11 +254,13 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 	@Override
 	public void onPageOpened(PageHolder holder, boolean forward) {
 		this.txtJar.setText(creator.modpack.minecraft.versionName);
-		this.txtJson.setText(creator.modpack.minecraft.jsonName);
-		this.txtVersion.setText(creator.modpack.minecraft.version);
+
 		this.setJarUpdateType(creator.modpack.minecraft.jarUpdateType);
 		this.setJsonUpdateType(creator.modpack.minecraft.jsonUpdateType);
+		this.txtJson.setText(creator.modpack.minecraft.jsonName);
+		this.txtVersion.setText(creator.modpack.minecraft.version);
 		this.txtInstallInfo.setText(creator.modpack.minecraft.installInfoUrl);
+
 		if (ModpackValues.Download.jsonGenerate.equals(creator.modpack.minecraft.jsonUpdateType)) {
 			//don't recreate default libs if already happened
 			creator.defaultLibrariesGenerated = true;
