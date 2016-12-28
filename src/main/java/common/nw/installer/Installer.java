@@ -278,14 +278,14 @@ public class Installer {
 
 		//Add inheritance if needed
 		if (repo.minecraft.jarUpdateType.equals(ModpackValues.Download.jarForgeInherit)) {
-			String forgeVersion = null;
+			String forgeVersionFull = null;
 			try {
 				//noinspection StatementWithEmptyBody
 				if (repo.minecraft.versionName.contains("/")) {
 					//this seems to be direct link, we don't know which version
 				} else if (repo.minecraft.versionName.contains("-")) {
 					//parse as full version name
-					forgeVersion = repo.minecraft.versionName;
+					forgeVersionFull = repo.minecraft.versionName;
 				} else {
 					//parse as build number
 					String s = DownloadHelper.getString(ModpackValues.URL.forgeVersionJson, null);
@@ -295,7 +295,12 @@ public class Installer {
 					String branch = build.isStringValue("branch") ? "-" + build.getStringValue("branch") : "";
 					String mcversion = build.getStringValue("mcversion");
 					String forgeversion = build.getStringValue("version");
-					forgeVersion = mcversion + "-Forge" + forgeversion + branch;
+
+					if (FileUtils.compareVersions(mcversion, "1.10.0") == -1) {
+						forgeVersionFull = String.format("%s-Forge%s%s", mcversion, forgeversion, branch);
+					} else {
+						forgeVersionFull = String.format("%s-forge%s-%s%s", mcversion, mcversion, forgeversion, branch);
+					}
 				}
 			} catch (MalformedURLException e) {
 				NwLogger.INSTALLER_LOGGER.error("Error parsing Minecraft Forge Installer version...", e);
@@ -310,8 +315,8 @@ public class Installer {
 			} catch (Exception e) {
 				NwLogger.INSTALLER_LOGGER.error("Unknown Error occurred!", e);
 			}
-			if (forgeVersion != null) {
-				versionDataCopy.put(JsonNodeFactories.string("inheritsFrom"), JsonNodeFactories.string(forgeVersion));
+			if (forgeVersionFull != null) {
+				versionDataCopy.put(JsonNodeFactories.string("inheritsFrom"), JsonNodeFactories.string(forgeVersionFull));
 			}
 		}
 		//Add Version Id
@@ -416,7 +421,12 @@ public class Installer {
 							String forgeversion = build.getStringValue("version");
 
 							if (allowGui) {
-								String forgeDir = String.format("%s-Forge%s%s", mcversion, forgeversion, branch);
+								String forgeDir;
+								if (FileUtils.compareVersions(mcversion, "1.10.0") == -1) {
+									forgeDir = String.format("%s-Forge%s%s", mcversion, forgeversion, branch);
+								} else {
+									forgeDir = String.format("%s-forge%s-%s%s", mcversion, mcversion, forgeversion, branch);
+								}
 								File forgeVersionDir = new File(minecraftDirectory, "versions/" + forgeDir);
 								NwLogger.INSTALLER_LOGGER.fine("Searching for minecraftforge Installation at: " + forgeVersionDir.getAbsolutePath());
 								if (forgeVersionDir.exists() && forgeVersionDir.isDirectory()) {

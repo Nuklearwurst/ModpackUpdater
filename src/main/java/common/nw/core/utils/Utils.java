@@ -84,6 +84,24 @@ public class Utils {
 	}
 
 	/**
+	 * @return converts a String to int when possible. returns 0 otherwise.
+	 */
+	public static int tryParseInt(String value) {
+		return tryParseInt(value, 0);
+	}
+
+	/**
+	 * @return converts a String to int when possible. returns the given default otherwise.
+	 */
+	public static int tryParseInt(String value, int defaultValue) {
+		try {
+			return Integer.parseInt(value);
+		} catch (NumberFormatException nfe) {
+			return defaultValue;
+		}
+	}
+
+	/**
 	 * Gets System Text Clipboard if available
 	 *
 	 * @return found value
