@@ -16,6 +16,7 @@ public class Library implements IDataTableElement {
 
 	private static final String defaultUpdaterUrl = "https://dl.dropboxusercontent.com/u/87474141/minecraft/modupdater/updater/";
 	private static final String defaultUpdaterName = "common.nuklearwurst:updater:%s";
+	private static final String defaultArgoName = "common.nuklearwurst:updater:%s";
 
 	private static final String[] dataFields = {"id", "url"};
 
@@ -117,6 +118,18 @@ public class Library implements IDataTableElement {
 	 */
 	@SuppressWarnings("SameParameterValue")
 	public static Library createUpdaterLibrary(String version) {
+		Library library = new Library();
+		library.isVital = true;
+		library.id = String.format(defaultUpdaterName, version);
+		library.url = defaultUpdaterUrl;
+		return library;
+	}
+
+	/**
+	 * creates the default argo library for the given version
+	 */
+	@SuppressWarnings("SameParameterValue")
+	public static Library createArgoLibrary(String version) {
 		Library library = new Library();
 		library.isVital = true;
 		library.id = String.format(defaultUpdaterName, version);

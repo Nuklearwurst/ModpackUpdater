@@ -18,15 +18,16 @@ public class MCArgument implements IDataTableElement {
 
 	public static final String specialArgMinecraft = specialArgPrefix + "minecraft";
 	public static final String specialArgForge = specialArgPrefix + "forge";
+	public static final String specialArgForgeNew = specialArgPrefix + "forge_post_1.10";
 	public static final String specialArgUpdater = specialArgPrefix + "updater";
 
 	public static final String[] specialArgumentList = {
-			specialArgMinecraft, specialArgForge, specialArgUpdater
+			specialArgMinecraft, specialArgForge, specialArgUpdater, specialArgForgeNew
 	};
 
 	public static final ObjectToDisplayName<String>[] specialArgumentDisplayList =
 			ObjectToDisplayName.createNewObjectToDisplayNameArray(specialArgumentList,
-					new String[]{"Default Minecraft arguments", "Default Forge arguments", "Default Updater arguments"});
+					new String[]{"Default Minecraft arguments", "Default Forge arguments (pre mc 1.10)", "Default Updater arguments", "Default Forge arguments (mc 1.10+)"});
 
 
 	private final Type type;

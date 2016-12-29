@@ -149,8 +149,10 @@ public class PanelMinecraftSettings implements PageHolder.IExtendedPageHandler {
 			creator.modpack.minecraft.libraries.add(updater.compileToJson());
 			creator.modpack.minecraft.arguments.add(MCArgument.specialArgMinecraft);
 			creator.modpack.minecraft.arguments.add(MCArgument.specialArgUpdater);
-			creator.modpack.minecraft.arguments.add(MCArgument.specialArgForge);
-			JOptionPane.showMessageDialog(frame, "Default libraries and arguments have been genereated!\nPlease check if everthing is correct!");
+			creator.modpack.minecraft.arguments.add(MCArgument.specialArgForgeNew);
+			JOptionPane.showMessageDialog(frame, "Default libraries and arguments have been genereated!\n" +
+					"Please check if everthing is correct!\n" +
+					"If you are creating a modpack for 1.7.10 or lower, use the legacy forge arguments!");
 			creator.defaultLibrariesGenerated = true;
 		}
 

@@ -26,11 +26,12 @@ import java.util.List;
 
 public class Installer {
 
-	private static final String JSON_MC_ARGUMENTS = "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type} --tweakClass common.nw.updater.launch.Launch --tweakClass cpw.mods.fml.common.launcher.FMLTweaker --modpackrepo %s --modpackversion %s";
+	private static final String JSON_MC_ARGUMENTS = "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type} --tweakClass common.nw.updater.launch.Launch --tweakClass cpw.mods.fml.common.launcher.FMLTweaker --modpackrepo %s --modpackversion %s --versionType Forge";
 	private static final String JSON_TYPE = "release";
 	private static final String JSON_TIME = "2015-12-10T00:05:37-0500";
 
-	private static final String JSON_MC_ARGUMENTS_FORGE = "--tweakClass cpw.mods.fml.common.launcher.FMLTweaker";
+	private static final String JSON_MC_ARGUMENTS_FORGE_PRE_1_10 = "--tweakClass cpw.mods.fml.common.launcher.FMLTweaker --versionType Forge";
+	private static final String JSON_MC_ARGUMENTS_FORGE = "--tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker --versionType Forge";
 	private static final String JSON_MC_ARGUMENTS_MINECRAFT = "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type} ";
 	private static final String JSON_MC_ARGUMENTS_UPDATER = "--tweakClass common.nw.updater.launch.Launch --modpackrepo %s --modpackversion %s";
 
@@ -277,7 +278,7 @@ public class Installer {
 
 
 		//Add inheritance if needed
-		if (repo.minecraft.jarUpdateType.equals(ModpackValues.Download.jarForgeInherit)) {
+		if (repo.minecraft.jsonUpdateType.equals(ModpackValues.Download.jsonGenerate)) {
 			String forgeVersionFull = null;
 			try {
 				//noinspection StatementWithEmptyBody
@@ -338,8 +339,11 @@ public class Installer {
 				case MCArgument.specialArgPredefined:
 					builder.append(jsonArgs).append(" ");
 					break;
-				case MCArgument.specialArgForge:
+				case MCArgument.specialArgForgeNew:
 					builder.append(JSON_MC_ARGUMENTS_FORGE).append(" ");
+					break;
+				case MCArgument.specialArgForge:
+					builder.append(JSON_MC_ARGUMENTS_FORGE_PRE_1_10).append(" ");
 					break;
 				case MCArgument.specialArgMinecraft:
 					builder.append(JSON_MC_ARGUMENTS_MINECRAFT).append(" ");
