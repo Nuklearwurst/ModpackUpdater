@@ -33,5 +33,12 @@ $RECYCLE.BIN/
 .project
 .classpath
 
-## gradle
+### gradle
 .gradle
+
+### other
+*.log
+
+### Test folders
+Run_Updater_Empty/
+Run_Updater_pack5/
