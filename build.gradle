@@ -25,9 +25,9 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 ext {
-    updaterVersion = '2.2.2'
-    installerVersion = '2.5.0'
-    creatorVersion = '2.4.4'
+    updaterVersion = '2.2.3'
+    installerVersion = '2.5.2'
+    creatorVersion = '2.4.2'
 }
 
 dependencies {
@@ -35,7 +35,7 @@ dependencies {
     compile 'net.sourceforge.argo:argo:3.7'
     compile 'com.google.guava:guava:14.0'
     compile 'com.google.code.gson:gson:2.2.4'
-    compile ('net.minecraft:launchwrapper:1.11') {
+    compile('net.minecraft:launchwrapper:1.11') {
         exclude group: 'org.ow2.asm'
     }
     compile 'net.sf.jopt-simple:jopt-simple:4.5'
@@ -52,10 +52,16 @@ jar {
 }
 
 task thinUpdater(type: Jar) {
-    from sourceSets.main.output
     baseName = 'updater'
     version = updaterVersion
     classifier = 'thin'
+    from sourceSets.main.output
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    include 'common/nw/**'
+    include 'argo/**'
+    include 'com/intellij/**'
 }
 
 /**
